@@ -515,3 +515,57 @@ lambda表达式
 
 		list(map(lambda x : x * 2,range(10)))
 		运行结果[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+#5.29
+tips:
+
+1. 设置递归深度多少层，需要导入sys模块然后设置递归的深度如
+
+		import sys
+		sys.setrecursionlimit(1000000)
+2. 递归效率低，需要设置结束递归语句，需要合适的使用递归
+
+##1.递归
+函数调用自身时叫做递归,并且能正常返回值
+
+	def funf(n):
+		if n == 1:
+			return 1
+		else: 
+			return n*funf(n-1)
+	number = int(input('请输入一个数字'))
+	result = funf(number)
+	print("%d的阶乘是%d" % (number,result))
+斐波那契数列的递归实现方式
+	
+	迭代实现;
+		def funa(n):
+			n1 = 1
+			n2 = 1
+			n3 = 1
+			if n < 1:
+				print('输入有误！')
+				return -1
+			while n - 2 > 0:
+				n3 = n1 + n2
+				n1 = n2
+				n2 = n3
+				n -= 1
+			return n3
+		result = funa(20)
+		if result != -1:
+			print('总共有%d对小兔子诞生'%result)
+	递归实现
+		def fab(n):
+			if n < 1:
+				print('输入有误！')
+				return -1
+			if n == 1 or n == 2:
+				return 1
+			else:
+				return fab(n-1)+fab(n-2)
+		result = fab(20)
+		if result != -1:
+			print('总共有%d对小兔子诞生'%result)
+	
+1. 树结构的定义
+2. 谢尔宾斯基三角形
