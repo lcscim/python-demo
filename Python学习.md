@@ -687,8 +687,67 @@ open() 方法用于打开一个文件，第一个参数名为必须。语法如�
 		f = open('E:\\test.txt','w')
 		f.write('大家好我是老长')
 		f.close（）
-	
+#6.2
+tips:
 
+1. 模块导入使用import，一个模块只会被导入一次，不管执行了多少次import
+2. 
+
+##1.文件2
+示例：
+
+	def save_file(boy,girl,count):		//将保存方法提取出来成为一个函数，方便调用
+	    file_name_boy = 'A_'+str(count)+'.txt'
+	    file_name_girl = 'B_'+str(count)+'.txt'		//设置新文件名称
+	    boy_file = open(file_name_boy,'w')
+	    girl_file = open(file_name_girl,'w')		//
+		新建文件
+	    boy_file.writelines(boy)
+	    girl_file.writelines(girl)		//将选取的内容保存到文件中
+	    boy_file.close()
+	    girl_file.close()		//关闭文件流
+	
+	def split_file(file_name):
+	    f = open('text.txt')
+	    boy = []
+	    girl = []
+	    count = 1
+	    for each_line in f:
+	        if each_line[:6] != '======':
+	            (role,line_spoken) = each_line.split(':',1)
+	            if role == 'A':
+	                boy.append(line_spoken)
+	            else:
+	                girl.append(line_spoken)
+	        else:
+	            save_file(boy,girl,count)
+	            boy = []
+	            girl = []
+	            count += 1
+	    save_file(boy,girl,count)
+	    f.close()
+	split_file('text.txt')
+##2.与文件有关模块
+1.OS模块：操作系统模块
+	
+	模块方法：	
+	os.getcwd()			返回当前工作目录
+	os.chdir(path) 		改变当前工作目录，path为指定目录
+	os.listdir(path)	返回path指定的文件夹包含的文件或文件夹的名字的列表。
+	os.mkdir(path)		创建单层目录，如果存在就抛出异常
+	os.makedirs(path)	递归创建多层目录，如果存在就抛出异常
+	os.remove(path)		删除路径为path的文件
+	os.rmdir(path)		删除单层目录，如果目录非空抛出异常
+	os.removedirs(path)	递归删除目录，从子目录到父目录逐层删除，遇到目录非空则抛出异常
+	os.rename(old, new)	重命名文件或目录,从old到new
+	os.system(command)	运行系统的shell命令
+	常用定义：
+	os.curdir		指代当前目录('.')
+	os.pardir		指代上一级目录('..')
+	os.sep			输出操作系统特定的路径分隔符(win下为'\\',linux下为'/')
+	os.linesep		当前平台使用的行终止符(win下为'\r\n',Linux下为'\n')
+	os.name			指代当前的操作系统(posix代表Linux，nt代表Linux，mac代表苹果)
+2.os.path模块
 
 
 	
