@@ -749,5 +749,161 @@ tips:
 	os.name			指代当前的操作系统(posix代表Linux，nt代表Linux，mac代表苹果)
 2.os.path模块
 
+	os.path.basename(path)	去掉目录路径，单独返回文件名
+	os.path.dirname(path) 	去掉文件名，单独返回目录路径
+	os.path.join(path1[, path2[, ...]]) 	将path1和path2组合成一个路径
+	os.path.split(path) 	将path分割成目录和文件名二元组返回。，如果最后一个为目录也会将其作为文件名与前面分开，不管是否为空
+	os.path.splitext(path) 	分离文件名与扩展名；默认返回(fname,fextension)元组，可做分片操作
+	os.path.getsize(path) 	返回path的文件的大小（字节）
+	os.path.getatime(path) 	返回path所指向的文件或者目录的最后存取时间。(浮点型秒数，可用time模块的gmtime()或localtime()函数换算)
+	os.path.getmtime(path) 	回path所指向的文件或者目录的最后修改时间。(浮点型秒数，可用time模块的gmtime()或localtime()函数换算)
+	os.path.getctime(path)	回path所指向的文件的创建时间。(浮点型秒数，可用time模块的gmtime()或localtime()函数换算)
+	os.path.exists(path) 	如果path存在，返回True；如果path不存在，返回False。
+	os.path.isabs(path) 	如果path是绝对路径（包含盘符），返回True
+	os.path.isdir(path) 	判断path是否是一个目录
+	os.path.isfile(path)	判断path是否是一个文件
+	os.path.islink(path)	判断path是否是一个符号链接（在Windows上是指快捷方式）
+	os.path.ismount(path)	判断path是否是一个挂载点（盘符）
+	os.path.samefile(path1,path2)	判断path1和path2是否指向同一个文件
+#6.5
+tips：
 
+1. 如果需要，多个异常名用逗号连接用括号阔起except （EOFError，ImportError）：
+
+##1.pickle模块
+存放（pickling）读取（unpickling）
+示例：
+
+	import pickle		//导入模块
+	my_list = [1,2,3,'你好','我好','大家好']
+	pickle_file = open('C:\\Users\\asus\\Desktop\\kaifa\\python\\python-demo\\project\\my_list.pkl','wb')		//创建写入文件
+	pickle.dump(my_list,pickle_file)	//将内容传入文件中
+	pickle_file.close()		//关闭文件
+	pickle_file = open('C:\\Users\\asus\\Desktop\\kaifa\\python\\python-demo\\project\\my_list.pkl','rb')		//打开文件
+	my_list2 = pickle.load(pickle_file)		//读取打开文件内容
+	print(my_list2)			//打印内容
+- pickle.dump(内容，要传入的文件)		将内容传入文件
+- pickle.load(要读取的文件)		读取文件内容
+
+##2.异常exception
+Python标准异常总结
 	
+	AssertionError		断言语句（assert）失败
+	AttributeError		尝试访问未知的对象属性
+	EOFError			用户输入文件末尾标志EOF（Ctrl+d）
+	FloatingPointError	浮点计算错误
+	GeneratorExit		generator.close()方法被调用的时候
+	ImportError			导入模块失败的时候
+	IndexError			索引超出序列的范围
+	KeyError			字典中查找一个不存在的关键字
+	KeyboardInterrupt	用户输入中断键（Ctrl+c）
+	MemoryError			内存溢出（可通过删除对象释放内存）
+	NameError			尝试访问一个不存在的变量
+	NotImplementedError	尚未实现的方法
+	OSError				操作系统产生的异常（例如打开一个不存在的文件）
+	OverflowError		数值运算超出最大限制
+	ReferenceError		弱引用（weak reference）试图访问一个已经被垃圾回收机制回收了的对象
+	RuntimeError		一般的运行时错误
+	StopIteration		迭代器没有更多的值
+	SyntaxError			Python的语法错误
+	IndentationError	缩进错误
+	TabError			Tab和空格混合使用
+	SystemError			Python编译器系统错误
+	SystemExit			Python编译器进程被关闭
+	TypeError			不同类型间的无效操作
+	UnboundLocalError	访问一个未初始化的本地变量（NameError的子类）
+	UnicodeError		Unicode相关的错误（ValueError的子类）
+	UnicodeEncodeError	Unicode编码时的错误（UnicodeError的子类）
+	UnicodeDecodeError	Unicode解码时的错误（UnicodeError的子类）
+	UnicodeTranslateError	Unicode转换时的错误（UnicodeError的子类）
+	ValueError			传入无效的参数
+	ZeroDivisionError	除数为零
+Python 内置异常类的层次结构：
+	
+	BaseException
+	+-- SystemExit
+	+-- KeyboardInterrupt
+	+-- GeneratorExit
+	+-- Exception
+	      +-- StopIteration
+	      +-- ArithmeticError
+	      |    +-- FloatingPointError
+	      |    +-- OverflowError
+	      |    +-- ZeroDivisionError
+	      +-- AssertionError
+	      +-- AttributeError
+	      +-- BufferError
+	      +-- EOFError
+	      +-- ImportError
+	      +-- LookupError
+	      |    +-- IndexError
+	      |    +-- KeyError
+	      +-- MemoryError
+	      +-- NameError
+	      |    +-- UnboundLocalError
+	      +-- OSError
+	      |    +-- BlockingIOError
+	      |    +-- ChildProcessError
+	      |    +-- ConnectionError
+	      |    |    +-- BrokenPipeError
+	      |    |    +-- ConnectionAbortedError
+	      |    |    +-- ConnectionRefusedError
+	      |    |    +-- ConnectionResetError
+	      |    +-- FileExistsError
+	      |    +-- FileNotFoundError
+	      |    +-- InterruptedError
+	      |    +-- IsADirectoryError
+	      |    +-- NotADirectoryError
+	      |    +-- PermissionError
+	      |    +-- ProcessLookupError
+	      |    +-- TimeoutError
+	      +-- ReferenceError
+	      +-- RuntimeError
+	      |    +-- NotImplementedError
+	      +-- SyntaxError
+	      |    +-- IndentationError
+	      |         +-- TabError
+	      +-- SystemError
+	      +-- TypeError
+	      +-- ValueError
+	      |    +-- UnicodeError
+	      |         +-- UnicodeDecodeError
+	      |         +-- UnicodeEncodeError
+	      |         +-- UnicodeTranslateError
+	      +-- Warning
+	           +-- DeprecationWarning
+	           +-- PendingDeprecationWarning
+	           +-- RuntimeWarning
+	           +-- SyntaxWarning
+	           +-- UserWarning
+	           +-- FutureWarning
+	           +-- ImportWarning
+	           +-- UnicodeWarning
+	           +-- BytesWarning
+	           +-- ResourceWarning
+##3.异常检测处理
+try-except语句，语法：
+
+	try：
+		检测范围
+	except Exception[as reason]:	//Exception是异常名，reason是指异常信息，
+		c出现异常(Exception)后的处理代码
+	finally：
+		无论如何都会被执行的代码
+	例如：
+	try:
+		f = open('nofile.txt')
+		print(f.read())
+		f.close()
+	except OSError as reason:
+		print('出错了，原因是：'+str(reason))
+
+raise语句引发异常
+
+	raise [异常名（'要显示异常的具体信息'）]
+
+
+
+
+
+
