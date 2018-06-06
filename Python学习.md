@@ -901,6 +901,65 @@ try-except语句，语法：
 raise语句引发异常
 
 	raise [异常名（'要显示异常的具体信息'）]
+#6.6
+tips:
+
+##1.else语句和with语句
+- 丰富的else语句	
+
+	1. if...else...语句
+	2. else和while语句配合，当while语句全部被执行不会执行else语句，如果中途跳出执行else语句
+	3. 跟在异常处理语句后，如果没有异常执行else中的语句
+
+- 简洁的with语句
+
+		try:
+			with open('test.txt','w') as f	//会自动查看文件是否使用完毕，自动调用close方法
+				for each_line in f:
+					print(each_line)
+		except OSError as reason:
+			print('出错啦'+str(reason))	
+##2.EasyGui图形界面入门
+1. 安装easyGui
+
+	下载安装包解压后，使用cmd命令切换到解压后的目录下使用命令Python setup.py install安装
+2. 导入easyGui
+
+		方法一：
+		import easygui
+		easygui.msgbox(...)		//使用此方法必须使用easygui开头才能调用其方法
+		方法二：
+		from easygui import *
+		msgbox(...)		//导入全部包可省略开头，不建议使用
+		方法三：
+		import easygui as g
+		g.msgbox(....)
+3. 简单例子
+
+		import easygui as f
+		import sys
+		
+		while 1:
+		    f.msgbox("欢迎进入游戏界面")
+		
+		    msg = "请问你想学什么呢？"
+		    title = "小游戏互动"
+		    choices = ["篮球","足球","乒乓球","网球"]
+		
+		    choice = f.choicebox(msg,title,choices)
+		
+		    f.msgbox("您的选择是："+str(choice),"结果")
+		    msg = "您希望重新开始吗？"
+		    title = "请选择"
+		    if f.ccbox(msg,title):
+		        pass
+		    else:
+		        sys.exit(0)
+	
+
+
+
+
 
 
 
