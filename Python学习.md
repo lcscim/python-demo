@@ -903,6 +903,8 @@ raise语句引发异常
 	raise [异常名（'要显示异常的具体信息'）]
 #6.6
 tips:
+1. 建议不要在IDLE上运行EasyGui
+2. 
 
 ##1.else语句和with语句
 - 丰富的else语句	
