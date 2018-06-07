@@ -904,7 +904,10 @@ raise语句引发异常
 #6.6
 tips:
 1. 建议不要在IDLE上运行EasyGui
-2. 
+2. 对于函数而言前两个参数是消息和标题，几乎所有的组件都会显示一个标题和消息，标题默认空白字符串，信息是一个简单的默认值
+3. 按钮组件可不带参数地调用它，当选择cancel或者关闭窗口的时候返回一个布尔值
+4. msgbox(msg,title,ok_button,image,root)该方法显示一个消息和提供一个OK按钮，可以指定消息，标题，按钮，建议使用关键字参数调用
+5. 
 
 ##1.else语句和with语句
 - 丰富的else语句	
@@ -942,22 +945,93 @@ tips:
 		import sys
 		
 		while 1:
-		    f.msgbox("欢迎进入游戏界面")
-		
+		    f.msgbox("欢迎进入游戏界面")		//对于函数而言前两个参数是消息和标题，几乎所有的组件都会显示一个标题和消息，									标题默认空白字符串，信息是一个简单的默认值
+
 		    msg = "请问你想学什么呢？"
 		    title = "小游戏互动"
-		    choices = ["篮球","足球","乒乓球","网球"]
-		
-		    choice = f.choicebox(msg,title,choices)
-		
-		    f.msgbox("您的选择是："+str(choice),"结果")
+		    choices = ["篮球","足球","乒乓球","网球"]		
+		    choice = f.choicebox(msg,title,choices)		
+		    f.msgbox("您的选择是："+str(choice),"结果")	//msgbox(msg,title,ok_button,image,root)该方法显示一个消息												和提供一个OK按钮，可以指定消息，标题，按钮，建议使用关键字参数调											用
+
 		    msg = "您希望重新开始吗？"
 		    title = "请选择"
-		    if f.ccbox(msg,title):
+		    if f.ccbox(msg,title):			//按钮组件可不带参数地调用它，当选择cancel或者关闭窗口的时候返回一个布尔值
+											ccbox(msg,title,choices=('continue','cancel'),image)该方法提供一个选择continue和cancel，相应的返回1或者0
 		        pass
 		    else:
 		        sys.exit(0)
+- msgbox(msg='(Your message goes here)', title=' ', ok_button='OK', image=None, root=None)该方法显示一个消息	和提供一个OK按钮，可以指定消息，标题，按钮，建议使用关键字参数调用
+- ccbox(msg='Shall I continue?', title=' ', choices=('Continue', 'Cancel'), image=None)该方法提供一个选择continue和cancel，相应的返回1或者0
+- ynbox(msg,title,choices('yes','no'),image=none)和ccbox相同
+- buttonbox(msg='', title=' ', choices=('Button1', 'Button2', 'Button3'), image=None, root=None)当用户点击任意一个按钮的时候，buttonbox() 返回按钮的文本内容。如果用户取消取消或者关闭窗口，那么会返回默认选项（第一个选项）。
+- indexbox(msg='Shall I continue?', title=' ', choices=('Yes', 'No'), image=None) 基本跟上面一样，区别就是当用户选择第一个按钮的时候返回序列号0，选择第二个按钮时候返回序列号1。
+- boolbox(msg='Shall I continue?', title=' ', choices=('Yes', 'No'), image=None) 如果第一个按钮被选中则返回 1，否则返回 0。
+- 当你调用一个 buttonbox 函数（例如 msgbox(), ynbox(), indexbox() 等等）的时候，你还可以为关键字参数 image 赋值，这是设置一个 .gif 格式的图像（注意仅支持 GIF 格式
+- choicebox(msg='Pick something.', title=' ', choices=())为用户提供了一个可选择的列表，使用序列（元祖或列表）作为选项，这些选项显示前会按照不区分大小写的方法排好序。
+- multchoicebox(msg='Pick as many items as you like.', title=' ', choices=(), **kwargs)multchoicebox() 支持用户选择 0 个，1 个或者同时选择多个选项。
+- enterbox(msg='Enter something.', title=' ', default='', strip=True, image=None, root=None)为用户提供一个最简单的输入框，返回值为用户输入的字符串。默认返回的值会自动去除首尾的空格，如果需要保留首尾空格的话请设置参数 strip=False。
+- integerbox(msg='', title=' ', default='', lowerbound=0, upperbound=99, image=None, root=None, **invalidKeywordArguments)为用户提供一个简单的输入框，用户只能输入范围内（lowerbound参数设置最小值，upperbound参数设置最大值）的整型数值，否则会要求用户重新输入。
+- multenterbox(msg='Fill in values for the fields.', title=' ', fields=(), values=()) 为用户提供多个简单的输入框，要注意以下几点：
+
+		如果用户输入的值比选项少的话，则返回列表中的值用空字符串填充用户为输入的选项。
+		如果用户输入的值比选项多的话，则返回的列表中的值将截断为选项的数量。
+		如果用户取消操作，则返回域中的列表的值或者None值
+- passwordbox(msg='Enter your password.', title=' ', default='', image=None, root=None)passwordbox() 跟 enterbox() 样式一样，不同的是用户输入的内容用"*"显示出来，返回用户输入的字符串
+- multpasswordbox(msg='Fill in values for the fields.', title=' ', fields=(), values=())multpasswordbox() 跟 multenterbox() 使用相同的接口，但当它显示的时候，最后一个输入框显示为密码的形式（"*"）
+- textbox(msg='', title=' ', text='', codebox=0)textbox() 函数默认会以比例字体（参数 codebox=1 设置为等宽字体）来显示文本内容（会自动换行哦），这个函数适合用于显示一般的书面文字。 
+		
+		注：text 参数（第三个参数）可以是字符串类型，列表类型，或者元祖类型。
+
+
+
+#6.7
+tips：
+
+##1.类和对象
+- 属性（变量）加方法（函数）统称对象
+- class定义类，类名首字母大写
+- 创建一个类的对象叫做类的实例化	
+
+		class Text:
+	    color = 'green'
+	    weight = 10
+	    legs = 4
 	
+	    def climb(self):
+	        print('你好')
+	    def run(self):
+	        print('我好')
+	    def bite(self):
+	        print('大家好')
+		调用
+		tt = Text()
+		tt.climb()
+1. 封装，信息隐蔽技术
+2. 继承，子类自动共享父类之间的数据和方法的机制
+
+		class MyList1(list):	//括号内表示继承list
+			pass
+		list2 = MyList1()
+		list2.append(3)
+		list2.append(6)
+		list2.append(9)
+3. 多态，不同对象对同一方法响应不同的行动
+
+		class A:
+			def fun(self):
+				print('我是A。。')
+		class B:
+			def fun(self):
+				print('我是B。。')
+		a = A()
+		b = B()
+		a.fun()
+		b.fun()
+
+#6.8
+tips:
+
+##1.面向对象编程
 
 
 

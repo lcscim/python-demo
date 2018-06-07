@@ -3,7 +3,7 @@ import sys
 
 while 1:
     f.msgbox("欢迎进入游戏界面")
-
+    
     msg = "请问你想学什么呢？"
     title = "小游戏互动"
     choices = ["篮球","足球","乒乓球","网球"]
