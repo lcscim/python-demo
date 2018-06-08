@@ -1032,10 +1032,86 @@ tips：
 tips:
 
 ##1.面向对象编程
+- Python中的self相当于Java中的this，对象的方法被调用时，对象会把自身作为第一个参数传递给方法
+- __init__(self)是构造方法，前后两个下划线
+- 公有和私有的，公有的可直接使用.连接方法名使用，定义私有的需要在方法名或者变量名前加__(双下划线)，私有的基本只能在内部引用，可使用_类名__属性名调用
+- 
 
+##2.继承
+语法如下：
 
+	class sonclassname(fatherclassname):	
+	//sonclass子类，fatherclass又叫做基类父类或超类
+		.......
+- 子类重写父类方法，创建子类对象，调用该方法用的是子类方法
+- 调用未绑定的父类方法和使用super()方法两种技术
+- 支持多重继承,谨慎使用
 
+		class sonclassname(name1,name2,name3...):
+			......
 
+示例
+
+	import random as r
+
+	class Fish:
+	    def __init__(self):
+	        self.x = r.randint(0,10)
+	        self.y = r.randint(0,10)
+	    def move(self):
+	        self.x -= 1
+	        print("我的位置是",self.x,self.y)
+	        
+	class Godfish(Fish):
+	        pass
+	class Carp(Fish):
+	        pass
+	class Salmon(Fish):
+	        pass
+	class Shark(Fish):
+	    def _init_(self):
+	        super()._init_() 
+	        self.hungry = True
+	    def eat(self):
+	        if self.hungry:
+	            print("那就吃了吧")
+	        else:
+	            print("吃不下")
+
+##3.组合
+就是把类的实例化放到新的类中，示例
+
+	
+	class Turtle:
+	    def __init__(self,x):
+	        self.num = x
+	
+	class Fish:
+	    def __init__(self,x):
+	        self.num = x
+	
+	class Pool:
+	    def __init__(self,x,y):
+	        self.turtle = Turtle(x)
+	        self.fish = Fish(y)
+	
+	    def print_num(self):
+	        print("水中有龟%d只，鱼%d条"%(self.turtle.num,self.fish.num)
+- 不要在一个类里面定义所有能想到的特性和方法，应该利用继承和组合机制来进行扩展
+- 用不同词性的名词命名属性和方法	
+
+##4.绑定
+- Python严格要求方法需要有实例才能被调用，这种限制就是所谓绑定概念
+
+- 定义一个类，使得产生一个这个类的实例，类的一个变量就自加
+
+		class A(object):
+		    count = 0
+		
+		    def __init__(self):
+		        A.count += 1
+			def print1(self):
+				print(A.count)
 
 
 
