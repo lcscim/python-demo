@@ -1113,6 +1113,56 @@ tips:
 			def print1(self):
 				print(A.count)
 
+#6.10
+tips:
+
+##1.相关内置函数BIF
+- issubclass(class,classinfo)方法用于判断参数 class 是否是类型参数 classinfo 的子类
+- isinstance(object, classinfo)函数来判断一个对象是否是一个已知的类型，类似 type()
+	
+	- object -- 实例对象。
+	- classinfo -- 可以是直接或间接类名、基本类型或者由它们组成的元组
+
+			sinstance() 与 type() 区别：
+			type() 不会认为子类是一种父类类型，不考虑继承关系。		
+			isinstance() 会认为子类是一种父类类型，考虑继承关系
+- hasattr(object, name) 函数用于判断对象是否包含对应的属性
+
+	- object -- 对象。
+	- name -- 字符串，属性名。
+
+- getattr(object, name[, default]) 函数用于返回一个对象属性值。
+
+	- object -- 对象。
+	- name -- 字符串，对象属性。
+	- default -- 默认返回值，如果不提供该参数，在没有对应属性时，将触发 AttributeError。
+
+- setattr(object, name, value)函数对应函数 getatt()，用于设置属性值，该属性必须存在。
+
+	- object -- 对象。
+	- name -- 字符串，对象属性。
+	- value -- 属性值。
+- delattr(object, name)函数用于删除属性
+
+	- object -- 对象。
+	- name -- 必须是对象属性。
+
+- property([fget[, fset[, fdel[, doc]]]])函数的作用是在新式类中返回属性值。
+
+	- fget -- 获取属性值的函数
+	- fset -- 设置属性值的函数
+	- fdel -- 删除属性值函数
+	- doc -- 属性描述信息
+##2.魔法方法
+总被双下划线包围如__init__(self[,...])
+
+- __new__(cls[,...])继承不可变类型，又需要修改时，该方法返回值为None，即不要返回任何值
+
+		class CapStr(str):
+			def __new__(cls,string):
+				string = string.upper()
+				return str.__new__(cls,string)
+- __del__(self)垃圾回收时才会调用该方法，当创建所有对象删除时
 
 
 
