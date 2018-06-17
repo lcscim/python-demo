@@ -23,7 +23,7 @@ class MyTimer():
     
     #开始计时
     def start(self):
-        self.begin = t.localtime()
+        self.begin = t.perf_counter()
         self.prompt = '提示：请先使用stop()停止计时'
         print('计时开始')
 
@@ -32,7 +32,7 @@ class MyTimer():
         if not self.begin:
             print('请点击开始计时')
         else:
-            self.end = t.localtime()
+            self.end = t.process_time()
             self.cacl()
             print('计时结束')
 
@@ -40,9 +40,7 @@ class MyTimer():
     def cacl(self):
         self.lasted = []
         self.prompt = '总共运行了'
-        for index in range(6):
-            self.lasted.append(self.end[index] - self.begin[index])
-            if self.lasted[index]:
-                self.prompt += (str(self.lasted[index]) + self.unit[index])
+        self.lasted.append(self.end - self.begin)
+        self.prompt += str(self.lasted)
 
         
