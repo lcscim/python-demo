@@ -1263,10 +1263,28 @@ tips:
 
 7. 属性操作  
 
+描述符就是将某种特殊类型的类的实例指派给另一个类的属性，特殊类型是指有__get__或__set__或__delete__的一类方法
+
 		__getattr__(self, name)	当用户访问一个不存在的属性时调用	注意 object/super() (所有类的基类) 是无该方法的
 		__getattribute(self, name)	访问存在的属性时调用	先调用此函数，如找不到该属性，再去调用上面的属性
 		__setattr__(self, name, value)	设置属性时调用	 
 		__delattr__(self, name)	删除一个属性时调用	 
+		示例：	
+			class Rectangle:
+			    def __init__(self,width = 0,height = 0):
+			        self.width = width
+			        self.height = height
+			
+			    def __setattr__(self,nam,value):
+			        if name == 'square':
+			            self.width = value
+			            self.height = value
+			        else:
+			            super().__setattr__(name,value)
+			
+			    def getArea(self):
+			        return self.width * self.height
+
 		property(fget=None, fset=None, fdel=None, doc=None)	是一个类，主要功能是为了方便类内部函数的调用	
 				 1 class C(object):
 				 2     def getx(self): return self._x
@@ -1386,7 +1404,6 @@ format 格式如下：
 14. time.time()返回当前时间的时间戳（1970 纪元年后经过的浮点秒数）
 15. time.timezone 属性是当地时区（未启动夏令时）距离格林威治的偏移秒数（美洲 >0；大部分欧洲，亚洲，非洲 <= 0）
 16. time.tzname 属性是包含两个字符串的元组：第一是当地非夏令时区的名称，第二个是当地的 DST 时区的名称。
-
 
 
 
