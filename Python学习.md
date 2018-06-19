@@ -1494,8 +1494,88 @@ format 格式如下：
 #6.19
 tips：
 
-##1.迭代
+##1.Python的生成器
+一般函数中使用yield关键字，可以实现一个最简单的生成器，此时这个函数变成一个生成器函数。yield与return返回相同的值，区别在于return返回后，函数状态终止，而yield会保存当前函数的执行状态，在返回后，函数又回到之前保存的状态继续执行
 
+1. 生成器函数与一般函数的不同
 
+	- 生成器函数包含一个或者多个yield
+	- 当调用生成器函数时，函数将返回一个对象，但是不会立刻向下执行
+	- 像__iter__()和__next__()方法等是自动实现的，所以我们可以通过next()方法对对象进行迭代
+	- 一旦函数被yield，函数会暂停，控制权返回调用者
+	- 局部变量和它们的状态会被保存，直到下一次调用
+	- 函数终止的时候，StopIteraion会被自动抛出 
 
+示例： 简单的生成器函数
 
+	def my_gen():
+		n = 1
+		print("first")
+		yield n
+		n+=1
+		print("second")
+		yield n
+		n+=1
+		print("third")
+		yield n
+
+	>>> a=my_gen()
+	>>> print(next(a))
+	first
+	1
+	>>> print(next(a))
+	second
+	2
+	>>> print(next(a))
+	third
+	3
+	>>> print(next(a))
+	Traceback (most recent call last):
+	  File "<pyshell#15>", line 1, in <module>
+	    print(next(a))
+	StopIteration
+
+使用循环的生成器
+
+	def rev_str(my_str):
+	    length=len(my_str)
+	    for i in range(length-1,-1,-1):	//负数表示倒叙
+	        yield my_str[i]
+	
+	for char in rev_str("hello"):
+	    print(char)
+
+2. 生成器的表达式
+Python中，有一个列表生成方法，比如
+
+		# 产生1,2,3,4,5的一个列表
+		[x for x in range(5)]
+		如果换成[]换成()，那么会成为生成器的表达式。
+		
+		(x for x in range(5))
+		具体使用方式：
+		
+		a=(x for x in range(10))
+		b=[x for x in range(10)]
+		# 这是错误的，因为生成器不能直接给出长度
+		# print("length a:",len(a))
+		
+		# 输出列表的长度
+		print("length b:",len(b))
+		
+		b=iter(b)
+		# 二者输出等价，不过b是在运行时开辟内存，而a是直接开辟内存
+		print(next(a))
+		print(next(b)) 
+
+3. 为什么使用生成器
+
+	- 更容易使用，代码量较小
+	- 内存使用更加高效。比如列表是在建立的时候就分配所有的内存空间，而生成器仅仅是需要的时候才使用，更像一个记录
+	- 代表了一个无限的流。如果我们要读取并使用的内容远远超过内存，但是需要对所有的流中的内容进行处理，那么生成器是一个很好的选择，比如可以让生成器返回当前的处理状态，由于它可以保存状态，那么下一次直接处理即可。
+	- 流水线生成器。假设我们有一个快餐记录，这个记录的地4行记录了过去五年每小时售出的食品数量，并且我们要把所有的数量加在一起，求解过去5年的售出的总数。假设所有的数据都是字符串，并且不可用的数字被标记成N/A。那么可以使用下面的方式处理：
+	
+		with open('sells.log') as file:
+		    pizza_col = (line[3] for line in file)
+		    per_hour = (int(x) for x in pizza_col if x != 'N/A')  # 使用生成器进行自动迭代
+		    print("Total pizzas sold = ",sum(per_hour))
