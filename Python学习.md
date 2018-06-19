@@ -1033,8 +1033,11 @@ tips:
 
 ##1.面向对象编程
 - Python中的self相当于Java中的this，对象的方法被调用时，对象会把自身作为第一个参数传递给方法
-- __init__(self)是构造方法，前后两个下划线
-- 公有和私有的，公有的可直接使用.连接方法名使用，定义私有的需要在方法名或者变量名前加__(双下划线)，私有的基本只能在内部引用，可使用_类名__属性名调用
+- __init__(self)是构造方法，前后两个
+
+
+- 公有和私有的，公有的可直接使用.连接方法名使用，定义私有的需要在方法名或者变量名前加__(双
+- )，私有的基本只能在内部引用，可使用_类名__属性名调用
 - 
 
 ##2.继承
@@ -1115,6 +1118,9 @@ tips:
 
 #6.10-6.15
 tips:
+
+1. 名称前的单下划线（如：_shahriar）用于指定该名称属性为“私有”只供内部使用
+2. 在参数名之前使用一个星号，就是让函数接受任意多的位置参数。
 
 ##1.相关内置函数BIF
 - issubclass(class,classinfo)方法用于判断参数 class 是否是类型参数 classinfo 的子类
@@ -1263,7 +1269,7 @@ tips:
 
 7. 属性操作  
 
-描述符就是将某种特殊类型的类的实例指派给另一个类的属性，特殊类型是指有__get__或__set__或__delete__的一类方法
+描述符就是将某种特殊类型的类的实例指派给另一个类的属性，特殊类型是指至少实现__get__或__set__或__delete__的一类方法
 
 		__getattr__(self, name)	当用户访问一个不存在的属性时调用	注意 object/super() (所有类的基类) 是无该方法的
 		__getattribute(self, name)	访问存在的属性时调用	先调用此函数，如找不到该属性，再去调用上面的属性
@@ -1286,31 +1292,111 @@ tips:
 			        return self.width * self.height
 
 		property(fget=None, fset=None, fdel=None, doc=None)	是一个类，主要功能是为了方便类内部函数的调用	
-				 1 class C(object):
-				 2     def getx(self): return self._x
-				 3     def setx(self, value): self._x = value
-				 4     def delx(self): del self._x
-				 5     x = property(getx, setx, delx, "I'm the 'x' property.")
-				 6 
-				 7     
-				 8 >>> c=C()
-				 9 >>> c.x=10
-				10 >>> c.x
-				11 10
+
+示例
+			
+		class Celsius:
+		    def __init__(self,value = 26):
+		        self.value = float(value)
+		
+		    def __get__(self,instance,owner):
+		        return self.value
+		
+		    def __set__(self,instance,value):
+		        self.value = float(value)
+		
+		class Fahrenheit:
+		    def __init__(self,value = 78.8):
+		        self.value = float(value)
+		        
+		    def __get__(self,instance,owner):
+		        return instance.cel * 1.8 + 32
+		
+		    def __set__(self,instance,value):
+		        instance.cel = (float(value) - 32) / 1.8
+					
+		class Temperature:
+		    cel = Celsius()
+		    fah = Fahrenheit()
+
+			x = Temperature()
+			x.cel = 100
+			x.fah		//结果为212
+			x.fah = 100
+			x.cel		//结果为86		
+
 		__get__(self, instance, owner)	描述符被访问时调用	想详细了解，请点击这里
 		__set__(self, instance, value)	描述符被改变时调用	 
 		__delelte__(self, instance, value)删除描述符时调用	 
 
 8. 容器类型操作  
+定制的容器不可变的话，只需定义以下前两个，可变需定义前四个
 
-		__len__(self)　　　	求容器的大小（注意与capacity的区别）	可变和非尅便容器均具备 __len__ 和 __getitem__
-		__getitem__(self, key)	获取容器中指定元素的行为	 
-		__setitem__(self, key, value)	设置容器中指定元素的行为	 只有可变容器拥有 __setitem__ 和 __delitem__
-		__delitem__(self, key)	删除容器中指定元素的行为	 
-		__iter__(self)	定义迭代器中元素的行为	 
+		__len__(self)定义当被 len() 调用时的行为（返回容器中元素的个数）可变和非尅便容器均具备 __len__ 和 __getitem__
+		__getitem__(self, key)	获取容器中指定元素的行为	相当于 self[key] 
+		__setitem__(self, key, value)	设置容器中指定元素的行为	相当于 self[key] = value 只有可变容器拥有 __setitem__ 和 __delitem__
+		__delitem__(self, key)	删除容器中指定元素的行为	del self[key] 
+
+
+		__iter__(self)	定义迭代器中元素的行为	 ，调用到没有时会出现stopiteration异常 
 		__reversed__(self)	当调用reversed()函数时	 
 		__contains__(self, item)	成员运算符in/ not in的行为	 
-   
+
+示例：
+		
+		class CountList:
+		    def __init__(self,*args):
+		        self.values = [x for x in args]
+		        self.count = {}.fromkeys(range(len(self.values)),0)
+		
+		    def __len__(self):
+		        return len(self.values)
+		
+		    def __getitem__(self,key):
+		        self.count[key] += 1
+		        return self.values[key]
+		
+		>>> c1 = CountList(1,3,5,7,9)
+		>>> c2 = CountList(2,4,6,8,10)
+		>>> c1[1]
+		3
+		>>> c1[1]+c2[1]
+		7
+		>>> c1.count
+		{0: 0, 1: 2, 2: 0, 3: 0, 4: 0}	//返回调用该键值的次数
+		>>> c2.count
+		{0: 0, 1: 1, 2: 0, 3: 0, 4: 0}
+
+		
+		class Fibs:
+		    def __init__(self,n=10):
+		        self.a = 0
+		        self.b = 1
+		        self.n = n
+		
+		    def __iter__(self):
+		        return self
+		
+		    def __next__(self):
+		        self.a,self.b = self.b,self.a+self.b
+		        if self.a>self.n:
+		            raise StopIteration
+		
+		        return self.a
+		
+		>>> fibs = Fibs()
+		>>> for each in fibs:
+			print(each)
+		
+			
+		1
+		1
+		2
+		3
+		5
+		8
+
+		
  PS: ①.以上所有的魔法方法，君采用__xx__形式（__为双 "_"，双下划线）
 
 　　 ②.以上魔法方法为Python解释器自动调用，当然也可以手动调用
@@ -1405,6 +1491,10 @@ format 格式如下：
 15. time.timezone 属性是当地时区（未启动夏令时）距离格林威治的偏移秒数（美洲 >0；大部分欧洲，亚洲，非洲 <= 0）
 16. time.tzname 属性是包含两个字符串的元组：第一是当地非夏令时区的名称，第二个是当地的 DST 时区的名称。
 
+#6.19
+tips：
+
+##1.迭代
 
 
 
