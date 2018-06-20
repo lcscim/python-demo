@@ -1603,3 +1603,55 @@ tips:
 		- __name__是内置变量，可用于反映一个包的结构。
 		- __name__是内置变量，可用于表示当前模块的名字
 
+
+- 搜索路径，使用sys模块的path方法，可获取文件可存放路径。
+
+		>>> import sys
+		>>> sys.path
+		['', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\Lib\\idlelib', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\python37.zip', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\DLLs', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\lib', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\lib\\site-packages', 'C:\\Users\\lvqih\\AppData\\Local\\Programs\\Python\\Python37\\lib\\site-packages\\easygui-0.98.0_unreleased-py3.7.egg']
+	由于可存放的路径是一个列表，所以我们可以向里面添加路径
+
+		sys.path.append('D:\\Android\\python\\python-demo')
+
+- 包（package）创建方法：
+
+	1. 创建一个文件夹，用于存放相关的模块，文件夹的名字即报的名字
+	2. 在文件夹中创建一个__init__.py的模块文件，内容可以为空
+	3. 将相关模块放入到文件夹中
+
+导入模块时，只需在模块前面加上(包名.)
+##2.python标准库
+
+##3.爬虫
+- Python访问互联网，urllib包由urllib.request，urllib.error，urllib.parse，urllib.robotparser四个模块构成 
+
+	- url的一般格式为（带[]的可选）：
+	
+			Protocol://hostname[:port]/path/[;parameters][?query]#fragment
+	- url由三部分构成
+			
+		1. 第一部分是协议：http，https,ftp,file,ed2k...
+		2. 第二部分是存放资源的服务器的域名系统或ip地址（有时候要包含端口号，各种协议都有默认的端口号，如http的默认端口号为80）
+		3. 第三部分是资源的具体地址，如目录或文件名等
+
+示例：
+
+	>>> import urllib.request     //导入模块
+	>>> response = urllib.request.urlopen("https://www.baidu.com/")     //加载链接地址
+	>>> html = response.read()      //读取链接地址内容
+	>>> print(html)      //打印
+	b'<html>\r\n<head>\r\n\t<script>\r\n\t\tlocation.replace(location.href.replace("https://","http://"));\r\n\t</script>\r\n</head>\r\n<body>\r\n\t<noscript><meta http-equiv="refresh" content="0;url=http://www.baidu.com/"></noscript>\r\n</body>\r\n</html>'
+	>>> html = html.decode("utf-8")      //将其内容进行重新编码
+	>>> print(html)
+	<html>	
+	<head>	
+		<script>	
+			location.replace(location.href.replace("https://","http://"));	
+		</script>	
+	</head>	
+	<body>	
+		<noscript><meta http-equiv="refresh" content="0;url=http://www.baidu.com/"></noscript>	
+	</body>	
+	</html>
+	
+
