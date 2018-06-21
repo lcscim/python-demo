@@ -1654,4 +1654,36 @@ tips:
 	</body>	
 	</html>
 	
+-  实战：
 
+		import urllib.request
+
+		req = urllib.request.Request('http://placekitten.com/g/500/600')
+		response = urllib.request.urlopen(req)
+		
+		cat_img = response.read()
+		
+		with open('cat_500_600.jpg','wb') as f:
+		    f.write(cat_img)
+使用with后不管with中的代码出现什么错误，都会进行对当前对象进行清理工作。例如file的file.close()方法，无论with中出现任何错误，都会执行file.close（）方法其次with只有特定场合下才能使用。，这个特定场合只的是那些支持了上下文管理器的对象。这些对象有：
+
+	file
+	decimal.Context
+	thread.LockType
+	threading.Lock
+	threading.RLock
+	threading.Condition
+	threading.Semaphore
+	threading.BoundedSemaphore
+上下文管理器就是在对象内实现了两个方法：__enter__() 和__exit__()
+
+　　__enter__()方法会在with的代码块执行之前执行，__exit__（）会在代码块执行结束后执行。
+　　__exit__()方法内会自带当前对象的清理方法。
+
+这个urlopen函数总是返回一个对象，这个对象能被context manager（上下文管理器）中的一些方法使用，如：
+
+	geturl() — 返回一个资源索引的URL，通常重定向后的URL照样能get到。
+	info() — 返回页面的元信息，如头信息。像 email.message_from_string() 实例的格式一样。（请看 Quick Reference to HTTP Headers）
+	getcode() – 返回响应后，HTTP的状态码。
+
+	
