@@ -1582,7 +1582,7 @@ Python中，有一个列表生成方法，比如
 		    per_hour = (int(x) for x in pizza_col if x != 'N/A')  # 使用生成器进行自动迭代
 		    print("Total pizzas sold = ",sum(per_hour))
 
-#6.20
+#6.20-22
 tips:
 
 
@@ -1686,4 +1686,66 @@ tips:
 	info() — 返回页面的元信息，如头信息。像 email.message_from_string() 实例的格式一样。（请看 Quick Reference to HTTP Headers）
 	getcode() – 返回响应后，HTTP的状态码。
 
+- 实战2，有道翻译
+
+		import urllib.request
+		import urllib.parse
+		import json				//导入json模块，处理数据结果需要使用
+		
+		content = input("请输入要翻译的内容")
+		
+		url = 'http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule'		//翻译地址
+		data = {}
+		data['i'] = content
+		data['from'] = 'AUTO'
+		data['to'] = 'AUTO'
+		data['smartresult'] = 'dict'
+		data['client'] = 'fanyideskweb'
+		data['salt'] = '1529660044390'
+		data['sign'] = '093569408e9469545bafc4e72e1b06a3'
+		data['doctype'] = 'json'
+		data['version'] = '2.1'
+		data['keyfrom'] = 'fanyi.web'
+		data['action'] = 'FY_BY_CLICKBUTTION'
+		data['typoResult'] = 'false'
+		//以上为form Data内容
+		data = urllib.parse.urlencode(data).encode('utf-8')		//将映射对象或两元素元组序列，可以包含str或字节对象，转换为百分号编码的ASCII文本字符串，并使用utf-8进行编码
+		
+		response = urllib.request.urlopen(url,data)		//加载地址，若本次HTTP请求要用POST方法，data必须有数据；若为GET方法时， data写None就行。data参数应该是一个标准的application/x-www-form-urlencoded 格式的缓冲区
+		html = response.read().decode('utf-8')		//读取内容，并对其进行utf-8编码，是一个json格式文本
+		
+		target = json.loads(html)		//使用json进行加载读取
+		print("翻译结果：%s" % (target['translateResult'][0][0]['tgt']))
+
+- 隐藏Python访问信息
+
+	- 修改headers，通过request的headers参数修改或通过request.add_header()方法修改
 	
+		import urllib.request
+		...
+		head = {}
+		head['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36'
+		...		
+		data = urllib.parse.urlencode(data).encode('utf-8')
+		req = urllib.request.Request(url,data,head)
+		response = urllib.request.urlopen(req)
+		...
+		print("翻译结果：%s" % (target['translateResult'][0][0]['tgt']))
+
+		或者
+
+		import urllib.request
+		...
+		
+		data = urllib.parse.urlencode(data).encode('utf-8')
+		
+		req = urllib.request.Request(url,data)
+		req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+		response = urllib.request.urlopen(req)
+		...
+		print("翻译结果：%s" % (target['translateResult'][0][0]['tgt']))
+
+	- 延迟提交时间，加入time模块
+
+		
+			
