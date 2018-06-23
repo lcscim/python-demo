@@ -962,7 +962,8 @@ tips:
 		    else:
 		        sys.exit(0)
 - msgbox(msg='(Your message goes here)', title=' ', ok_button='OK', image=None, root=None)该方法显示一个消息	和提供一个OK按钮，可以指定消息，标题，按钮，建议使用关键字参数调用
-- ccbox(msg='Shall I continue?', title=' ', choices=('Continue', 'Cancel'), image=None)该方法提供一个选择continue和cancel，相应的返回1或者0
+- ccbox(msg='Shall I continue?', title=' ', 
+- s=('Continue', 'Cancel'), image=None)该方法提供一个选择continue和cancel，相应的返回1或者0
 - ynbox(msg,title,choices('yes','no'),image=none)和ccbox相同
 - buttonbox(msg='', title=' ', choices=('Button1', 'Button2', 'Button3'), image=None, root=None)当用户点击任意一个按钮的时候，buttonbox() 返回按钮的文本内容。如果用户取消取消或者关闭窗口，那么会返回默认选项（第一个选项）。
 - indexbox(msg='Shall I continue?', title=' ', choices=('Yes', 'No'), image=None) 基本跟上面一样，区别就是当用户选择第一个按钮的时候返回序列号0，选择第二个按钮时候返回序列号1。
@@ -1740,12 +1741,60 @@ tips:
 		data = urllib.parse.urlencode(data).encode('utf-8')
 		
 		req = urllib.request.Request(url,data)
-		req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+		req.add_headers('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
 		response = urllib.request.urlopen(req)
 		...
 		print("翻译结果：%s" % (target['translateResult'][0][0]['tgt']))
 
 	- 延迟提交时间，加入time模块
 
+		import urllib.request
+		import urllib.parse
+		import json
+		import time
 		
+		while True:
+		    content = input("请输入要翻译的内容(输入'q!'退出程序)")
+		    if content == 'q!':
+		        break
+		    .....
+		    time.sleep(5)
+	- 使用代理，步骤
+		
+		1. 参数是一个字典{'类型':'代理ip:端口号'}
+
+			proxy_support=urllib.request.ProxyHandler({})
+		2. 定制，创建一个opener
+
+			opener=urllib.request.build_opener(proxy_support)
+		3. 安装.调用opener
+
+			urllib.request.intall_opener(opener)
+			opener.open(url)
+
+		import urllib.request
+		import random
+		
+		url = 'http://www.whatismyip.com.tw/'		//查询地址
+		
+		iplist = ['60.216.177.152:8118','118.190.95.26:9001','171.12.133.160:47102']
+		
+		proxy_support = urllib.request.ProxyHandler({'https':random.choice(iplist)})
+		
+		opener = urllib.request.build_opener(proxy_support)
+		opener.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')]
+		
+		urllib.request.install_opener(opener)
+		
+		response = urllib.request.urlopen(url)
+		html = response.read().decode('utf-8')
+		
+		print(html)
+
+#6.23
+tips
+
+##1.爬取图片
+
+
 			
