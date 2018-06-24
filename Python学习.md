@@ -1792,9 +1792,107 @@ tips:
 		print(html)
 
 #6.23
-tips
+tips:
+1. 元字符在方括号中不会触发“特殊功能”，在字符类中，它们只匹配自身。例如 [akm$] 会匹配任何字符 'a'，'k'，'m' 或 '$'，'$' 是一个元字符，但在方括号中它不表示特殊含义，它只匹配 '$' 字符本身。
+2. 
 
 ##1.爬取图片
+实例（目前不能用）：
 
+	import urllib.request
+	import os
+	import random
+	
+	def url_open(url):			//隐藏信息相关方法
+	    req = urllib.request.Request(url)
+	    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+	
+	    proxies = ['118.190.95.43:9001','61.135.217.7:80','110.83.172.124:28214']
+	    proxy = random.choice(proxies)
+	
+	    proxy_support = urllib.raquest.ProxyHandler({'http':proxy})
+	    opener = urllib.request.build_opener(proxy_support)
+	    urllib.request.install_opener(opener)
+	
+	    response = urllib.request.urlopen(url)
+	    html = response.read()
+	
+	    return html
+	
+	def get_page(url):
+	    html = url_open(url).decode('utf-8')
+	
+	    a = html.find('current-comment-page') + 23
+	    b = html.find(']',a)
+	
+	    return html[a:b]
+	
+	def find_imgs(url):
+	    html = url_open(url).decode('utf-8')
+	    img_addrs = []
+	
+	    a = html.find('image src=')
+	
+	    while a != -1:
+	        b = html.find('.jpg',a,a+255)
+	        if b != -1:
+	            img_addrs.append(html[a+9,b+4])
+	        else:
+	            b = a + 9
+	
+	        a = html.find('img src=',b)
+	
+	    return img_addrs
+	
+	def save_img(folder.img_addrs):
+	    for each in img_addrs:
+	        filename = each.split('/')[-1]
+	        with open(filename,'wb') as f:
+	            img = url_open(each)
+	            f.write(image)
+	
+	def download_mm(folder='ooxx',pages=10):
+	    os.mkdir(folder)
+	    os.chdir(folder)
+	
+	    url = "http://jandan.net/ooxx/"
+	    page_num = int(get_page(url))
+	
+	    for i in range(pages):
+	        page_num -= i
+	        page_url = url+'page-'+str(page_num)+'#comments'
+	        img_addrs = find_imgs(page_url)
+	        save_image(folder,img_addrs)
+	
+	if __name__ == '__main__':
+	    download_mm()
+
+##2.正则表达式
+正则表达式（Regular expressions 也称为 REs，或 regexes 或 regex patterns）本质上是一个微小的且高度专业化的编程语言。它被嵌入到 Python 中，并通过 re 模块提供给程序猿使用。
+
+	import re
+	re.search(r'FishC','I love FishC.com')		//第一个参数为表达式，必须以r开头，后跟表达式，表达式用单引号括起，第二个参数被查找的目标
+- 字符匹配，有少数特殊的字符我们称之为元字符（metacharacter），它们并不能匹配自身，它们定义了字符类、子组匹配和模式重复次数等。有以下几个：'.','^','$','*','+','?','{ }','[ ]','\','|','( )'
+
+	1. 括号 [ ]，它们指定一个字符类用于存放你需要匹配的字符集合。可以单独列出需要匹配的字符，也可以通过两个字符和一个横杆 - 指定匹配的范围。例如 [abc] 会匹配字符 a，b 或 c；[a-c] 可以实现相同的功能。后者使用范围来表示与前者相同的字符集合。如果你想只匹配小写字母，你的 RE 可以写成 [a-z]。可以匹配方括号中未列出的所有其他字符。做法是在类的开头添加一个脱字符号 ^ ，例如 [^5] 会匹配除了 '5' 之外的任何字符。
+	2. 反斜杠 \ 了。跟 Python 的字符串规则一样，如果在反斜杠后边紧跟着一个元字符，那么元字符的“特殊功能”也不会被触发。例如你需要匹配符号 [ 或 \，你可以在它们前面加上一个反斜杠，以消除它们的特殊功能：\[，\\。
+		
+		特殊字符             含义
+		\d 				匹配任何十进制数字；相当于类 [0-9]
+		\D 				与 \d 相反，匹配任何非十进制数字的字符；相当于类 [^0-9]
+		\s 				匹配任何空白字符（包含空格、换行符、制表符等）；相当于类 [ \t\n\r\f\v]
+		\S 				与 \s 相反，匹配任何非空白字符；相当于类 [^ \t\n\r\f\v]
+		\w 				匹配任何单词字符，相当于字符类 [a-zA-Z0-9_]
+		\W 				于 \w 相反
+		\b 				匹配单词的开始或结束
+		\B 				与 \b 相反
+	3. * 这个元字符它用于指定前一个字符匹配零次或者多次.例如 ca*t 将匹配 ct（0 个字符 a），cat（1 个字符 a），caaat（3 个字符 a），等等
+	4. + 元字符,用于指定前一个字符匹配一次或者多次。和 + 的区别：* 匹配的是零次或者多次，所以被重复的内容可能压根儿不会出现；+ 至少需要出现一次。
+	5. ? 用于指定前一个字符匹配零次或者一次。例如 小?甲鱼 可以匹配 小甲鱼，也可以匹配 甲鱼。
+	6. 最灵活的应该是元字符 {m,n}（m 和 n 都是十进制整数），上边讲到的几个元字符都可以使用它来表达，它的含义是前一个字符必须匹配 m 次到 n 次之间。例如 a/{1,3}b 会匹配 a/b，a//b 和 a///b。但不会匹配 ab（没有斜杠）；也不会匹配 a////b（斜杠超过三个）。可以省略 m 或者 n，这样的话，引擎会假定一个合理的值代替。省略 m，将被解释为下限 0；省略 n 则会被解释为无穷大（事实上是上边我们提到的 20 亿）。
+	
+	import re
+	re.search(r'(([01]{0,1}\d{0,1}\d|2[0-4]\d|25[0-5])\.){3}([01]{0,1}\d{0,1}\d|2[0-4]\d|25[0-5])','192.168.1.1')
+	//此方法匹配IP地址
 
 			

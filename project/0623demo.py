@@ -1,49 +1,69 @@
-from selenium import webdriver
-from lxml import etree
-import urllib.requests
-import time
+import urllib.request
+import os
 import random
 
-class download_img(object):
-    def __init__(self):
-        self.url = 'http://jandan.net/ooxx'
-        option = webdriver.FirefoxOptions()
-        option.set_headless()
-        self.driver = webdriver.Firefox(firefox_options=option)
-    
-    def pageurl(self):
-        page_url = []
-        for i in range(10,12):
-            url = 'http://jandan.net/ooxx/page-%d#comments' % i
-            page_url.append(url)
-            print (url)
-        return page_url
-    
-    def imgurl(self,url):
-        self.driver.get(url)
-        time.sleep(5)
-        source = self.driver.page_source
-        self.driver.quit()
-        content = etree.HTML(source)
-        imglist = content.xpath('//div[@class="text"]/p/a[@class="view_img_link"]/@href')
-        for i in range(len(imglist)):
-            imglist[i] = 'http:' + imglist[i]
-        return imglist
-    
-    def downloder(self,url):
-        i = 1
-        for each in url:
-            time.sleep(random.randint(1,10))
-            name = each.split('/')[-1]            
-            content = requests.get(each).content
-            with open('C:\\Users\\Public\\Pictures\\Sample Pictures' % name,'wb+') as f:
-                f.write(content)
-            print ('下载第%s张图片' % i)
-            i += 1
+def url_open(url):
+    req = urllib.request.Request(url)
+    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+
+    proxies = ['118.190.95.43:9001','61.135.217.7:80','110.83.172.124:28214']
+    proxy = random.choice(proxies)
+
+    proxy_support = urllib.raquest.ProxyHandler({'http':proxy})
+    opener = urllib.request.build_opener(proxy_support)
+    urllib.request.install_opener(opener)
+
+    response = urllib.request.urlopen(url)
+    html = response.read()
+
+    return html
+
+def get_page(url):
+    html = url_open(url).decode('utf-8')
+
+    a = html.find('righttext') + 23
+    b = html.find(']',a)
+
+    return html[a:b]
+
+def find_imgs(url):
+    html = url_open(url).decode('utf-8')
+    img_addrs = []
+
+    a = html.find('image src=')
+
+    while a != -1:
+        b = html.find('.jpg',a,a+255)
+        if b != -1:
+            img_addrs.append(html[a+9,b+4])
+        else:
+            b = a + 9
+
+        a = html.find('img src=',b)
+
+    return img_addrs
+
+def save_img(folder.img_addrs):
+    for each in img_addrs:
+        filename = each.split('/')[-1]
+        with open(filename,'wb') as f:
+            img = url_open(each)
+            f.write(image)
+
+def download_mm(folder='ooxx',pages=10):
+    os.mkdir(folder)
+    os.chdir(folder)
+
+    url = "http://jandan.net/ooxx/"
+    page_num = int(get_page(url))
+
+    for i in range(pages):
+        page_num -= i
+        page_url = url+'page-'+str(page_num)+'#comments'
+        img_addrs = find_imgs(page_url)
+        save_image(folder,img_addrs)
 
 if __name__ == '__main__':
-    img = download_img()
-    pageurl = img.pageurl()
-    for each in pageurl:
-        imglist = img.imgurl(each)
-        img.downloder(imglist)
+    download_mm()
+    
+            
