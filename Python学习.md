@@ -1791,7 +1791,7 @@ tips:
 		
 		print(html)
 
-#6.23
+#6.23-26
 tips:
 1. 元字符在方括号中不会触发“特殊功能”，在字符类中，它们只匹配自身。例如 [akm$] 会匹配任何字符 'a'，'k'，'m' 或 '$'，'$' 是一个元字符，但在方括号中它不表示特殊含义，它只匹配 '$' 字符本身。
 2. 
@@ -1892,7 +1892,7 @@ tips:
 	6. 最灵活的应该是元字符 {m,n}（m 和 n 都是十进制整数），上边讲到的几个元字符都可以使用它来表达，它的含义是前一个字符必须匹配 m 次到 n 次之间。例如 a/{1,3}b 会匹配 a/b，a//b 和 a///b。但不会匹配 ab（没有斜杠）；也不会匹配 a////b（斜杠超过三个）。可以省略 m 或者 n，这样的话，引擎会假定一个合理的值代替。省略 m，将被解释为下限 0；省略 n 则会被解释为无穷大（事实上是上边我们提到的 20 亿）。
 	
 	import re
-	re.search(r'(([01]{0,1}\d{0,1}\d|2[0-4]\d|25[0-5])\.){3}([01]{0,1}\d{0,1}\d|2[0-4]\d|25[0-5])','192.168.1.1')
+	re.search(r'(([01]？\d？\d|2[0-4]\d|25[0-5])\.){3}([01]？\d{0,1}\d|2[0-4]\d|25[0-5])','192.168.1.1')
 	//此方法匹配IP地址
 - Python3 正则表达式特殊符号及用法（详细列表）
 
@@ -2008,7 +2008,7 @@ tips:
 
 - 编译正则表达式，如果需要重复的使用某个正则表达式，那么可以将该正则表达式编译成模式对象
 
-	1. 使用re.compile()编译,也可以接受 flags 参数，用于开启各种特殊功能和语法变化
+	1. 使用re.compile(pattern, flags=0)编译,也可以接受 flags 参数，用于开启各种特殊功能和语法变化
 
 		>>> import re
 		>>> p = re.compile('ab*')
@@ -2018,11 +2018,11 @@ tips:
 
 - 实现匹配,将正则表达式编译之后，就得到一个模式对象.模式对象拥有很多方法和属性
 
-		方法					功能
-		match()		判断一个正则表达式是否从开始处匹配一个字符串
-		search()	遍历字符串，找到正则表达式匹配的第一个位置
-		findall()	遍历字符串，找到正则表达式匹配的所有位置，并以列表的形式返回
-		finditer()	遍历字符串，找到正则表达式匹配的所有位置，并以迭代器的形式返回
+		方法										功能
+		match(pattern, string, flags=0)		判断一个正则表达式是否从开始处匹配一个字符串
+		search(pattern, string, flags=0)	遍历字符串，找到正则表达式匹配的第一个位置
+		findall(pattern, string, flags=0)	遍历字符串，找到正则表达式匹配的所有位置，并以列表的形式返回
+		finditer(pattern, string, flags=0)	遍历字符串，找到正则表达式匹配的所有位置，并以迭代器的形式返回
 
 例子：
 	
@@ -2051,7 +2051,7 @@ match() 返回一个匹配对象，我们将其存放在变量 m 中,匹配对�
 		span()		返回一个元组表示匹配位置（开始，结束）
 由于 match() 只检查正则表达式是否在字符串的起始位置匹配，所以 start() 总是返回 0。
 
-- 编译标志,编译标志让你可以修改正则表达式的工作方式。在 re 模块下，编译标志均有两个名字：完整名和简写，例如 IGNORECASE 简写是 I（如果你是 Perl 的粉丝，那么你有福了，因为这些简写跟 Perl 是一样的，例如 re.VERBOSE 的简写是 re.X）。另外，多个标志还可以同时使用（通过“|”），如：re.I | re.M 就是同时设置 I 和 M 标志。
+- 编译标志,编译标志让你可以修改正则表达式的工作方式。在flags中定义。在 re 模块下，编译标志均有两个名字：完整名和简写，例如 IGNORECASE 简写是 I（如果你是 Perl 的粉丝，那么你有福了，因为这些简写跟 Perl 是一样的，例如 re.VERBOSE 的简写是 re.X）。另外，多个标志还可以同时使用（通过“|”），如：re.I | re.M 就是同时设置 I 和 M 标志。
 
 		标志								含义
 		ASCII, A					使得转义符号如 \w，\b，\s 和 \d 只能匹配 ASCII 字符
@@ -2092,4 +2092,208 @@ match() 返回一个匹配对象，我们将其存放在变量 m 中,匹配对�
 	VERBOSE
 	这个标志使你的正则表达式可以写得更好看和更有条理，因为使用了这个标志，空格会被忽略（除了出现在字符类中和使用反斜杠转义的空格）；这个标志同时允许你在正则表达式字符串中使用注释，# 符号后边的内容是注释，不会递交给匹配引擎（除了出现在字符类中和使用反斜杠转义的 #）。
 
+使用正则表达式的下载实例
 
+	import urllib.request
+	import re
+	
+	def open_url(url):
+	    req = urllib.request.Request(url)
+	    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+	    page = urllib.request.urlopen(req)
+	    html = page.read().decode('utf-8')
+	
+	    return html
+	
+	def get_img(html):
+	    p = r'<img class="BDE_Image" src="([^"]+\.jpg)"'	
+	    imglist = re.findall(p,html)		//如果匹配的内容中含有词组（用括号阔住的内容），就单独返回该词组，如果有多个，将所有词组组成元组并返回
+	    '''
+	    for each in imglist:
+	        print(each)
+	    '''
+	    for each in imglist:
+	        filename = each.split("/")[-1]
+	        urllib.request.urlretrieve(each,filename,None)
+	if __name__ == '__main__':
+	    url = "https://tieba.baidu.com/p/3563409202"
+	    get_img(open_url(url))
+仅在findall（）方法中，如果正则表达式匹配的内容中含有词组（用括号阔住的内容），就单独返回该词组，如果有多个，将所有词组组成元组并返回.如果不需要自动完成，需要使用(?:...),即，左侧括号后紧跟'？'和'：'，例子如下
+
+	import urllib.request
+	import re
+	
+	def open_url(url):
+	    req = urllib.request.Request(url)
+	    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36')
+	    page = urllib.request.urlopen(req)
+	    html = page.read().decode('utf-8')
+	
+	    return html
+	
+	def get_img(html):
+	    p = r'(?:(?:2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(?:2[0-4]\d|25[0-5]|[01]?\d\d?)'
+	    iplist = re.findall(p,html)
+	
+	    for each in iplist:
+	        print(each)
+	        
+	if __name__ == '__main__':
+	    url = "https://www.kuaidaili.com/free/intr/"
+	    get_img(open_url(url))
+
+#6.26
+tips：
+
+
+##1.异常处理
+这里介绍urlerror，HTTPError 是 URLError 的子类，服务器上每一个 HTTP 的响应都包含一个数字的“状态码”。</b>
+有时候状态码会指出服务器无法完成的请求类型，一般情况下 Python 会帮你处理一部分这类响应（例如，响应的是一个“重定向”，要求客户端从别的地址来获取文档，那么 urllib 会自动为你处理这个响应。）；但是呢，有一些无法处理的，就会抛出 HTTPError 异常。这些异常包括典型的：404（页面无法找到），403（请求禁止）和 401（验证请求）。</b>
+
+因为 Python 默认会自动帮你处理重定向方面的内容（状态码 300 ~ 399 范围），状态码 100 ~ 299 的范围是表示成功，所以你需要关注的是 400 ~ 599 这个范围的状态码（因为它们代表响应出了问题）。</b>
+
+其中，出现 4xx 的状态码，说明问题来自客户端，就是你自己哪里做错了；出现 5xx 的状态码，那就表示与你无关了，是来自服务器的问题</b>
+
+	状态码				内容					详细内容
+  
+	1xx 			这一类型的状态码，代表请求已被接受，需要继续处理。
+	  
+	100 			Continue 				收到请求，客户端应当继续发送请求。
+	  
+	101 		Switching  Protocols 		服务器通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。
+	  
+	2xx 			成功 | 这一类型的状态码，代表请求已成功被服务器接收、理解、并接受。
+	  
+	200 			OK 						请求已成功，请求的响应头或数据体将随此响应返回。
+	  
+	201 		Created 					请求已经被实现，而且有一个新的资源已经依据请求的需要而创建，且其 URI 已经随 Location  头信息返回。
+	  
+	202 		Accepted 					服务器已接受请求，但尚未处理。正如它可能被拒绝一样，最终该请求可能会也可能不会被执行。
+	  
+	203 	Non-Authoritative  Information 	服务器已成功处理了请求，但返回的实体头部元信息不是在原始服务器上有效的确定集合，而是来自本地或者第三方的拷贝。
+	  
+	204 		No  Content 				服务器成功处理了请求，但没有返回任何实体内容。
+	  
+	205 		Reset  Content 				服务器成功处理了请求，且没有返回任何内容。但是与204响应不同，返回此状态码的响应要求请求者重置文档视图。
+	  
+	206 		Partial  Content 			服务器已经成功处理了部分 GET 请求。
+	  
+	3xx 		重定向 | 这类状态码代表需要客户端采取进一步的操作才能完成请求。通常，这些状态码用来重定向，后续的请求地址（重定向目标）在本次响应的 Location 域中指明。
+	  
+	300 		Multiple  Choices 			被请求的资源有一系列可供选择的回馈信息，每个都有自己特定的地址和浏览器驱动的商议信息。用户或浏览器能够自行选择一个首选的地址进行重定向。
+	  
+	301 		Moved  Permanently 			被请求的资源已永久移动到新位置，并且将来任何对此资源的引用都应该使用本响应返回的若干个 URI 之一。
+	  
+	302 		Found 						请求的资源现在临时从不同的 URI 响应请求。由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。
+	  
+	303 		See  Other 					对应当前请求的响应可以在另一个 URI 上被找到，而且客户端应当采用 GET 的方式访问那个资源。
+	  
+	304 		Not  Modified 				如果客户端发送了一个带条件的 GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个状态码。
+	  
+	305 		Use  Proxy 					被请求的资源必须通过指定的代理才能被访问。Location  域中将给出指定的代理所在的URI信息，接收者需要重复发送一个单独的请求，通过这个代理才能访问相应资源。
+	  
+	307 		Temporary  Redirect 		请求的资源现在临时从不同的 URI 响应请求。由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。
+	  
+	4xx 		客户端错误 | 这类的状态码代表了客户端看起来可能发生了错误，妨碍了服务器的处理。
+	  
+	400 		Bad  Request 				由于包含语法错误，当前请求无法被服务器理解。
+	  
+	401 		Unauthorized 				当前请求需要用户验证。
+	  
+	402 		Payment  Required 			该状态码是为了将来可能的需求而预留的。
+	  
+	403 		Forbidden 					服务器已经理解请求，但是拒绝执行它。
+	  
+	404 		Not  Found 					请求失败，请求的资源在服务器上找不到。
+	  
+	405 		Method  Not Allowed 		请求中指定的请求方法不能被用于请求相应的资源。
+	  
+	406 		Not  Acceptable 			请求的资源的内容特性无法满足请求头中的条件，因而无法生成响应实体。
+	  
+	407 	Proxy  Authentication Required 	与 401 状态码类似，只不过客户端必须在代理服务器上进行身份验证。
+	  
+	408 		Request  Timeout 			请求超时。客户端没有在服务器预备等待的时间内完成一个请求的发送。
+	  
+	409 		Conflict 					由于和被请求的资源的当前状态之间存在冲突，请求无法完成。
+	  
+	410 		Gone 						被请求的资源在服务器上已经不再可用，而且没有任何已知的转发地址。
+	  
+	411 		Length  Required 			服务器拒绝在没有定义  Content-Length 头的情况下接受请求。
+	  
+	412 		Precondition  Failed 		服务器在验证在请求的头字段中给出先决条件时，没能满足其中的一个或多个。
+	  
+	413 		Request  Entity Too Large 	服务器拒绝处理当前请求，因为该请求提交的实体数据大小超过了服务器愿意或者能够处理的范围。
+	  
+	414 		Request-URI  Too Long 		请求的 URI 长度超过了服务器能够解释的长度，因此服务器拒绝对该请求提供服务。
+	  
+	415 		Unsupported  Media Type 	对于当前请求的方法和所请求的资源，请求中提交的实体并不是服务器中所支持的格式，因此请求被拒绝。
+	  
+	416 Requested  Range Not Satisfiable 	如果请求中包含了 Range 请求头，并且 Range 中指定的任何数据范围都与当前资源的可用范围不重合，同时请求中又没有定义 If-Range 请求头，那么服务器就应当返回 416 状态码。
+	  
+	417 		Expectation  Failed 		在请求头 Expect 中指定的预期内容无法被服务器满足，或者这个服务器是一个代理服务器，它有明显的证据证明在当前路由的下一个节点上，Expect 的内容无法被满足。
+	  
+	5xx 		服务器错误 | 这类状态码代表了服务器在处理请求的过程中有错误或者异常状态发生。
+	  
+	500 		Internal  Server Error 		服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。
+	  
+	501 		Not  Implemented 			服务器不支持当前请求所需要的某个功能。
+	  
+	502 		Bad  Gateway 				作为网关或者代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应。
+	  
+	503 		Service  Unavailable 		由于临时的服务器维护或者过载，服务器当前无法处理请求。
+	  
+	504 		Gateway  Timeout 			作为网关或者代理工作的服务器尝试执行请求时，未能及时从上游服务器（URI 标识出的服务器，例如 HTTP、FTP、LDAP）或者辅助服务器（例如 DNS）收到响应。
+	  
+	505 	HTTP  Version Not Supported 	服务器不支持，或者拒绝支持在请求中使用的HTTP版本。
+处理异常的第一种写法：
+
+	from urllib.request import Rquest,urlopen
+	from urllib.error imort URLError,HTTPError
+	req = Request(someurl)
+	try:
+		response = urlopen(req)
+	except HTTPError as e:
+		print('The server couldn\'t fulfill the request.')
+		print('Error code: ',e.code)
+	except URLError as e:
+		print('We failed to reach a server.')
+		print('Reason: ',e.reason)
+	else:
+		#everything is fine
+处理异常的第二种写法（推荐）：
+
+	from urllib.request import Rquest,urlopen
+	from urllib.error imort URLError,HTTPError
+	req = Request(someurl)
+	try:
+		response = urlopen(req)
+	except URLError as e:
+		if hasattr(e,'reason'):
+			print('We failed to reach a server.')
+			print('Reason: ',e.reason)
+		elif hasattr(e,'code'):
+			print('The server couldn\'t fulfill the request.')
+			print('Error code: ',e.code)		
+	else:
+		#everything is fine
+##2.安装scrapy
+1. 下载安装pywin32,要对应Python版本，地址如下
+
+		https://sourceforge.net/projects/pywin32/files/pywin32/Build%20221/
+2. 安装pip,一般会自带，在Python安装目录下的scrips文件夹下
+
+3. 安装lxml，在cmd中输入以下，等待完成即可
+
+		pip install lxml
+4. 安装OpenSSL，在cmd中输入以下，等待即可完成
+
+		pip install pyOpenSSL
+5. 安装Scrapy，在cmd中输入以下，等待即可完成
+
+		pip install Scrapy
+注意：可能需要更新pip,更新方法
+
+	Python -m pip install --upgrade pip
+提示：microsoft visual c++ 14.0 is required，需要在https://www.lfd.uci.edu/~gohlke/pythonlibs/下载对应版本的pymssql-2.1.4.dev5-cp36-cp36m-win32.whl,，然后放到Python安装目录下的scrips文件夹下，再执行以下语句
+
+	pip install C:\Users\asus\AppData\Local\Programs\Python\Python36-32\Scripts\numpy-1.14.5+mkl-cp36-cp36m-win32.whl
