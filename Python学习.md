@@ -2297,3 +2297,42 @@ tips：
 提示：microsoft visual c++ 14.0 is required，需要在https://www.lfd.uci.edu/~gohlke/pythonlibs/下载对应版本的pymssql-2.1.4.dev5-cp36-cp36m-win32.whl,，然后放到Python安装目录下的scrips文件夹下，再执行以下语句
 
 	pip install C:\Users\asus\AppData\Local\Programs\Python\Python36-32\Scripts\numpy-1.14.5+mkl-cp36-cp36m-win32.whl
+##3.Scrapy框架
+- 使用Scrapy抓取一个网站一共需要四个步骤：
+
+	- 创建一个Scrapy项目
+
+			在cmd中执行以下语句，会创建项目。Scrapy startproject tutorial
+	- 定义item容器
+
+			item是保存爬取到的数据的容器，其使用方法和Python字典类似，并提供了额外的保护机制来避免拼写错误导致的未定义字段错误，重写items文件
+			import scrapy
+			class TutorialItem(scrapy.Item):
+			    title = scrapy.Field()
+			    link = scrapy.Field()
+			    desc = scrapy.Field()
+
+	- 编写爬虫
+
+			编写爬虫类spider，spider是用户编写用于从网站上爬取数据的类。包含了一个用于下载初始URL，然后是如何跟进网页中的连接以及如何分析页面中的内容，还有提取生成item的方法，例如在C:\Users\asus\tutorial\tutorial\spiders中新建dmoz_spider.py。内容如下
+			
+			import scrapy
+			class DmozSpider(scrapy.Spider):
+			    name = "dmoz"
+			    allowed_domains = ['docs.python.org']
+			    start_urls = [
+			        'https://docs.python.org/3/',
+			        'https://docs.python.org/3/reference/index.html'
+			        ]
+			    def parse(self,response):
+			        filename = response.url.split("/")[-2]
+			        with open(filename,'wb') as f:
+			            f.write(response.body)
+			在cmd中输入cd tutorial切换路径到创建的工程目录下，再输入Scrapy crawl dmoz（dmoz就是上方的name的值），会在目录下生成URL地址所指定的网页内容
+
+			接下来对所保存的内容进行筛选，这时需要进行筛选selector。selector是一个选择器，有四个基本方法
+			xpath():传入xpath表达式，返回该表达式所对应的所有节点的selector list列表
+			css():传入css表达式，返回该表达式所对应的所有节点的selector list列表
+			extract():序列化该节点为Unicode字符串并返回list
+			re():根据传入的正则表达式对数据进行提取，返回Unicode字符串list列表
+	- 存储内容
