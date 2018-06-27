@@ -2307,32 +2307,92 @@ tips：
 
 			item是保存爬取到的数据的容器，其使用方法和Python字典类似，并提供了额外的保护机制来避免拼写错误导致的未定义字段错误，重写items文件
 			import scrapy
-			class TutorialItem(scrapy.Item):
+			class DmozItem(scrapy.Item):
 			    title = scrapy.Field()
-			    link = scrapy.Field()
-			    desc = scrapy.Field()
 
 	- 编写爬虫
-
-			编写爬虫类spider，spider是用户编写用于从网站上爬取数据的类。包含了一个用于下载初始URL，然后是如何跟进网页中的连接以及如何分析页面中的内容，还有提取生成item的方法，例如在C:\Users\asus\tutorial\tutorial\spiders中新建dmoz_spider.py。内容如下
-			
-			import scrapy
-			class DmozSpider(scrapy.Spider):
-			    name = "dmoz"
-			    allowed_domains = ['docs.python.org']
-			    start_urls = [
-			        'https://docs.python.org/3/',
-			        'https://docs.python.org/3/reference/index.html'
-			        ]
-			    def parse(self,response):
-			        filename = response.url.split("/")[-2]
-			        with open(filename,'wb') as f:
-			            f.write(response.body)
-			在cmd中输入cd tutorial切换路径到创建的工程目录下，再输入Scrapy crawl dmoz（dmoz就是上方的name的值），会在目录下生成URL地址所指定的网页内容
-
-			接下来对所保存的内容进行筛选，这时需要进行筛选selector。selector是一个选择器，有四个基本方法
-			xpath():传入xpath表达式，返回该表达式所对应的所有节点的selector list列表
-			css():传入css表达式，返回该表达式所对应的所有节点的selector list列表
-			extract():序列化该节点为Unicode字符串并返回list
-			re():根据传入的正则表达式对数据进行提取，返回Unicode字符串list列表
 	- 存储内容
+
+
+
+编写爬虫类spider，spider是用户编写用于从网站上爬取数据的类。包含了一个用于下载初始URL，然后是如何跟进网页中的连接以及如何分析页面中的内容，还有提取生成item的方法，例如在C:\Users\asus\tutorial\tutorial\spiders中新建dmoz_spider.py。内容如下
+	
+	import scrapy
+	class DmozSpider(scrapy.Spider):
+	    name = "dmoz"
+	    allowed_domains = ['docs.python.org']
+	    start_urls = [
+	        'https://docs.python.org/3/',
+	        'https://docs.python.org/3/reference/index.html'
+	        ]
+	    def parse(self,response):
+	        filename = response.url.split("/")[-2]
+	        with open(filename,'wb') as f:
+	            f.write(response.body)
+在cmd中输入cd tutorial切换路径到创建的工程目录下，再输入Scrapy crawl dmoz（dmoz就是上方的name的值），会在目录下生成URL地址所指定的网页内容
+
+	接下来对所保存的内容进行筛选，这时需要进行筛选selector。selector是一个选择器，有四个基本方法
+	xpath():传入xpath表达式，返回该表达式所对应的所有节点的selector list列表
+	css():传入css表达式，返回该表达式所对应的所有节点的selector list列表
+	extract():序列化该节点为Unicode字符串并返回list
+	re():根据传入的正则表达式对数据进行提取，返回Unicode字符串list列表
+
+在cmd中，输入scrapy shell "https://docs.python.org/3/reference/index.html"，用于进入shell模式，这时可以使用response.headers获取header，respons.body可以获取网页内容。response后跟xpath等可使用其方法。
+
+1. xpath表达式：根据节点查找
+
+		/html/head/title:选择HTML文档中<head>标签内的<title>元素
+		/html/head/title/text():选择上面提到的<title>内的文字
+		//td:选择所有的<td>元素
+		//div[@class="mine"]:选择所有具有class=“mine”属性 的div元素
+
+response.xpath() == response.selector.xpath()
+2. 将列表字符串化使用extract()方法
+
+		response.xpath('//title').extract()
+3. 获取标签中具体的内容
+
+		response.xpath('//title/text()').extract()
+
+- shell会根据内容自动生成一个变量sel。
+
+		sel.xpath('//ul/li')		//匹配ul/li
+		sel.xpath('//ul/li/text()')		//获取内容
+		sel.xpath('//ul/li/text()').extract()  //获取字符串
+		sel.xpath('//ul/li/ul/li/a/@href').extract()	//获取链接地址
+
+		sites = sel.xpath('//ul/li/ul/li/a/@href').extract()
+		for site in sites:
+			title = "https://docs.python.org/3/reference/"+site
+			print(title)			//打印出找到的每一项
+
+使用exit()退出shell模式，然后修改dmoz_spider.py文件
+
+	import scrapy
+
+	from tutorial.items import DmozItem			//关联模块文件
+	
+	class DmozSpider(scrapy.Spider):
+	    name = "dmoz"
+	    allowed_domains = ['docs.python.org']
+	    start_urls = [
+	        'https://docs.python.org/3/',
+	        'https://docs.python.org/3/reference/index.html'
+	        ]
+	    def parse(self,response):
+	        sel = scrapy.selector.Selector(response)
+	        sites = sel.xpath('//ul/li/ul/li/a/@href').extract()
+	        items = []
+	        for site in sites:
+	            item = DmozItem()
+	            item['title'] = "https://docs.python.org/3/reference/"+site
+	            items.append(item)
+	
+	        return items
+
+最后在cmd中使用一下语句将查找内容导出为json格式文本
+
+	Scrapy crawl dmoz -o items.json -t json
+		
+
+
