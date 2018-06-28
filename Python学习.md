@@ -691,7 +691,8 @@ open() 方法用于打开一个文件，第一个参数名为必须。语法如�
 #6.2
 tips:
 
-1. 模块导入使用import，一个模块只会被导入一次，不管执行了多少次import
+1. 模块导入使用
+2. ，一个模块只会被导入一次，不管执行了多少次import
 2. 
 
 ##1.文件2
@@ -2393,6 +2394,375 @@ response.xpath() == response.selector.xpath()
 最后在cmd中使用一下语句将查找内容导出为json格式文本
 
 	Scrapy crawl dmoz -o items.json -t json
+
+#6.28
+tips:
+
+
+##1.图形界面GUI编程
+###1.1Tkinter
+实例1：
+
+	import tkinter as tk
+	app = tk.Tk()			//实例化一个tk用于容纳整个对象
+	app.title("lcscim")		//设置图形化界面标题栏	
+	theLabel = tk.Label(app,text="我的第一个程序！")		//label方法用于显示文本，图标，图片等
+	theLabel.pack()			//pack方法用于自动调节窗口的尺寸和位置	
+	app.mainloop()			//mainloop方法用于显示界面，一般位于程序最后一行代码
+
+实例2：
+
+	import tkinter as tk
+	class APP:
+	    def __init__(self,master):
+	        frame = tk.Frame(master)
+	        frame.pack(side=tk.LEFT,padx=10,pady=10)	//对框架frame进行包装，并设置位置
+	
+	        self.hi_there = tk.Button(frame,text="打招呼",bg="black",fg="white",command=self.say_hi)	//设置按钮并同时设置相关参数，command设置按钮的点击事件
+	        self.hi_there.pack()	//对按钮进行包装
+	
+	    def say_hi(self):	//点击按钮方法
+	        print("大家好我是老长")	
+	root = tk.Tk()		//实例化一个tk用于容纳整个对象
+	app = APP(root)		//创建类对象并将tk对象传入
+	root.mainloop()
+
+###1.2Tkinter 组件
+Tkinter的提供各种控件，如按钮，标签和文本框，一个GUI应用程序中使用。这些控件通常被称为控件或者部件。目前有15种Tkinter的部件。
+
+	控件					描述
+	Button			按钮控件；在程序中显示按钮。
+	Canvas			画布控件；显示图形元素如线条或文本
+	Checkbutton		多选框控件；用于在程序中提供多项选择框
+	Entry			输入控件；用于显示简单的文本内容
+	Frame			框架控件；在屏幕上显示一个矩形区域，多用来作为容器
+	Label			标签控件；可以显示文本和位图
+	Listbox			列表框控件；在Listbox窗口小部件是用来显示一个字符串列表给用户
+	Menubutton		菜单按钮控件，由于显示菜单项。
+	Menu			菜单控件；显示菜单栏,下拉菜单和弹出菜单
+	Message			消息控件；用来显示多行文本，与label比较类似
+	Radiobutton		单选按钮控件；显示一个单选的按钮状态
+	Scale			范围控件；显示一个数值刻度，为输出限定范围的数字区间
+	Scrollbar		滚动条控件，当内容超过可视化区域时使用，如列表框。.
+	Text			文本控件；用于显示多行文本
+	Toplevel		容器控件；用来提供一个单独的对话框，和Frame比较类似
+	Spinbox			输入控件；与Entry类似，但是可以指定输入范围值
+	PanedWindow		PanedWindow是一个窗口布局管理的插件，可以包含一个或者多个子控件。
+	LabelFrame		labelframe 是一个简单的容器控件。常用与复杂的窗口布局。
+	tkMessageBox	用于显示 你应用程序的消息框。
+标准属性，标准属性也就是所有控件的共同属性，如大小，字体和颜色等等。
+
+	属性				描述
+	Dimension	控件大小；
+	Color		控件颜色；
+	Font		控件字体；
+	Anchor		锚点；
+	Relief		控件样式；
+	Bitmap		位图；
+	Cursor		光标；
+几何管理，Tkinter控件有特定的几何状态管理方法，管理整个控件区域组织，一下是Tkinter公开的几何管理类：包、网格、位置
+
+	几何方法		描述
+	pack()		包装；
+	grid()		网格；
+	place()		位置；	
+
+- label标签，用于在屏幕上显示文本或图像。Label 组件仅能显示单一字体的文本，但文本可以跨越多行。另外，还可以为其中的个别字符加上下划线（例如用于表示键盘快捷键）。
 		
+		from tkinter import *
+		root = Tk()
+		textLabel = Label(root,
+		                  text="您所下载的影片包含有成人信息，\n年满18周岁才可观看",		//可使用换行符对文本进行换行
+		                  justify=LEFT,			//指定多行文本对齐方式，默认为居中
+		                  padx=10)				//设置文本偏移
+		textLabel.pack(side=LEFT)				//设置文本居左
+		photo = PhotoImage(file="18.gif")		//不支持JPG格式
+		imgLabel = Label(root,image=photo)		//设置图片标签
+		imgLabel.pack(side=RIGHT)				//设置图片居右
+		mainloop()
+		//该方法设置文本居左，图片居右
 
+		from tkinter import *
+		root = Tk()
+		photo = PhotoImage(file="timg.gif")		//图片对象
+		theLabel = Label(root,
+		                 text="大家好我是老长，\n各位下午好",		//文本
+		                 justify=LEFT,			//多行文本对齐
+		                 image=photo,			//指定图片背景
+		                 compound=CENTER,		//混合模式设置为居中
+		                 font=("微软雅黑",20),
+		                 fg="white")
+		theLabel.pack()
+		mainloop()
+		//将图片设置为背景
 
+语法：
+
+	Label(master=None, **options) (class)
+		master -- 父组件
+		**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+
+	选项								含义
+	activebackground	1. 设置当 Label 处于活动状态（通过 state 选项设置状态）的背景色
+						2. 默认值由系统指定
+						
+	activeforeground	1. 设置当 Label 处于活动状态（通过 state 选项设置状态）的前景色
+						2. 默认值由系统指定
+	
+	anchor				1. 控制文本（或图像）在 Label 中显示的位置
+						2. N, NE, E, SE, S, SW, W, NW, 或 CENTER 来定位（EWSN 代表东西南北，上北下南左西右东）
+						3. 默认值是 CENTER
+	
+	background			1. 设置背景颜色
+						2. 默认值由系统指定
+	
+	bg					跟 background 一样
+	
+	bitmap				1. 指定显示到 Label 上的位图
+						2. 如果指定了 image 选项，则该选项被忽略
+	
+	borderwidth			1. 指定 Label 的边框宽度
+						2. 默认值由系统指定，通常是 1 或 2 像素
+	
+	bd					跟 borderwidth 一样
+	
+	compound			1. 控制 Label 中文本和图像的混合模式
+						2. 默认情况下，如果有指定位图或图片，则不显示文本
+						3. 如果该选项设置为 CENTER，文本显示在图像上（文本重叠图像）
+						4. 如果该选项设置为 BOTTOM，LEFT，RIGHT 或 TOP，那么图像显示在文本的旁边（如 BOTTOM，则图像在文本的下方）
+						5. 默认值是 NONE
+	
+	cursor				1. 指定当鼠标在 Label 上飘过的时候的鼠标样式
+						2. 默认值由系统指定
+	
+	disabledforeground	1. 指定当 Label 不可用的时候前景色的颜色
+						2. 默认值由系统指定
+	
+	font				1. 指定 Label 中文本的字体
+						2. 一个 Label 只能设置一种字体
+						3. 默认值由系统指定
+	
+	foreground			1. 设置 Label 的文本和位图的颜色
+						2. 默认值由系统指定
+	
+	fg					跟 foreground 一样
+	
+	height				1. 设置 Label 的高度
+						2. 如果 Label 显示的是文本，那么单位是文本单元
+						3. 如果 Label 显示的是图像，那么单位是像素（或屏幕单元）
+						4. 如果设置为 0 或者干脆不设置，那么会自动根据 Label 的内容计算出高度
+	
+	highlightbackground	1. 指定当 Label 没有获得焦点的时候高亮边框的颜色
+						2. 默认值由系统指定，通常是标准背景颜色
+	
+	highlightcolor		1. 指定当 Label 获得焦点的时候高亮边框的颜色
+						2. 默认值由系统指定
+	
+	highlightthickness	1. 指定高亮边框的宽度
+						2. 默认值是 0（不带高亮边框）
+	
+	image				1. 指定 Label 显示的图片
+						2. 该值应该是 PhotoImage，BitmapImage，或者能兼容的对象
+						3. 该选项优先于 text 和 bitmap 选项
+	
+	justify				1. 定义如何对齐多行文本
+						2. 使用 LEFT，RIGHT 或 CENTER
+						3. 注意，文本的位置取决于 anchor 选项
+						4. 默认值是 CENTER
+	
+	padx				1. 指定 Label 水平方向上的额外间距（内容和边框间）
+						2. 单位是像素
+	
+	pady				1. 指定 Label 垂直方向上的额外间距（内容和边框间）
+						2. 单位是像素
+	
+	relief				1. 指定边框样式
+						2. 默认值是 FLAT
+						3. 另外你还可以设置 SUNKEN，RAISED，GROOVE 或 RIDGE
+	
+	state				1. 指定 Label 的状态
+						2. 这个标签控制 Label 如何显示
+						3. 默认值是 NORMAL
+						4. 另外你还可以设置 ACTIVE 或 DISABLED
+	
+	takefocus			1. 如果是 True，该 Label 接受输入焦点
+						2. 默认值是 False
+	
+	text				1. 指定 Label 显示的文本
+						2. 文本可以包含换行符
+						3. 如果设置了 bitmap 或 image 选项，该选项则被忽略
+	
+	textvariable		1. Label 显示 Tkinter 变量（通常是一个 StringVar 变量）的内容
+						2. 如果变量被修改，Label 的文本会自动更新
+	
+	underline			1. 跟 text 选项一起使用，用于指定哪一个字符画下划线（例如用于表示键盘快捷键） 
+						2. 默认值是 -1
+						3. 例如设置为 1，则说明在 Button 的第 2 个字符处画下划线
+	
+	width				1. 设置 Label 的宽度
+						2. 如果 Label 显示的是文本，那么单位是文本单元
+						3. 如果 Label 显示的是图像，那么单位是像素（或屏幕单元）
+						4. 如果设置为 0 或者干脆不设置，那么会自动根据 Label 的内容计算出宽度
+	
+	wraplength			1. 决定 Label 的文本应该被分成多少行
+						2. 该选项指定每行的长度，单位是屏幕单元
+						3. 默认值是 0
+
+- Button按钮，用于在 Python 应用程序中添加按钮，按钮上可以放上文本或图像，按钮可用于监听用户行为，能够与一个 Python 函数关联，当按钮被按下时，自动调用该函数。
+
+		from tkinter import *
+		def callback():
+		    var.set("吹得")
+		root = Tk()
+		frame1 = Frame(root)
+		frame2 = Frame(root)	
+		var = StringVar()
+		var.set("您所下载的影片包含有成人信息，\n年满18周岁才可观看")
+		textLabel = Label(frame1,
+		                  textvariable=var,
+		                  justify=LEFT)
+		textLabel.pack(side=LEFT)
+		photo = PhotoImage(file="18.gif")
+		imgLabel = Label(frame1,image=photo)
+		imgLabel.pack(side=RIGHT)
+		theButton = Button(frame2,text="我已满18周岁",command=callback)
+		theButton.pack()
+		frame1.pack(padx=10,pady=10)
+		frame2.pack(padx=10,pady=10)
+		mainloop()
+
+语法格式如下：
+
+	w = Button ( master, option=value, ... )
+		master: 按钮的父容器。
+		options: 可选项，即该按钮的可设置的属性。这些选项可以用键 = 值的形式设置，并以逗号分隔。
+
+	序号			可选项 							描述
+	1 		activebackground 			当鼠标放上去时，按钮的背景色
+	
+	2	 	activeforeground 			当鼠标放上去时，按钮的前景色
+	
+	3	 	bd 							按钮边框的大小，默认为 2 个像素
+	
+	4 		bg 							按钮的背景色
+	
+	5	 	command 					按钮关联的函数，当按钮被点击时，执行该函数
+	
+	6 		fg 							按钮的前景色（按钮文本的颜色）
+	
+	7 		font 						文本字体
+	
+	8 		height 						按钮的高度
+	
+	9	 	highlightcolor 				要高亮的颜色
+	
+	10	 	image 						按钮上要显示的图片
+	
+	11	 	justify 					显示多行文本的时候,设置不同行之间的对齐方式，可选项包括LEFT, RIGHT, CENTER
+	
+	12	 	padx 						按钮在x轴方向上的内边距(padding)，是指按钮的内容与按钮边缘的距离
+	
+	13	 	pady 						按钮在y轴方向上的内边距(padding)
+	
+	14	 	relief 						边框样式，设置控件3D效果，可选的有：FLAT、SUNKEN、RAISED、GROOVE、RIDGE。默认为 FLAT。
+	
+	15	 	state 						设置按钮组件状态,可选的有NORMAL、ACTIVE、 DISABLED。默认 NORMAL。
+	
+	16	 	underline 					下划线。默认按钮上的文本都不带下划线。取值就是带下划线的字符串索引，为 0 时，第一个字符带下划线，为 1 时，前两个字符带下划线，以此类推
+	
+	17	 	width 						按钮的宽度，如未设置此项，其大小以适应按钮的内容（文本或图片的大小）
+	
+	18	 	wraplength 					限制按钮每行显示的字符的数量
+	
+	19	 	text 						按钮的文本内容
+	
+	19	 	anchor 						锚选项，控制文本的位置，默认为中心
+	
+	
+	以下为组件常用的方法：
+
+	方法						描述
+	deselect()		清除单选按钮的状态
+	flash()			在激活状态颜色和正常颜色之间闪烁几次单选按钮，但保持它开始时的状态。
+	invoke()		可以调用此方法来获得与用户单击单选按钮以更改其状态时发生的操作相同的操作
+	select()		设置单选按钮为选中。
+- checkbutton
+
+	1. 实例1
+
+			from tkinter import *
+			root = Tk()
+			v = IntVar()		//variable主要用于传参和绑定变量
+			c = Checkbutton(root,text="测试一下",variable=v)		//设置checkbutton，variable为值，选中为1未选中为0
+			c.pack()
+			l = Label(root,textvariable=v)
+			l.pack()
+			mainloop()
+	2. 实例2
+
+			from tkinter import *
+			root = Tk()
+			GIRLS = ["西施","貂蝉","王昭君","杨玉环"]
+			v = []
+			for girl in GIRLS:
+			    v.append(IntVar())
+			    b = Checkbutton(root,text=girl,variable=v[-1])
+			    b.pack(anchor=W)		//anchor值为E，W，S,N,和地图方位类似
+			mainloop()
+语法格式如下：
+
+	w = Checkbutton ( master, option=value, ... )	
+		master: 按钮的父容器。
+		options: 可选项，即该按钮的可设置的属性。这些选项可以用键 = 值的形式设置，并以逗号分隔。
+
+	序号			可选项     			描述
+	1	 activebackground 		当鼠标放上去时，按钮的背景色
+	2	 activeforeground 		当鼠标放上去时，按钮的前景色
+	3 	 		bg 				按钮的背景色
+	4	 	  bitmap 			位图
+	5	 		bd 				边框的大小，默认为 2 个像素
+	6	 		command 		关联的函数，当按钮被点击时，执行该函数
+	7	 		cursor 			光标的形状设定，如arrow, circle, cross, plus 等
+	8	 disabledforeground 	禁用选项的前景色
+	9	 		font 			文本字体
+	10	 		fg 				选项的前景色
+	11	 		height 			复选框文本行数，默认为 1。
+	12	 	highlightcolor 		聚焦的高亮颜色
+	13	 		image 			是否使用图标
+	14	 		justify 		显示多行文本的时候,设置不同行之间的对齐方式，可选项包括LEFT, RIGHT, CENTER
+	15	 		offvalue 		Checkbutton 的值不仅仅是 1 或 0，可以是其他类型的数值，可以通过 onvalue 和 offvalue 属性							设置 Checkbutton 的状态值。
+	16	 		onvalue 		Checkbutton 的值不仅仅是 1 或 0，可以是其他类型的数值，可以通过 onvalue 和 offvalue 属性							设置 Checkbutton 的状态值。
+	17	 		padx 			按钮在x轴方向上的内边距(padding)，是指按钮的内容与按钮边缘的距离，默认为 1 像素。
+	18	 		pady 			按钮在y轴方向上的内边距(padding)，默认为 1 像素。
+	19	 		relief 			边框样式，设置控件3D效果，可选的有：FLAT、SUNKEN、RAISED、GROOVE、RIDGE。默认为 FLAT。
+	20	 	selectcolor 		选中后的颜色，默认为 selectcolor="red"。
+	21	 	selectimage 		选中后的图片
+	22	 		state 			状态，默认为 state=NORMAL
+	23	 		text 			显示的文本，使用 "\n" 来对文本进行换行。
+	24	 		underline       下划线。默认按钮上的文本都不带下划线。取值就是带下划线的字符串索引，为 0 时，第一个字符带下划线，为 1 时，前两个字符带下划线，以此类推
+	25	 		variable 		变量，variable 的值为 1 或 0，代表着选中或不选中	
+	26	 		width 			默认宽度是复选框的文本或图像决定的，你可以设置指定字符数。	
+	27	 		wraplength 		是否设置包裹。
+	
+		以下为常用的方法：
+
+	序号				方法 			描述
+	1			deselect() 		清除复选框选中选项。	
+	2	 		flash() 		在激活状态颜色和正常颜色之间闪烁几次单选按钮，但保持它开始时的状态。	
+	3 			invoke() 		可以调用此方法来获得与用户单击单选按钮以更改其状态时发生的操作相同的操作	
+	4	 		select() 		设置按钮为选中。	
+	5	 		toggle()  		选中与没有选中的选项互相切换
+- Radiobutton与checkbutton类似
+
+	1. 实例1
+
+		from tkinter import *
+		root = Tk()
+		v = IntVar()
+		Radiobutton(root,text="One",variable=v,value=1).pack(anchor=W)	//anchor值为E，W，S,N,和地图方位类似
+		Radiobutton(root,text="Two",variable=v,value=2).pack(anchor=W)
+		Radiobutton(root,text="Three",variable=v,value=3).pack(anchor=W)
+		mainloop()
+	2. 实例2
+
+		
