@@ -2,17 +2,20 @@ from tkinter import *
 
 root = Tk()
 
-LANGES = [
-    ("Python",1),
-    ("Perl",2),
-    ("Ruby",3),
-    ("Lua",4)]
+Label(root,text="作品：").grid(row=0,column=0)
+Label(root,text="作者：").grid(row=1,column=0)
 
-v = IntVar()
-v.set(1)
+e1 = Entry(root)
+e2 = Entry(root)
+e1.grid(row=0,column=1,padx=10,pady=5)
+e2.grid(row=1,column=1,padx=10,pady=5)
 
-for lang,num in LANGES:
-    b = Radiobutton(root,text=lang,variable=v,value=num,indicatoron=False)
-    b.pack(fill=X)
+def show():
+    print("作品：《%s》"% e1.get())
+    print("作者：%s"% e2.get())
+
+
+Button(root,text="获取信息",width=10,command=show).grid(row=3,column=0,sticky=W,padx=10,pady=5)
+Button(root,text="退出",width=10,command=root.quit).grid(row=3,column=1,sticky=E,padx=10,pady=5)
 
 mainloop()
