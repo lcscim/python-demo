@@ -3096,3 +3096,186 @@ Tkinter的提供各种控件，如按钮，标签和文本框，一个GUI应用�
 	mainloop()
 
 - 实战，简单加法计算器
+
+		from tkinter import *
+		master = Tk()		
+		frame = Frame(master)
+		frame.pack(padx=10,pady=10)		
+		v1 = StringVar()
+		v2 = StringVar()
+		v3 = StringVar()		
+		def test(content):
+		    return content.isdigit()		
+		testCMD = master.register(test)		
+		e1 = Entry(frame,width=10,textvariable=v1,validate="key",validatecommand=(testCMD,'%P')).grid(row=0,column=0)
+		Label(frame,text="+").grid(row=0,column=1)
+		e2 = Entry(frame,width=10,textvariable=v2,validate="key",validatecommand=(testCMD,'%P')).grid(row=0,column=2)
+		Label(frame,text="=").grid(row=0,column=3)
+		e3 = Entry(frame,width=10,textvariable=v3,state="readonly").grid(row=0,column=4)	
+		def calc():
+		    result = int(v1.get()) + int(v2.get())
+		    v3.set(str(result))
+		Button(frame,text="计算结果",command=calc).grid(row=1,column=2,pady=5)	
+		mainloop()
+
+#6.30
+tips：
+
+
+##1.listbox
+Listbox 组件通常被用于显示一组文本选项，Listbox 组件跟 Checkbutton 和 Radiobutton 组件类似，不过 Listbox 是以列表的形式来提供选项的（后两个是通过按钮的形式）。创建一个 Listbox 组件的时候，它是空的,我们使用 insert() 方法添加文本，该方法有两个参数：第一个参数是插入的索引号，第二个参数是插入的字符串。索引号通常是项目的序号（0 是列表中第一项的序号）。
+
+	from tkinter import *
+	master = Tk()	
+	# 创建一个空列表
+	theLB = Listbox(master)
+	theLB.pack()	
+	# 往列表里添加数据
+	for item in ["鸡蛋", "鸭蛋", "鹅蛋", "李狗蛋"]:
+	    theLB.insert(END, item)			//第一个参数是插入的索引号，第二个参数是插入的字符串
+		//listbox.delete(0, END)
+	theButton = Button(master, text="删除", command=lambda x=theLB: x.delete(ACTIVE))	//lambda表达式表示删除活动部分
+	theButton.pack()
+	mainloop()
+	
+- 语法：
+
+		Listbox(master=None, **options) (class)
+			master -- 父组件
+			**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+
+			选项							含义
+		background					1. 设置背景颜色
+									2. 默认值由系统指定
+		bg							跟 background 一样
+		borderwidth					1. 指定 Listbox 的边框宽度
+									2. 默认值由系统指定，通常是 2 像素
+		bd							跟 borderwidth 一样
+		cursor						1. 指定当鼠标在 Listbox 上飘过的时候的鼠标样式
+									2. 默认值由系统指定
+		exportselection				1. 指定选中的项目文本是否可以被复制到剪贴板
+									2. 默认值是 True
+									3. 可以修改为 False 表示不允许复制项目文本
+		font						1. 指定 Listbox 中文本的字体
+									2. 默认值由系统指定
+		foreground					1. 设置 Listbox 的文本颜色
+									2. 默认值由系统指定
+		fg							跟 foreground 一样
+		height						1. 设置 Listbox 显示的行数（不是像素）
+									2. 默认值是 10
+		highlightbackground			1. 指定当 Listbox 没有获得焦点的时候高亮边框的颜色
+									2. 默认值由系统指定，通常是标准背景颜色
+		highlightcolor				1. 指定当 Listbox 获得焦点的时候高亮边框的颜色
+									2. 默认值由系统指定
+		highlightthickness			1. 指定高亮边框的宽度
+									2. 默认值是 1
+		listvariable				1. 指向一个 StringVar 类型的变量，该变量存放 Listbox 中所有的项目
+									2. 在 StringVar 类型的变量中，用空格分隔每个项目，例如 var.set("鸡蛋 鸭蛋 鹅蛋 李狗蛋")
+		relief						1. 指定边框样式
+									2. 默认值是 SUNKEN
+		selectbackground			1. 指定当某个项目被选中的时候背景颜色
+									2. 默认值由系统指定
+		selectborderwidth			1. 指定当某个项目被选中的时候边框的宽度
+									2. 默认是由 selectbackground 指定的颜色填充，没有边框
+									3. 如果设置了此选项，Listbox 的每一项会相应变大，被选中项为 RAISED 样式
+		selectforeground			1. 指定当某个项目被选中的时候文本颜色
+									2. 默认值由系统指定
+		selectmode					1. 决定选择的模式
+									2. 四种不同的选择模式：SINGLE（单选）、BROWSE（也是单选，但拖动鼠标或通过方向键可以直接改变选项）、MULTIPLE（多选）和 EXTENDED（也是多选，但需要同时按住 Shift 键或 Ctrl 键或拖拽鼠标实现）
+									3. 默认是 BROWSE
+		setgrid						1. 指定一个布尔类型的值，决定是否启用网格控制
+									2. 默认值是 False
+		takefocus					1. 指定该组件是否接受输入焦点（用户可以通过 tab 键将焦点转移上来）
+									2. 默认值是 True
+		width						1. 设置 Listbox 的宽度（单位是文本单元）
+									2. 文本单元是英文字母的平均宽度（所以如果该选项设置为 2，那么是无法容纳"ww"这两个宽度大于平均宽度的字母的）
+									3. 默认值是 20
+		xscrollcommand				1. 为 Listbox 组件添加一条水平滚动条
+									2. 将此选项与 Scrollbar 组件相关联即可
+		yscrollcommand				1. 为 Listbox 组件添加一条垂直滚动条
+									2. 将此选项与 Scrollbar 组件相关联即可
+		
+
+- ListBox相关方法
+	
+		activate(index)			-- 将给定索引号对应的选项激活（在其文本下方画一条下划线）
+		bbox(index) 			-- 返回给定索引号对应的选项的边框
+								-- 返回值是一个以像素为单位的 4 元祖表示边框：(xoffset, yoffset, width, height)
+								-- xoffset 和 yoffset 表示距离左上角的偏移位置
+								-- 返回的 width 是文本的实际宽度（像素为单位）
+								-- 如果指向的选项是不可见的，那么返回值是 None
+		curselection() 			-- 返回一个元组，包含被选中的选项的序号（从 0 开始）
+								-- 如果没有选中任何选项，返回一个空元组
+		delete(first, last=None)-- 删除参数 first 到 last 范围内（包含 first 和 last）的所有选项
+								-- 如果忽略 last 参数，表示删除 first 参数指定的选项
+		get(first, last=None) 	-- 返回一个元组，包含参数 first 到 last 范围内（包含 first 和 last）的所有选项的文本
+								-- 如果忽略 last 参数，表示返回 first 参数指定的选项的文本
+		index(index) 			-- 返回与 index 参数相应的选项的序号（例如 lb.index(END)）
+		insert(index, *elements)-- 添加一个或多个项目到 Listbox 中
+								-- 使用 lb.insert(END) 添加新选项到末尾
+		itemcget(index, option) -- 获得 index 参数指定的项目对应的选项（由 option 参数指定）
+		itemconfig(index, **options)-- 设置 index 参数指定的项目对应的选项（由可变参数 **option 指定）
+		nearest(y)				-- 返回与给定参数 y 在垂直坐标上最接近的项目的序号
+		scan_dragto(x, y) 		-- 见下方 scan_mark(x, y)
+		scan_mark(x, y) 		-- 使用这种方式来实现 Listbox 内容的滚动
+								-- 需要将鼠标按钮事件及当前鼠标位置绑定到 scan_mark(x, y) 方法，然后再将 <motion> 事件及当前鼠标位置绑定到 scan_dragto(x, y) 方法，就可以实现 Listbox 在当前位置和 sacn_mack(x, y) 指定的位置 (x, y) 之间滚动
+		see(index) 				-- 调整列表框的位置，使得 index 参数指定的选项是可见的
+		select_anchor(index) 	-- 与 selection_anchor(index) 相同，见下方解释
+		select_clear(first, last=None)-- 与 selection_clear(first, last=None) 相同，见下方解释
+		select_includes(index) 	-- 与 selection_includes(index) 相同，见下方解释
+		select_set(first, last=None)-- 与 selection_set(first, last=None) 相同，见下方解释
+		selection_anchor(index)	-- 在 index 参数的位置下一个锚点，此后你就可以通过特殊索引 ANCHOR 访问
+		selection_clear(first, last=None)-- 取消参数 first 到 last 范围内（包含 first 和 last）选项的选中状态
+										-- 如果忽略 last 参数，则只取消 first 参数指定选项的选中状态
+		selection_includes(index) 	-- 返回 index 参数指定的选项的选中状态
+									-- 返回 1 表示选中，返回 0 表示未选中
+		selection_set(first, last=None) -- 设置参数 first 到 last 范围内（包含 first 和 last）选项为选中状态
+										-- 如果忽略 last 参数，则只设置 first 参数指定选项为选中状态
+		size() 					-- 返回 Listbox 组件中选项的数量
+		xview(*args) 			-- 该方法用于在水平方向上滚动 Listbox 组件的内容，一般通过绑定 Scollbar 组件的 command 选项来实现（具体操作参考：Scrollbar）
+								-- 如果第一个参数是 MOVETO，则第二个参数表示滚动到指定的位置：0.0 表示最左端，1.0 表示最右端
+								-- 如果第一个参数是 SCROLL，则第二个参数表示滚动的数量，第三个参数表示滚动的单位（可以是 UNITS 或 PAGES），例如：xview(SCROLL, 3, UNITS) 表示向右滚动三行
+		xview_moveto(fraction) 	-- 跟 xview(MOVETO, fraction) 一样
+		xview_scroll(number, what)-- 跟 xview(SCROLL, number, what) 一样
+		yview(*args)			-- 该方法用于在垂直方向上滚动 Listbox 组件的内容，一般通过绑定 Scollbar 组件的 command 选项来实现（具体操作参考：Scrollbar）
+								-- 如果第一个参数是 MOVETO，则第二个参数表示滚动到指定的位置：0.0 表示最顶端，1.0 表示最底端
+								-- 如果第一个参数是 SCROLL，则第二个参数表示滚动的数量，第三个参数表示滚动的单位（可以是 UNITS 或 PAGES），例如：yview(SCROLL, 3, PAGES) 表示向下滚动三页
+		yview_moveto(fraction) 	-- 跟 yview(MOVETO, fraction) 一样
+		yview_scroll(number, what) 	-- 跟 yview(SCROLL, number, what) 一样
+
+##2.Scrollbar
+在某个组件上安装垂直滚动条Scrollbar
+
+1. 设置该组件的yscrollbarcommand选项为Scrollbar组建的set()方法
+2. 设置Scrollbar组建的command选项为该组件的yview()方法
+
+示例：
+
+	from tkinter import *
+	root = Tk()		
+	sb = Scrollbar(root)
+	sb.pack(side=RIGHT,fill=Y)	
+	lb = Listbox(root,yscrollcommand=sb.set)	
+	for i in range(1000):
+	    lb.insert(END,i)	
+	lb.pack(side=LEFT,fill=BOTH)
+	sb.config(command=lb.yview)		    
+	mainloop()
+
+##3.scale
+Scale范围控件，显示一个数值刻度，为输出限定范围的数字区间
+
+	from tkinter import *
+	root = Tk()
+	s1 = Scale(root,from_=0,to=42,tickinterval=5,resolution=5,length=200)
+	s1.pack()
+	s2 = Scale(root,from_=0,to=200,tickinterval=20,orient=HORIZONTAL,length=600)
+	s2.pack()
+	def show():
+	    print(s1.get(),s2.get())
+	Button(root,text="获取位置",command=show).pack()
+	mainloop()
+
+	tickinterval   			--指定刻度间距
+	resolution				--指定显示精度，就是每一步走多少
+	length					--指定Scrollbar的长度

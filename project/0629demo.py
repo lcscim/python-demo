@@ -23,12 +23,7 @@ def calc():
     result = int(v1.get()) + int(v2.get())
     v3.set(str(result))
 
-def clean():
-    e1.delete(0,END)
-    e2.delete(0,END)
-    e3.delete(0,END)
 
 Button(frame,text="计算结果",command=calc).grid(row=1,column=2,pady=5)
-Button(frame,text="清除",command=clean).grid(row=1,column=3,pady=5)
 
 mainloop()
