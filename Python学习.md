@@ -3263,7 +3263,7 @@ Listbox 组件通常被用于显示一组文本选项，Listbox 组件跟 Checkb
 	mainloop()
 
 ##3.scale
-Scale范围控件，显示一个数值刻度，为输出限定范围的数字区间
+Scale范围控件，显示一个数值刻度，为输出限定范围的数字区间,样式和scrollbar类似
 
 	from tkinter import *
 	root = Tk()
@@ -3279,3 +3279,48 @@ Scale范围控件，显示一个数值刻度，为输出限定范围的数字区
 	tickinterval   			--指定刻度间距
 	resolution				--指定显示精度，就是每一步走多少
 	length					--指定Scrollbar的长度
+
+#7.1
+tips：
+
+
+##1.Text组件
+该组件用于显示和处理多行文本，主要用于显示多行文本，也常常作为简单的文字编辑器和浏览器使用
+
+- 创建Text组件，它里面是没有内容的，需要insert()方法为其插入内容
+
+		from tkinter import *
+		root = Tk()		
+		text = Text(root,width=30,height=2)
+		text.pack()		
+		text.insert(INSERT,"I love you \n")		//在开始处插入
+		text.insert(END,"Do you know")			//在结尾处插入
+		mainloop()
+
+- 可以插入其他组件
+
+		from tkinter import *
+		root = Tk()	
+		text = Text(root,width=30,height=5)
+		text.pack()
+		text.insert(INSERT,"I love you \n")
+		text.insert(END,"Do you know")	
+		def show():
+		    print("被点击了")	
+		b1 = Button(text,text="click",command=show)
+		text.window_create(INSERT,window=b1)		//window窗口组件
+		mainloop()
+
+- 可以插入图片
+
+		from tkinter import *
+		root = Tk()	
+		text = Text(root,width=30,height=30)
+		text.pack()
+		photo = PhotoImage(file="18.gif")
+		def show():
+		    text.image_create(END,image=photo)	
+		b1 = Button(text,text="click",command=show)
+		text.window_create(INSERT,window=b1)
+		mainloop()
+- Indexes(索引)用法
