@@ -3297,7 +3297,7 @@ tips：
 		text.insert(END,"Do you know")			//在结尾处插入
 		mainloop()
 
-- 可以插入其他组件
+- 可以插入其他组件，用window_create()方法
 
 		from tkinter import *
 		root = Tk()	
@@ -3311,7 +3311,7 @@ tips：
 		text.window_create(INSERT,window=b1)		//window窗口组件
 		mainloop()
 
-- 可以插入图片
+- 可以插入图片image_create()方法
 
 		from tkinter import *
 		root = Tk()	
@@ -3323,4 +3323,95 @@ tips：
 		b1 = Button(text,text="click",command=show)
 		text.window_create(INSERT,window=b1)
 		mainloop()
-- Indexes(索引)用法
+##1.1Indexes(索引)用法
+Indexes（索引）是用来指向 Text 组件中文本的位置，跟 Python 的序列索引一样，Text 组件索引也是对应实际字符之间的位置。Tkinter 提供一系列不同的索引类型：
+
+	"line.column"（行/列）
+	"line.end"（某一行的末尾）
+	INSERT				对应插入光标的位置。	
+	CURRENT				对应与鼠标坐标最接近的位置。不过，如果你紧按鼠标任何一个按钮，它会直到你松开它才响应。
+	END					对应 Text 组件的文本缓冲区最后一个字符的下一个位置。
+	user-defined marks			user-defined marks 是对 Text 组件中位置的命名。INSERT 和 CURRENT 是两个预先命名好的 marks，除此之外你可以自定义 marks（请参考下方【Marks 用法】
+	user-defined tags（"tag.first"，"tag.last"）				User-defined tags 代表可以分配给 Text 组件的特殊事件绑定和风格（请参考下方【Tags 用法】）
+	selection（SEL_FIRST，SEL_LAST）				selection 是一个名为 SEL（或 "sel"）的特殊 tag，表示当前被选中的范围，你可以使用  SEL_FIRST 到 SEL_LAST 来表示这个范围。如果没有选中的内容，那么 Tkinter 会抛出一个TclError 异常。
+	window coordinate（"@x,y"）
+	embedded object name（window，images）			embedded object name 用于指向在 Text 组件中嵌入的 window 和 image 对象。要引用一个 window，只要简单地将一个 Tkinter 组件实例作为索引即可。引用一个嵌入的 image，只需使用相应的 PhotoImage 和 BitmapImage 对象。
+	expressions			expressions 用于修改任何格式的索引，用字符串的形式实现修改索引的表达式。
+- "line.column"行/列 是最基础的索引方式，它们将索引位置的行号和列号以字符串的形式表示出来（中间以 "." 分隔，例如 "1.0"）。需要注意的是，行号以 1 开始，列号则以 0 开始。使用 index() 方法可以将所有支持的“索引”格式转换为“行/列”格式的索引号。
+
+		text.insert(INSERT, "I love FishC")
+		print(text.get("1.2", 1.6))		//打印从第一行第三个字母开始到第一行第七个字母结束
+- "line.end"行号加上字符串 ".end" 的格式表示为该行最后一个字符的位置
+
+		text.insert(INSERT, "I love FishC")
+		print(text.get("1.2", "1.end"))
+- expressionsexpressions 用于修改任何格式的索引，用字符串的形式实现修改索引的表达式。具体表达式实现如下：
+
+		表达式				含义
+		"+ count chars"	1. 将索引向前（->）移动 count 个字符
+		2. 可以越过换行符，但不能超过 END 的位置
+		"- count chars"	1. 将索引向后（<-）移动 count 个字符
+		2. 可以越过换行符，但不能超过 "1.0" 的位置
+		"+ count lines"	1. 将索引向前（->）移动 count 行
+		2. 索引会尽量保持与移动前在同一列上，但如果移动后的那一行字符太少，将移动到该行的末尾
+		"- count lines"	1. 将索引向后（<-）移动 count 行
+		2. 索引会尽量保持与移动前在同一列上，但如果移动后的那一行字符太少，将移动到该行的末尾
+		" linestart"	1. 将索引移动到当前索引所在行的起始位置
+		2. 注意，使用该表达式前边必须有一个空格隔开
+		" lineend"	1. 将索引移动到当前索引所在行的末尾
+		2. 注意，使用该表达式前边必须有一个空格隔开
+		" wordstart"	1. 将索引移动到当前索引指向的单词的开头
+		2. 单词的定义是一系列字母、数字、下划线或任何非空白字符的组合
+		3. 注意，使用该表达式前边必须有一个空格隔开
+		" wordend"	1. 将索引移动到当前索引指向的单词的末尾
+		2. 单词的定义是一系列字母、数字、下划线或任何非空白字符的组合
+		3. 注意，使用该表达式前边必须有一个空格隔开
+
+TIPS：只要结果不产生歧义，关键字可以被缩写，空格也可以省略。例如："+ 5 chars" 可以简写成 "+5c"
+
+##1.2Marks 用法
+Marks（标记）通常是嵌入到 Text 组件文本中的不可见对象。事实上 Marks 是指定字符间的位置，并跟随相应的字符一起移动。Marks 有 INSERT，CURRENT 和 user-defined marks（用户自定义的 Marks）。其中，INSERT 和 CURRENT 是 Tkinter 预定义的特殊 Marks，它们不能够被删除。<br/>
+INSERT（或 "insert"）用于指定当前插入光标的位置，Tkinter 会在该位置绘制一个闪烁的光标（因此并不是所有的 Marks 都不可见）。<br/>
+CURRENT（或 "current"）用于指定与鼠标坐标最接近的位置。不过，如果你紧按鼠标任何一个按钮，它会直到你松开它才响应。<br/>
+你还可以自定义任意数量的 Marks，Marks 的名字是由普通字符串组成，可以是除了空白字符外的任何字符（为了避免歧义，你应该起一个有意义的名字）。使用 mark_set() 方法创建和移动 Marks。<br/>
+
+如果你在一个 Mark 标记的位置之前插入或删除文本，那么 Mark 跟着一并移动。删除 Marks 你需要使用 mark_unset() 方法，删除 Mark 周围的文本并不会删除 Mark 本身。<br/>
+
+1. 例1，Mark 事实上就是索引，用于表示位置：
+
+		text.insert(INSERT, "I love FishC")
+		text.mark_set("here", "1.2")
+		text.insert("here", "插")
+2. 例2，如果 Mark 前边的内容发生改变，那么 Mark 的位置也会跟着移动
+
+		text.insert(INSERT, "I love FishC")
+		text.mark_set("here", "1.2")
+		text.insert("here", "插")
+		text.insert("here", "入")
+3. 如果 Mark 周围的文本被删除了，Mark 仍然还在
+
+		text.insert(INSERT, "I love FishC")
+		text.mark_set("here", "1.2")
+		text.insert("here", "插")
+		
+		text.delete("1.0", END)
+		text.insert("here", "入")
+4. 只有 mark_unset() 方法可以解除 Mark 的封印：
+		
+		text.insert(INSERT, "I love FishC")
+		text.mark_set("here", "1.2")
+		text.insert("here", "插")
+		
+		text.mark_unset("here")
+		
+		text.delete("1.0", END)
+		text.insert("here", "入")
+5. 默认插入内容到 Mark，是插入到它的左侧（就是说插入一个字符的话，Mark 向后移动了一个字符的位置）。那能不能插入到 Mark 的右侧呢？其实是可以的，通过 mark_gravity() 方法就可以实现。
+
+		text.insert(INSERT, "I love FishC")
+
+		text.mark_set("here", "1.2")
+		text.mark_gravity("here", LEFT)
+		
+		text.insert("here", "插")
+		text.insert("here", "入")
