@@ -1,17 +1,24 @@
 from tkinter import *
 
+OPTIONS = [
+    "California",
+    "458",
+    "FF",
+    "ENZO",
+    "LaFerrari"
+    ]
+
 root = Tk()
 
-w = Canvas(root, width=400, height=200)
+variable = StringVar()
+variable.set(OPTIONS[0])
+
+w = OptionMenu(root, variable, *OPTIONS)
 w.pack()
 
-def paint(event):
-    x1, y1 = (event.x - 1), (event.y - 1)
-    x2, y2 = (event.x + 1), (event.y + 1)
-    w.create_oval(x1, y1, x2, y2, fill="red")
-    
-w.bind("<B1-Motion>", paint)
+def callback():
+    print(variable.get())
 
-Label(root, text="按住鼠标左键并移动，开始绘制你的理想蓝图吧......").pack(side=BOTTOM)
+Button(root, text="点我", command=callback).pack()
 
 mainloop()
