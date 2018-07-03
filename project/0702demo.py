@@ -1,28 +1,20 @@
 from tkinter import *
-import hashlib
 
-root = Tk()		
+root = Tk()
 
-text = Text(root, width=30, height=5)
-text.pack()		
+text = Text(root, width=30, height=5, autoseparators=False, undo=True, maxundo=10)
+text.pack()
 
-text.insert(INSERT, "I love FishC.com!")		
-contents = text.get("1.0",END)
+def callback(event):
+    text.edit_separator()
 
-def getsig(contents):
-    m = hashlib.md5(contents.encode())
-    return m.digest()
+text.bind('<Key>', callback)
 
-sig = getsig(contents)
+text.insert(INSERT, "I love FishC")
 
-def check():
-    contents=text.get("1.0",END)
-    if sig != getsig(contents):
-        print("内容发生变动")
-    else:
-        print("风平浪静~")
+def show():
+    text.edit_undo()
 
-Button(root,text="检查",command=check).pack()
+Button(root, text="撤销", command=show).pack()
 
 mainloop()
-

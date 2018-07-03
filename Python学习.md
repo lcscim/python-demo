@@ -3804,4 +3804,56 @@ SEL（或 "sel"）用于表示对应的选中内容（如果有的话）。<br/>
 		        print("风平浪静~")	
 		Button(root,text="检查",command=check).pack()	
 		mainloop()
+- 示例2
 
+		from tkinter import *
+		import hashlib	
+		root = Tk()			
+		text = Text(root, width=30, height=5)
+		text.pack()			
+		text.insert(INSERT, "I love FishC.com!")
+		def getIndex(text,index):
+		    return tuple(map(int,str.split(text.index(index),".")))		//返回元祖，将行列对剪切，并将其转为int类型组成元祖
+		start = "1.0"
+		while True:
+		    pos = text.search("o",start,stopindex=END)
+		    if not pos:
+		        break
+		    print("找到啦，位置是：",getIndex(text,pos))
+		    start = pos+"+1c"		//将start向右移动一个位置
+		mainloop()
+- 示例3
+
+		from tkinter import *
+		import hashlib
+		root = Tk()		
+		text = Text(root, width=30, height=5,undo=True)	//undo设置为TRUE
+		text.pack()			
+		text.insert(INSERT, "I love FishC.com!")	
+		def show():
+		    text.edit_undo()		//使用该方法撤销操作
+		Button(root,text="撤销",command=show).pack()	
+		mainloop()
+
+##1.5“恢复”和“撤销”操作
+Text 组件还支持“恢复”和“撤销”操作，这使得 Text 组件显得相当高大上。通过设置 undo 选项为 True 可以开启 Text 组件的“撤销”功能。然后用 edit_undo() 方法实现“撤销”操作，用 edit_redo() 方法实现“恢复”操作，这是因为 Text 组件内部有一个栈专门用于记录内容的每次变动，所以每次“撤销”操作就是一次弹栈操作，“恢复”就是再次压栈。<br/>
+
+默认情况下，每一次完整的操作将会放入栈中。但怎么样算是一次完整的操作呢？Tkinter 觉得每次焦点切换、用户按下 Enter 键、删除\插入操作的转换等之前的操作算是一次完整的操作。也就是说你连续输入“FishC 是个 P”的话，一次的“撤销”操作就会将所有的内容删除。<br/>
+
+那我们能不能自定义呢？比如我希望插入一个字符就算一次完整的操作，然后每次点击“撤销”就去掉一个字符。<br/>
+
+当然可以！做法就是先将 autoseparators 选项设置为 False（因为这个选项是让 Tkinter 在认为一次完整的操作结束后自动插入“分隔符”），然后绑定键盘事件，每次有输入就用 edit_separator() 方法人为地插入一个“分隔符”：
+
+	from tkinter import *
+	root = Tk()	
+	text = Text(root, width=30, height=5, autoseparators=False, undo=True, maxundo=10)
+			//设置 undo 选项为 True 可以开启 Text 组件的“撤销”功能
+	text.pack()	
+	def callback(event):
+	    text.edit_separator()
+	text.bind('<Key>', callback)
+	text.insert(INSERT, "I love FishC")
+	def show():
+	    text.edit_undo()
+	Button(root, text="撤销", command=show).pack()
+	mainloop()
