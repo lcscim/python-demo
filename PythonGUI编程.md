@@ -2581,4 +2581,749 @@ OptionMenu（选择菜单）事实上是下拉菜单的改版，它的发明弥�
 		>>> fun2(**c)
 		{'two': 2, 'one': 1, 'three': 3}
 		>>> 
-##6.时间绑定
+##6.事件绑定
+一个 Tkinter 应用程序大部分时间花费在事件循环中（通过 mainloop() 方法进入）。事件可以有各种来源：包括用户触发的鼠标和键盘操作和窗口管理器触发的重绘事件（在多数情况下是由用户间接引起的）。Tkinter 提供一个强大的机制可以让你自由地处理事件，对于每个组件来说，你可以通过 bind() 方法将函数或方法绑定到具体的事件上。
+	
+	widget.bind(event, handler)
+当被触发的事件满足该组件绑定的事件时，Tkinter 就会带着事件对象（Event）去调用 handler() 方法。
+
+	# 捕获点击鼠标的位置
+	from tkinter import *
+	root = Tk()
+	def callback(event):
+	    print("点击位置：", event.x, event.y)
+	frame = Frame(root, width=200, height=200)
+	frame.bind("<Button-1>", callback)		//使用 Frame 组件的 bind() 方法将鼠标点击事件（<Button-1>）和我们自定义的 callback() 方法绑定起来
+	frame.pack()
+	mainloop()
+只有当组件获得焦点的时候才能接收 键盘事件（Key），下边例子中我们用 focus_set() 获得焦点，当你你可以设置 Frame 的 takefocus 选项为 True，然后使用 Tab 将焦点转移上来。
+
+	# 捕获键盘事件
+	from tkinter import *
+	root = Tk()
+	def callback(event):		//event代表按下的按键
+	    print("敲击位置：", repr(event.char))
+	frame = Frame(root, width=200, height=200,takefocus=True)
+	frame.bind("<Key>", callback)
+	frame.focus_set()		//获取焦点
+	frame.pack()
+	mainloop()
+捕获鼠标在组件上的运动轨迹，这里需要关注的是 <Motion> 事件
+
+	from tkinter import *
+	root = Tk()	
+	def callback(event):
+	    print("当前位置：", event.x, event.y)	
+	frame = Frame(root, width=200, height=200)
+	frame.bind("<Motion>", callback)
+	frame.pack()	
+	mainloop()
+###6.1 事件序列
+Tkinter 使用一种称为事件序列的机制来允许用户定义事件，用户需使用 bind() 方法将具体的事件序列与自定义的方法相绑定。事件序列是以字符串的形式表示的，可以表示一个或多个相关联的事件（如果是多个事件，那么对应的方法只有在满足所有事件的前提下才会被调用）。事件序列使用以下语法描述
+
+	<modifier-type-detail>
+	事件序列是包含在尖括号（<...>）中
+	type 部分的内容是最重要的，它通常用于描述普通的事件类型，例如鼠标点击或键盘按键点击（详见下方）。
+	modifier 部分的内容是可选的，它通常用于描述组合键，例如 Ctrl + c，Shift + 鼠标左键点击（详见下方）。
+	detail 部分的内容是可选的，它通常用于描述具体的按键，例如 Button-1 表示鼠标左键。
+示例
+	事件序列	含义
+	<Button-1>	用户点击鼠标左键
+	<KeyPress-H>	用户点击 H 按键
+	<Control-Shift-KeyPress-H>	用户同时点击 Ctrl + Shift + H
+- type
+
+			type	含义
+		Activate	当组件的状态从“未激活”变为“激活”的时候触发该事件
+		Button	1. 当用户点击鼠标按键的时候触发该事件
+				2. detail 部分指定具体哪个按键：<Button-1>鼠标左键，<Button-2>鼠标中键，<Button-3>鼠标右键，<Button-4>滚轮上滚（Linux），<Button-5>滚轮下滚（Linux）
+		ButtonRelease	1. 当用户释放鼠标按键的时候触发该事
+						2. 在大多数情况下，比 Button 要更好用，因为如果当用户不小心按下鼠标，用户可以将鼠标移出组件再释放鼠标，从而避免不小心触发事件
+		Configure	当组件的尺寸发生改变的时候触发该事件
+		Deactivate	当组件的状态从“激活”变为“未激活”的时候触发该事件
+		Destroy	当组件被销毁的时候触发该事件
+		Enter	1. 当鼠标指针进入组件的时候触发该事件
+				2. 注意：不是指用户按下回车键
+		Expose	当窗口或组件的某部分不再被覆盖的时候触发该事件
+		FocusIn	1. 当组件获得焦点的时候触发该事件
+				2. 用户可以用 Tab 键将焦点转移到该组件上（需要该组件的 takefocus 选项为 True）
+				3. 你也可以调用 focus_set() 方法使该组件获得焦点（见上方例子）
+		FocusOut	当组件失去焦点的时候触发该事件
+		KeyPress	1. 当用户按下键盘按键的时候触发该事件
+					2. detail 可以指定具体的按键，例如 <KeyPress-H>表示当大写字母 H 被按下的时候触发该事件
+					3. KeyPress 可以简写为 Key
+		KeyRelease	当用户释放键盘按键的时候触发该事件
+		Leave	当鼠标指针离开组件的时候触发该事件
+		Map	1. 当组件被映射的时候触发该事件
+			2. 意思是在应用程序中显示该组件的时候，例如调用 grid() 方法
+		Motion	当鼠标在组件内移动的整个过程均触发该事件
+		MouseWheel	1. 当鼠标滚轮滚动的时候触发该事件
+					2. 目前该事件仅支持 Windows 和 Mac 系统，Linux 系统请参考 Button
+		Unmap	1. 当组件被取消映射的时候触发该事件
+				2. 意思是在应用程序中不再显示该组件的时候，例如调用 grid_remove() 方法
+		Visibility	当应用程序至少有一部分在屏幕中是可见的时候触发该事件
+- modifier
+
+		在事件序列中，modifier 部分的内容可以是以下这些：
+
+		modifier	含义
+		Alt	当按下 Alt 按键的时候
+		Any		1. 表示任何类型的按键被按下的时候
+				2. 例如 <Any-KeyPress> 表示当用户按下任何按键时触发事件
+		Control	当按下 Ctrl 按键的时候
+		Double	1. 当后续两个事件被连续触发的时候
+				2. 例如 <Double-Button-1> 表示当用户双击鼠标左键时触发事件
+		Lock	当打开大写字母锁定键（CapsLock）的时候
+		Shift	当按下 Shift 按键的时候
+		Triple	跟 Double 类似，当后续三个事件被连续触发的时候
+- Event 对象
+
+		当 Tkinter 去回调你定义的函数的时候，都会带着 Event 对象（作为参数）去调用，Event 对象以下这些属性你可以使用：
+
+			属性		含义
+		widget	产生该事件的组件
+		x, y	当前的鼠标位置坐标（相对于窗口左上角，像素为单位）
+		x_root, y_root	当前的鼠标位置坐标（相对于屏幕左上角，像素为单位）
+		char	按键对应的字符（键盘事件专属）
+		keysym	按键名，见下方 Key names（键盘事件专属）
+		keycode	按键码，见下方 Key names（键盘事件专属）
+		num	按钮数字（鼠标事件专属）
+		width, height	组件的新尺寸（Configure 事件专属）
+		type	该事件类型
+- Key names
+
+	当事件为 <Key>，<KeyPress>，<KeyRelease> 的时候，detail 可以通过设定具体的按键名（keysym）来筛选。例如 <Key-H> 表示按下键盘上的大写字母 H 时候触发事件，<Key-Tab> 表示按下键盘上的 Tab 按键的时候触发事件。
+
+	下表列举了键盘所有特殊按键的 keysym 和 keycode：
+	（下边按键码是对应美国标准 101 键盘的“Latin-1”字符集，键盘标准不同对应的按键码不同，但按键名是一样的）
+
+		按键名（keysym）	按键码（keycode）	代表的按键
+		Alt_L				64			左边的 Alt 按键
+		Alt_R				113			右边的 Alt 按键
+		BackSpace			22			Backspace（退格）按键
+		Cancel				110			break 按键
+		Caps_Lock			66			CapsLock（大写字母锁定）按键
+		Control_L			37			左边的 Ctrl 按键
+		Control_R			109			右边的 Ctrl 按键
+		Delete				107			Delete 按键
+		Down				104			↓ 按键
+		End					103			End 按键
+		Escape				9			Esc 按键
+		Execute				111			SysReq 按键
+		F1					67			F1 按键
+		F2					68			F2 按键
+		F3					69			F3 按键
+		F4					70			F4 按键
+		F5					71			F5 按键
+		F6					72			F6 按键
+		F7					73			F7 按键
+		F8					74			F8 按键
+		F9					75			F9 按键
+		F10					76			F10 按键
+		F11					77			F11 按键
+		F12					96			F12 按键
+		Home				97			Home 按键
+		Insert				106			Insert 按键
+		Left				100			← 按键
+		Linefeed			54			Linefeed（Ctrl + J）
+		KP_0				90			小键盘数字 0
+		KP_1				87			小键盘数字 1
+		KP_2				88			小键盘数字 2
+		KP_3				89			小键盘数字 3
+		KP_4				83			小键盘数字 4
+		KP_5				84			小键盘数字 5
+		KP_6				85			小键盘数字 6
+		KP_7				79			小键盘数字 7
+		KP_8				80			小键盘数字 8
+		KP_9				81			小键盘数字 9
+		KP_Add				86			小键盘的 + 按键
+		KP_Begin			84			小键盘的中间按键（5）
+		KP_Decimal			91			小键盘的点按键（.）
+		KP_Delete			91			小键盘的删除键
+		KP_Divide			112			小键盘的 / 按键
+		KP_Down				88			小键盘的 ↓ 按键
+		KP_End				87			小键盘的 End 按键
+		KP_Enter			108			小键盘的 Enter 按键
+		KP_Home				79			小键盘的 Home 按键
+		KP_Insert			90			小键盘的 Insert 按键
+		KP_Left				83			小键盘的 ← 按键
+		KP_Multiply			63			小键盘的 * 按键
+		KP_Next				89			小键盘的 PageDown 按键
+		KP_Prior			81			小键盘的 PageUp 按键
+		KP_Right			85			小键盘的 → 按键
+		KP_Subtract			82			小键盘的 - 按键
+		KP_Up				80			小键盘的 ↑ 按键
+		Next				105			PageDown 按键
+		Num_Lock			77			NumLock（数字锁定）按键
+		Pause				110			Pause（暂停）按键
+		Print				111			PrintScrn（打印屏幕）按键
+		Prior				99			PageUp 按键
+		Return				36			Enter（回车）按键
+		Right				102			→ 按键
+		Scroll_Lock			78			ScrollLock 按键
+		Shift_L				50			左边的 Shift 按键
+		Shift_R				62			右边的 Shift 按键
+		Tab					23			Tab（制表）按键
+		Up					98			↑ 按键
+
+##7.Message
+Message（消息）组件是 Label 组件的变体，用于显示多行文本消息。Message 组件能够自动换行，并调整文本的尺寸使其适应给定的尺寸。通常你可以使用 Label 来代替。如果你希望使用多种字体来显示文本，那么应该使用 Text 组件。
+
+	from tkinter import *
+	root = Tk()	
+	w1 = Message(root, text="这是一则消息", width=100)
+	w1.pack()	
+	w2 = Message(root, text="这是一则骇人听闻的长长长长长消息！", width=100)
+	w2.pack()
+	mainloop()
+参数
+
+	Message(master=None, **options) (class)
+	master -- 父组件
+	**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+
+	选项	含义
+	anchor	1. 控制文本消息的显示位置
+			2. N, NE, E, SE, S, SW, W, NW, 或 CENTER 来定位（EWSN 代表东西南北，上北下南左西右东）
+			3. 默认值是 CENTER
+	aspect	1. 设置高宽比，即宽度/高度的百分比的值
+			2. 默认值是 150（宽度比高度大 50%）
+			3. 注意：如果设置了 width 选项的值，该选项将被忽略
+	background	1. 设置背景颜色
+				2. 默认值由系统指定
+	bg	跟 background 一样
+	borderwidth	1. 指定边框宽度
+				2. 默认值由系统指定，通常是 1 或 2 像素
+	bd	跟 borderwidth 一样
+	cursor	1. 指定当鼠标在 Message 上飘过的时候的鼠标样式
+			2. 默认值由系统指定
+	font	1. 指定 Message 中文本的字体
+			2. 只能指定一种字体
+			3. 默认值由系统指定
+	foreground	1. 设置 Message 的文本的颜色
+				2. 默认值由系统指定
+	fg	跟 foreground 一样
+	highlightbackground	1. 指定当 Message 没有获得焦点的时候高亮边框的颜色
+						2. 默认值由系统指定，通常是标准背景颜色
+	highlightcolor	1. 指定当 Message 获得焦点的时候高亮边框的颜色
+					2. 默认值由系统指定
+	highlightthickness	1. 指定高亮边框的宽度
+						2. 默认值是 0（不带高亮边框）
+	justify	1. 定义如何对齐多行文本
+			2. 使用 LEFT，RIGHT 或 CENTER
+			3. 注意，文本的位置取决于 anchor 选项
+			4. 默认值是 CENTER
+	padx	1. 指定水平方向上的额外间距（内容和边框间）
+			2. 单位是像素
+	pady	1. 指定垂直方向上的额外间距（内容和边框间）
+			2. 单位是像素
+	relief	1. 指定边框样式
+			2. 默认值是 FLAT
+			3. 另外你还可以设置 SUNKEN，RAISED，GROOVE 或 RIDGE
+	takefocus	1. 如果是 True，该组件接受输入焦点
+				2. 默认值是 False
+	text	1. 指定 Label 显示的文本
+			2. 为了达到指定的高宽比（aspect 选项指定），文本内容将自动进行换行
+	textvariable	1. Message 显示 Tkinter 变量（通常是一个 StringVar 变量）的内容
+					2. 如果变量被修改，Message 的文本会自动更新
+	width	1. 设置 Message 的宽度
+			2. 单位是文本单元
+			3. 如果忽略该选项，将根据 aspect 选项设置的高宽比来设置合适的宽度
+##7.Spinbox
+Spinbox 组件（Tk8.4 新增）是 Entry 组件的变体，用于从一些固定的值中选取一个。通常用于在限定数字中选取的情况下代替普通的 Entry 组件。
+
+	from tkinter import *
+	root = Tk()	
+	w = Spinbox(root, from_=0, to=10)
+	w.pack()	
+	mainloop()
+还可以通过元组指定允许输入的值：
+
+	from tkinter import *
+	root = Tk()	
+	w = Spinbox(root, values= ("小甲鱼", "~风介~", "wei_Y", "戴宇轩"))
+	w.pack()	
+	mainloop()
+- 参数
+
+	Spinbox(master=None, **options) (class)	
+	master -- 父组件
+	**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+
+		选项	含义
+		activebackground	设置当 Spinbox 处于 ACTIVE 状态下的背景颜色
+		background	1. 设置背景颜色
+					2. 默认值由系统指定
+		bg	跟 background 一样
+		borderwidth	1. 设置边框宽度
+					2. 默认值是 1 或 2 像素
+		buttonbackground	设置调节箭头的背景颜色
+		buttoncursor	指定当鼠标在调节箭头上方的鼠标样式
+		buttondownrelief	1. 指定向下调节箭头的样式
+							2. 默认值是 RAISED
+							3. 还可以设置为 FLAT，SUNKEN，GROOVE 和 RIDGE
+		buttonup	1. 指定向上调节箭头的样式 
+					2. 默认值是 RAISED
+					3. 还可以设置为 FLAT，SUNKEN，GROOVE 和 RIDGE
+		command	1. 指定一个函数，当用户点击调节箭头的时候将自动调用该函数
+				2. 注意：当用户直接在输入框中输入数据时并不会触发该函数
+		cursor	1. 指定当鼠标在 Spinbox 上飘过的时候的鼠标样式
+				2. 默认值由系统指定
+		disabledbackground	设置当 Spinbox 处于 DISABLED 状态下的背景颜色
+		disabledforeground	设置当 Spinbox 处于 DISABLED 状态下的前景颜色
+		exportselection	1. 指定选中的文本是否可以被复制到剪贴板
+						2. 默认值是 True
+						3. 可以修改为 False 表示不允许复制文本
+		font	1. 指定 Spinbox 中文本的字体
+				2. 默认值由系统指定
+		foreground	1. 设置前景（文本）颜色
+					2. 默认值由系统指定
+		fg	跟 foreground 一样
+		format	1. 使用该选项设置选择数值的样式（from_ 和 to 指定范围，用户自行输入的不算）
+				2. 例如 format='%10.4f' 表示显示的数值占 10 位，小数点后保留 4 位
+		from_	1. 该选项和 to 选项共同指定一个范围的数值
+				2. increment 选项设置每次点击调节箭头递增（递减）的精度
+		highlightbackground	1. 指定当 Spinbox 没有获得焦点的时候高亮边框的颜色
+							2. 默认值由系统指定
+		highlightcolor	1. 指定当 Spinbox 获得焦点的时候高亮边框的颜色
+						2. 默认值由系统指定
+		highlightthickness	指定高亮边框的宽度
+		increment	1. 该选项指定当用户每次点击调节箭头的时候递增（递减）的精度
+					2. 例如 from_=1, to=10, increment=0.5，那么每次用户点击调节箭头的时候，输入框中的数字递增（递减）0.5
+		insertbackground	指定输入光标的颜色
+		insertborderwidth	1. 指定输入光标的边框宽度
+							2. 如果被设置为非 0 值，光标样式会被设置为 RAISED
+							3. 小甲鱼温馨提示：将 insertwidth 设置大一点才能看到效果哦
+		insertofftime	1. 该选项控制光标的闪烁频率（灭）
+						2. 单位是毫秒
+		insertontime	1. 该选项控制光标的闪烁频率（亮）
+						2. 单位是毫秒
+		insertwidth	1. 指定光标的宽度
+					2. 默认值是 1 或 2 像素
+		invalidcommand	1. 指定当输入框输入的内容“非法”时调用的函数
+						2. 也就是指定当 validateCommand 选项指定的函数返回 False 时的函数
+						3. 详见 Entry 组件最下方小甲鱼关于验证详解
+		invcmd	跟 invalidcommand 一样
+		justify	1. 定义如何对齐输入框中的文本
+				2. 使用 LEFT，RIGHT 或 CENTER
+				3. 默认值是 LEFT
+		readonlybackground	设置当 Spinbox 处于 "readonly" 状态下的背景颜色
+		relief	1. 指定边框样式
+				2. 默认值是 SUNKEN
+				3. 其他可以选择的值是 FLAT，RAISED，GROOVE 和 RIDGE
+		repeatdelay	1. 该选项指定鼠标左键点击滚动条凹槽的响应时间
+					2. 默认值是 400（毫秒）
+		repeatinterval	1. 该选项指定鼠标左键紧按滚动条凹槽时的响应间隔
+						2. 默认值是 100（毫秒）
+		selectbackground	1. 指定输入框的文本被选中时的背景颜色
+							2. 默认值由系统指定
+		selectborderwidth	1. 指定输入框的文本被选中时的边框宽度（选中边框）
+							2. 默认值由系统指定
+		selectforeground	1. 指定输入框的文本被选中时的字体颜色
+							2. 默认值由系统指定
+		state	1. Spinbox 组件可以设置的状态：NORMAL，DISABLED 或 "readonly"（注意，这个是字符串。它跟 DISABLED 相似，但它		支持选中和拷贝，只是不能修改，而 DISABLED 是完全禁止）
+				2. 默认值是 NORMAL
+				3. 注意，如果此选项设置为 DISABLED 或 "readonly"，那么调用 insert() 和 delete() 方法都会被忽略
+		takefocus	1. 指定使用 Tab 键可以将焦点移动到输入框中
+					2. 默认是开启的，可以将该选项设置为 False 避免焦点在此输入框中
+		textvariable	1. 指定一个与输入框的内容相关联的 Tkinter 变量（通常是 StringVar）
+						2. 当输入框的内容发生改变时，该变量的值也会相应发生改变
+		to	1. 该选项和 from_ 选项共同指定一个范围的数值
+			2. increment 选项设置每次点击调节箭头递增（递减）的精度
+		validate	1. 该选项设置是否启用内容验证 
+					2. 详见 Entry 组件最下方小甲鱼关于验证详解
+		validatecommand	1. 该选项指定一个验证函数，用于验证输入框内容是否合法
+						2. 验证函数需要返回 True 或 False 表示验证结果
+						3. 注意，该选项只有当 validate 的值非 "none" 时才有效
+						3. 详见本内容最下方小甲鱼关于验证详解
+		vcmd	跟 validatecommand 一样
+		values	1. 提供两个方法限定用户输入的内容，一种是通过 from_ 和 to 选项设置范围，另一种则是将可选值以元组的形式赋值给 values 选项
+				2. 例如 values= ("小甲鱼", "~风介~", "wei_Y", "戴宇轩") 则允许用户在这 4 个字符串中选择
+		width	1. 设置输入框的宽度，以字符为单位
+				2. 默认值是 20
+				3. 对于变宽字体来说，组件的实际宽度等于字体的平均宽度乘以 width 选项的值
+		wrap	1. 默认情况下（Flase），当输入框中的值是第一个（最后一个）的时候，再点击向上（向下）调节箭头，内容不会改变
+				2. 当该选项的值设置为 True，则当达到第一个（最后一个）值的时候，再点击向上（向下）调节箭头，内容将回到最后一个（第一个）
+				3. 小甲鱼注：其实就是开启循环的意^_^
+		xscrollcommand	1. 与 scrollbar（滚动条）组件相关联
+						2. 如果你觉得用户输入的内容会超过该组件的输入框宽度，那么可以考虑设置该选项
+						3. 使用方法可以参考：Scrollbar 组件
+##8.PanedWindow
+PanedWindow 组件（Tk8.4 新增）是一个空间管理组件。跟 Frame 组件类似，都是为组件提供一个框架，不过 PanedWindow 允许让用户调整应用程序的空间划分。PanedWindow 组件会为每一个子组件生成一个独立地窗格，用户可以自由调整窗格的大小。
+
+	from tkinter import *
+	m = PanedWindow(orient=VERTICAL)		//orient指定窗格的分布方式
+	m.pack(fill=BOTH, expand=1)	
+	top = Label(m, text="top pane")
+	m.add(top)
+	bottom = Label(m, text="bottom pane")
+	m.add(bottom)
+	mainloop()
+创建一个 3 窗格的 PanedWindow 组件则需要一点小技巧：
+
+	from tkinter import *
+	m1 = PanedWindow()
+	m1.pack(fill=BOTH, expand=1)
+	left = Label(m1, text="left pane")
+	m1.add(left)
+	m2 = PanedWindow(orient=VERTICAL)
+	m1.add(m2)
+	top = Label(m2, text="top pane")
+	m2.add(top)
+	bottom = Label(m2, text="bottom pane")
+	m2.add(bottom)
+	mainloop()
+这里不同窗格事实上是有一条“分割线”（sash）隔开，虽然你看不到，但你却可以感受到它的存在。不信？不妨把鼠标缓慢移动到大概的位置，当鼠标指针改变的时候后拖拽鼠标.....但我们也可以把“分割线”给显式地显示出来，并且可以为它附上一个“手柄”（handle）：
+
+	from tkinter import *
+	m1 = PanedWindow(showhandle=True, sashrelief=SUNKEN)
+	m1.pack(fill=BOTH, expand=1)
+	left = Label(m1, text="left pane")
+	m1.add(left)
+	m2 = PanedWindow(orient=VERTICAL, showhandle=True, sashrelief=SUNKEN)
+	m1.add(m2)
+	top = Label(m2, text="top pane")
+	m2.add(top)
+	bottom = Label(m2, text="bottom pane")
+	m2.add(bottom)
+	mainloop()
+参数
+
+	PanedWindow(master=None, **options) (class)
+	master -- 父组件
+	**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+	
+	选项	含义
+	background	设置背景颜色
+	bg	跟 background 一样
+	borderwidth	设置边框宽度
+	bd	跟 borderwidth 一样
+	cursor	1. 指定当鼠标在 PanedWindow 上飘过的时候的鼠标样式
+	2. 默认值由系统指定
+	handlepad	1. 调节“手柄”的位置
+	2. 例如 orient=VERTICAL，则 handlepad 选项表示“分割线”上的手柄与左端的距离
+	3. 默认值是 8 像素
+	handlesize	1. 设置“手柄”的尺寸（由于“手柄”必须是一个正方形，所以是设置正方形的边长）
+	2. 默认值是 8 像素
+	height	1. 设置 PanedWindow 的高度
+	2. 如果忽略该选项，则高度由子组件的尺寸决定
+	opaqueresize	1. 该选项定义了用户调整窗格尺寸的操作
+	2. 如果该选项的值为 True（默认），窗格的尺寸随用户鼠标的拖拽而改变
+	3. 如果该选项的值为 False，窗格的尺寸在用户释放鼠标的时候才更新到新的位置
+	orient	1. 指定窗格的分布方式
+	2. 可以是 HORIZONTAL（横向分布）和 VERTICAL（纵向分布）
+	relief	1. 指定边框样式
+	2. 默认值是 FLAT
+	3. 另外你还可以设置 SUNKEN，RAISED，GROOVE 或 RIDGE
+	sashpad	设置每一条分割线到窗格间的间距
+	sashrelief	1. 设置分割线的样式
+	2. 默认值是：FLAT
+	3. 另外你还可以设置 SUNKEN，RAISED，GROOVE 或 RIDGE
+	sashwidth	设置分割线的宽度
+	showhandle	1. 设置是否显示调节窗格的手柄
+	2. 默认值为 False
+	width	1. 设置 PanedWindow 的宽度
+	2. 如果忽略该选项，则高度由子组件的尺寸决定
+
+
+方法
+
+	add(child, **options)
+	-- 添加一个新的子组件到窗格中
+	-- 下方表格列举了各个 options 选项具体含义：
+	
+	选项	含义
+	after	添加新的子组件到指定子组件后边
+	before	添加新的子组件到指定子组件前边
+	height	指定子组件的高度
+	minsize	1. 该选项控制窗格不得低于的值
+	2. 如果 orient=HORIZONTAL，表示窗格的宽度不得低于该选项的值
+	3. 如果 orient=VERTICAL，表示窗格的高度不得低于该选项的值
+	padx	指定子组件的水平间距
+	pady	指定子组件的垂直间距
+	sticky	1. 当窗格的尺寸大于子组件时，该选项指定子组件位于窗格的位置
+	2. 可选的值有：E、S、W、N（分别代表东南西北四个方位）以及它们的组合值
+	3. 例如 NE 表示子组件显示在右上角的位置
+	width	指定子组件的宽度
+	
+	
+	forget(child)
+	-- 删除一个子组件
+	
+	identify(x, y)
+	-- 给定一个坐标（x, y），返回该坐标所在的元素名称
+	-- 如果该坐标位于子组件上，返回空字符串
+	-- 如果该坐标位于分割线上，返回一个二元组（n, 'sash'），n 为 0 表示第一个分割线
+	-- 如果该坐标位于手柄上，返回一个二元组（n, 'handle'），n 为 0 表示第一个手柄
+	
+	panecget(child, option)
+	-- 获得子组件指定选项的值
+	
+	paneconfig(child, **options)
+	-- 设置子组件的各种选项
+	-- 下方表格列举了各个 options 选项具体含义：
+	
+	选项	含义
+	after	添加新的子组件到指定子组件后边
+	before	添加新的子组件到指定子组件前边
+	height	指定子组件的高度
+	minsize	1. 该选项控制窗格不得低于的值
+	2. 如果 orient=HORIZONTAL，表示窗格的宽度不得低于该选项的值
+	3. 如果 orient=VERTICAL，表示窗格的高度不得低于该选项的值
+	padx	指定子组件的水平间距
+	pady	指定子组件的垂直间距
+	sticky	1. 当窗格的尺寸大于子组件时，该选项指定子组件位于窗格的位置
+	2. 可选的值有：E、S、W、N（分别代表东南西北四个方位）以及它们的组合值
+	3. 例如 NE 表示子组件显示在右上角的位置
+	width	指定子组件的宽度
+	
+	
+	paneconfigure(child, **options)
+	-- 跟 paneconfig() 一样
+	
+	panes()
+	-- 将子组件以列表的形式返回
+	
+	remove(child)
+	-- 跟 forget() 一样
+	
+	sash_coord(index)
+	-- 返回一个二元组表示指定分割线的起点坐标
+	
+	sash_dragto(index, x, y)
+	-- 实现将指定的分割线拖拽到一个新的位置
+	-- 与 sash_mark() 一起实现
+	
+	sash_mark(index, x, y)
+	-- 注册当前的鼠标位置
+	
+	sash_place(index, x, y)
+	-- 将指定分割线移动到一个新的位置
+##9Toplevel
+Toplevel（顶级窗口）组件类似于 Frame 组件，但 Toplevel 组件是一个独立的顶级窗口，这种窗口通常拥有标题栏、边框等部件。通常用在显示额外的窗口、对话框和其他弹出窗口上。下边例子中，我们在 root 窗口添加一个按钮用于创建一个顶级窗口，点一下来一个：
+
+	from tkinter import *
+	root = Tk()
+	def create():
+	    top = Toplevel()
+	    top.title("FishC Demo")
+	    msg = Message(top, text="I love FishC.com!")
+	    msg.pack()
+	Button(root, text="创建顶级窗口", command=create).pack()
+	mainloop()
+参数
+
+	Toplevel(master=None, **options) (class)
+	master -- 父组件
+	**options -- 组件选项，下方表格详细列举了各个选项的具体含义和用法：
+	
+	选项	含义
+	background	1. 设置背景颜色
+	2. 默认值由系统指定
+	3. 为了防止更新，可以将颜色值设置为空字符串
+	bg	跟 background 一样
+	borderwidth	设置边框宽度
+	bd	跟 borderwidth 一样
+	class_	默认值是 Toplevel
+	colormap	1. 有些显示器只支持 256 色（有些可能更少），这种显示器通常提供一个颜色映射来指定要使用要使用的 256 种颜色
+				2. 该选项允许你指定用于该组件以及其子组件的颜色映射
+				3. 默认情况下，Toplevel 使用与其父组件相同的颜色映射
+				4. 使用此选项，你可以使用其他窗口的颜色映射代替（两窗口必须位于同个屏幕并且具有相同的视觉特性）
+				5. 你也可以直接使用 "new" 为 Toplevel 组件分配一个新的颜色映射
+				6. 一旦创建 Toplevel 组件实例，你就无法修改这个选项的值
+	container	1. 该选项如果为 True，意味着该窗口将被用作容器，一些其它应用程序将被嵌入 
+				2. 默认值是 False
+	cursor	1. 指定当鼠标在 Toplevel 上飘过的时候的鼠标样式
+			2. 默认值由系统指定
+	height	设置高度
+	highlightbackground	指定当 Toplevel 没有获得焦点的时候高亮边框的颜色
+	highlightcolor	指定当 Toplevel 获得焦点的时候高亮边框的颜色
+	highlightthickness	指定高亮边框的宽度
+	menu	设置该选项为 Toplevel 窗口提供菜单栏
+	padx	水平方向上的边距
+	pady	垂直方向上的边距
+	relief	1. 指定边框样式
+			2. 默认值是 FLAT
+			3. 另外你还可以设置 SUNKEN，RAISED，GROOVE 或 RIDGE
+			4. 注意，如果你要设置边框样式，记得设置 borderwidth 或 bd 选项不为 0，才能看到边框
+	takefocus	1. 指定该组件是否接受输入焦点（用户可以通过 tab 键将焦点转移上来）
+				2. 默认值是 False
+	width	设置宽度
+##10Tk && Toplevel
+下边这一系列方法用于与窗口管理器进行交互。他们可以被 Tk（根窗口）进行调用，同样也适用于 Toplevel（顶级窗口）。注：并非所有操作系统均完全支持下方所有方法的实现。
+	aspect(minNumer=None, minDenom=None, maxNumer=None, maxDenom=None)
+	-- 控制该窗口的宽高比（width:height）
+	-- 宽高比限制在：minNumer / minDenom ~ maxNumer / maxDenom
+	-- 如果忽略参数，则返回一个 4 元组表示当前的限制（如果有的话）
+	
+	attributes(*args)
+	-- 设置和获取窗口属性
+	-- 如果你只给出选项名，将返回当前窗口该选项的值
+	-- 注意：以下选项不支持关键字参数，你需要在选项前添加横杠（-）并用字符串的方式表示，用逗号（,）隔开选项和值。
+	-- 例如你希望设置窗口的透明度为 50%，你应该使用 attribute("-alpha", 0.5) 代替 attribute(alpha=0.5)
+	-- 下方表格列举了 args 可以使用各个选项的具体含义及用法：
+	
+		选项	含义
+		alpha	1.（Windows，Mac）控制窗口的透明度
+				2. 1.0 表示不透明，0.0 表示完全透明
+				3. 该选项并不支持所有的系统，对于不支持的系统，Tkinter 绘制一个不透明（1.0）的窗口
+		disabled	（Windows）禁用整个窗口（这时候你只能从任务管理器中关闭它）
+		fullscreen	（Windows，Mac）如果设置为 True，则全屏显示窗口
+		modified	（Mac）如果设置为 True，该窗口被标记为改动过
+		titlepath	（Mac）设置窗口代理图标的路径
+		toolwindow	（Windows）如果设置为 True，该窗口采用工具窗口的样式
+		topmost	（Windows，Mac）如果设置为 True，该窗口将永远置于顶层	
+		示例
+			from tkinter import *
+			root = Tk()
+			def create():
+			    top = Toplevel()
+			    top.attributes("-alpha",0.5)
+			    top.title("FishC Demo")		
+			    msg = Message(top, text="I love FishC.com!")
+			    msg.pack()	
+			Button(root, text="创建顶级窗口", command=create).pack()	
+			mainloop()
+	client(name=None)
+	-- 设置和获取 WM_CLIENT_MACHINE 属性
+	-- 如果要删除 WM_CLIENT_MACHINE 属性，赋值为空字符串即可
+	-- 该属性仅支持 X 窗口系统的窗口管理器，其他系统均忽略
+	colormapwindows(*wlist)
+	-- 设置和获取 WM_COLORMAP_WINDOWS 属性
+	-- 该属性仅支持 X 窗口系统的窗口管理器，其他系统均忽略
+	command(value=None)
+	-- 设置和获取 WM_COMMAND 属性
+	-- 该属性仅支持 X 窗口系统的窗口管理器，其他系统均忽略
+	deiconify()
+	-- 显示窗口
+	-- 默认情况下新创建的窗口都会显示在屏幕上，但使用 iconify() 或 withdraw() 方法可以在屏幕上移除窗口
+	focusmodel(model=None)
+	-- 设置和获取焦点模式
+	frame()
+	-- 返回一个字符串表示当前系统特征
+	-- 对于类 Unix 系统，返回值是 X 窗口标识符
+	-- 对于 Windows 系统，返回值是 HWND 强制转换为长整形的结果
+	geometry(geometry=None)
+	-- 设置和获取窗口的尺寸
+	-- geometry 参数的格式为："%dx%d%+d%+d" % (width, height, xoffset, yoffset)
+	grid(baseWidth=None, baseHeight=None, widthInc=None, heightInc=None)
+	-- 通知窗口管理器该窗口将以网格的形式重新调整尺寸
+	-- baseWidth 和 baseHeight 指定 Tk_GeometryRequest 要求的网格单元数
+	-- widthInc 和 heightInc 指定网格单元的宽度和高度（像素）
+	group(window=None)
+	-- 将窗口添加到窗口群中
+	-- window 参数指定控制窗口群的主窗口
+	-- 如果忽略该参数，将返回当前窗口群的主窗口
+	iconbitmap(bitmap=None, default=None)
+	-- 设置和获取窗口的图标
+	-- 例如 root.iconbitmap(bitmap="FishC.ico")
+	-- default 参数可以用于指定由该窗口创建的子窗口的默认图标
+	iconify()
+	-- 将窗口图标化（最小化）
+	-- 需要重新显示窗口，使用 deiconify() 方法
+	-- 该方法会使得 state() 返回 "iconic"
+	iconmask(bitmap=None)
+	-- 设置和获取位图掩码
+	iconname(newName=None)
+	-- 设置和获取当窗口图标化（最小化）时的图标名字
+	iconposition(x=None, y=None)
+	-- 设置和获取当窗口图标化（最小化）时的图标位置
+	iconwindow(pathName=None)
+	-- 设置和获取当窗口图标化（最小化）时的组件窗口
+	-- 该方法会使得 state() 返回 "icon"
+	maxsize(width=None, height=None)
+	-- 设置和获取该窗口的最大尺寸
+	minsize(width=None, height=None)
+	-- 设置和获取该窗口的最小尺寸
+	overrideredirect(boolean=None)
+	-- 如果参数为 True，该窗口忽略所有的小部件（也就是说该窗口将没有传统的标题栏、边框等部件）
+	positionfrom(who=None)
+	-- 指定窗口位置由“谁”决定
+	-- 如果 who 参数是 "user"，窗口位置由用户决定
+	-- 如果 who 参数是 "program"，窗口位置由系统决定
+	protocol(name=None, func=None)
+	-- 将回调函数 func 与相应的规则 name 绑定
+	-- name 参数可以是 "WM_DELETE_WINDOW"：窗口被关闭的时候
+	-- name 参数可以是 "WM_SAVE_YOURSELF"：窗口被保存的时候
+	- name 参数可以是 "WM_TAKE_FOCUS"：窗口获得焦点的时候
+	resizable(width=None, height=None)
+	-- 指定是否可以改变该窗口的尺寸
+	-- width 为 True 说明允许调整窗口的水平尺寸
+	-- height 为 True 说明允许调整窗口的垂直尺寸
+	sizefrom(who=None)
+	-- 指定窗口尺寸由“谁”决定
+	-- 如果 who 参数是 "user"，窗口位置由用户决定
+	-- 如果 who 参数是 "program"，窗口位置由系统决定
+	state(newstate=None)
+	-- 设置和获得当前窗口的状态
+	-- newstate 的值可以是 "normal"，"iconic"（见 iconify），"withdrawn"（见 withdraw），"icon"（见 iconwindow）和 "zoomed"（放大，Windows 特有）
+	title(string=None)
+	-- 设置窗口的标题
+	transient(master=None)
+	-- 指定为 master 的临时窗口
+	withdraw()
+	-- 将窗口从屏幕上移除（并没有销毁）
+	-- 需要重新显示窗口，使用 deiconify() 方法
+	-- 该方法会使得 state() 返回 "withdrawn"
+	wm_aspect(minNumer=None, minDenom=None, maxNumer=None, maxDenom=None)
+	-- 见上方 aspect()
+	wm_attributes(*args)
+	-- 见上方 attributes()
+	wm_client(name=None)
+	-- 见上方 client()
+	wm_colormapwindows(*wlist)
+	-- 见上方 colormapwindows()
+	wm_command(value=None)
+	-- 见上方 command()
+	wm_deiconify()
+	-- 见上方 deiconify()
+	wm_focusmodel(model=None)
+	-- 见上方 focusmodel()
+	wm_frame()
+	-- 见上方 frame()
+	wm_geometry(geometry=None)
+	-- 见上方 geometry()
+	wm_grid(baseWidth=None, baseHeight=None, widthInc=None, heightInc=None)
+	-- 见上方 grid()
+	wm_group(window=None)
+	-- 见上方 group()
+	wm_iconbitmap(bitmap=None, default=None)
+	-- 见上方 iconbitmap()
+	wm_iconify()
+	-- 见上方 iconify()
+	wm_iconmask(bitmap=None)
+	-- 见上方 iconmask()
+	wm_iconname(newName=None)
+	-- 见上方 iconname()
+	wm_iconposition(x=None, y=None)
+	-- 见上方 iconposition()
+	wm_iconwindow(pathName=None)
+	-- 见上方 iconwindow()
+	wm_maxsize(width=None, height=None)
+	-- 见上方 maxsize()
+	wm_minsize(width=None, height=None)
+	-- 见上方 minsize()
+	wm_overrideredirect(boolean=None)
+	-- 见上方 overrideredirect()
+	wm_positionfrom(who=None)
+	-- 见上方 positionfrom()
+	wm_protocol(name=None, func=None)
+	-- 见上方 protocol()
+	wm_resizable(width=None, height=None)
+	-- 见上方 resizable()
+	wm_sizefrom(who=None)
+	-- 见上方 sizefrom()
+	wm_state(newstate=None)
+	-- 见上方 state()
+	wm_title(string=None)
+	-- 见上方 title()
+	wm_transient(master=None)
+	-- 见上方 transient()
+	wm_withdraw()
+	-- 见上方 withdraw()
+
+
+
+
+
+

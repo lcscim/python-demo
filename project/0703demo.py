@@ -1,24 +1,15 @@
 from tkinter import *
 
-OPTIONS = [
-    "California",
-    "458",
-    "FF",
-    "ENZO",
-    "LaFerrari"
-    ]
-
 root = Tk()
 
-variable = StringVar()
-variable.set(OPTIONS[0])
+def create():
+    top = Toplevel()
+    top.attributes("-alpha",0.5)
+    top.title("FishC Demo")
 
-w = OptionMenu(root, variable, *OPTIONS)
-w.pack()
+    msg = Message(top, text="I love FishC.com!")
+    msg.pack()
 
-def callback():
-    print(variable.get())
-
-Button(root, text="点我", command=callback).pack()
+Button(root, text="创建顶级窗口", command=create).pack()
 
 mainloop()
