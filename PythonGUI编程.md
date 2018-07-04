@@ -3322,8 +3322,352 @@ Toplevel（顶级窗口）组件类似于 Frame 组件，但 Toplevel 组件是�
 	wm_withdraw()
 	-- 见上方 withdraw()
 
+#7.4
+tips:
 
 
+##1. Pack布局管理器
+pack、grid 和 place 均用于管理同在一个父组件下的所有组件的布局，其中：
 
+	pack 是按添加顺序排列组件
+	grid 是按行/列形式排列组件
+	place 则允许程序员指定组件的大小和位置
+对比 grid 管理器，pack 更适用于少量组件的排列，但它在使用上更加简单（就像我们前边所有的例子中，展示一个组件我们一般都直接使用 .pack()，多简单~）。如果你需要创建相对复杂的布局结构，那么建议是使用多个框架（Frame）结构构成，或者使用 grid 管理器实现。
 
+	注意：不要在同一个父组件中混合使用 pack 和 grid，因为 Tkinter 会很认真地在那儿计算到底先使用那个布局管理器......以至于你等了半个小时，Tkinter 还在那儿纠结不出结果！
+我们常常会遇到的一个情况是将一个组件放到一个容器组件中，并填充整个父组件。这儿给大家举个例子，我们生成一个 Listbox 组件并将它填充到 root 窗口中：
 
+	from tkinter import *
+	root = Tk()
+	listbox = Listbox(root)
+	listbox.pack(fill=BOTH, expand=True)		//将listbox水平垂直填充，并填充父控件的额外空间
+	for i in range(10):
+	    listbox.insert(END, str(i))	
+	mainloop()
+其中，fill 选项是告诉窗口管理器该组件将填充整个分配给它的空间，BOTH 表示同时横向和纵向扩展，X 表示横向，Y 表示纵向；expand 选项是告诉窗口管理器将父组件的额外空间也填满。默认下，pack 是将添加的组件依次纵向排列
+
+	from tkinter import *
+	root = Tk()	
+	Label(root, text="Red", bg="red", fg="white").pack(fill=X)
+	Label(root, text="Green", bg="green", fg="black").pack(fill=X)
+	Label(root, text="Blue", bg="blue", fg="white").pack(fill=X)	
+	mainloop()
+如果想要组件横向挨个儿排放，你可以使用 side 选项：
+
+	from tkinter import *
+	root = Tk()	
+	Label(root, text="Red", bg="red", fg="white").pack(side=LEFT)
+	Label(root, text="Green", bg="green", fg="black").pack(side=LEFT)
+	Label(root, text="Blue", bg="blue", fg="white").pack(side=LEFT)
+	mainloop()
+方法，注：下边所有方法适用于所有组件
+
+	pack(**options)
+	-- 下方表格详细列举了各个选项的具体含义和用法：
+
+	选项	含义
+	anchor	1. 控制组件在 pack 分配的空间中的位置
+			2. N, NE, E, SE, S, SW, W, NW, 或 CENTER 来定位（EWSN代表东西南北，上北下南左西右东）
+			3. 默认值是 CENTER
+	expand	1. 指定是否填充父组件的额外空间
+			2. 默认值是 False
+	fill	1. 指定填充 pack 分配的空间
+			2. 默认值是 NONE，表示保持子组件的原始尺寸
+			3. 还可以使用的值有：X（水平填充），Y（垂直填充）和 BOTH（水平和垂直填充）
+	in_		1. 将该组件放到该选项指定的组件中
+			2. 指定的组件必须是该组件的父组件
+	ipadx	指定水平方向上的内边距
+	ipady	指定垂直方向上的内边距
+	padx	指定水平方向上的外边距
+	pady	指定垂直方向上的外边距
+	side	1. 指定组件的放置位置
+			2. 默认值是 TOP
+			3. 还可以设置的值有：LEFT，BOTTOM，RIGHT
+		
+	pack_configure(**options)
+	-- 跟 pack() 一样	
+	pack_forget()
+	-- 将组件从屏幕中“删除”
+	-- 并没有销毁该组件，只是看不到了
+	-- 可以通过 pack 或其他布局管理器显示已“删除”的组件
+	pack_info()
+	-- 以字典的形式返回当前 pack 的选项
+	pack_propagate(flag)
+	-- 如果开启，父组件会自动调节尺寸以容纳所有子组件
+	-- 默认值是开启（flag = True）
+	-- 该方法仅适用于父组件
+	pack_slaves()
+	-- 以列表的形式返回该组件的所有子组件
+	-- 该方法仅适用于父组件
+##2.Grid布局管理器
+grid 管理器可以说是 Tkinter 这三个布局管理器中最灵活多变的。如果你只希望学习使用一个布局管理器，那么 grid 绝对是首选。当你在设计对话框的时候，使用 gird 尤其便捷。如果你此前一直在用 pack 构造窗口布局，那么学习完 grid 你会悔恨当初为啥不早学它。使用一个 grid 就可以简单的实现你用很多个框架和 pack 搭建起来的效果。注意：不要在同一个父组件中混合使用 pack 和 grid，因为 Tkinter 会很认真地在那儿计算到底先使用那个布局管理器......以至于你等了半个小时，Tkinter 还在那儿纠结不出结果！<br/>
+
+使用 grid 排列组件，只需告诉它你想要将组件放置的位置（行/列，row 选项指定行，cloumn 选项指定列）。此外，你并不用提前指出网格（grid 分布给组件的位置称为网格）的尺寸，因为管理器会自动计算。
+
+	from tkinter import *	
+	root = Tk()	
+	# column 默认值是 0
+	Label(root, text="用户名").grid(row=0)
+	Label(root, text="密码").grid(row=1)	
+	Entry(root).grid(row=0, column=1)
+	Entry(root, show="*").grid(row=1, column=1)	
+	mainloop()
+默认情况下组件会居中显示在对应的网格里，你可以使用 sticky 选项来修改这一特性。该选项可以使用的值有 E，W，S，N（EWSN分别表示东西南北，即上北下南左西右东）以及它们的组合。因此，我们可以通过 sticky = W 使得 Label 左对齐：
+
+	Label(root, text="用户名").grid(row=0, sticky=W)
+	Label(root, text="密码").grid(row=1, sticky=W)
+只需要指定 rowspan 和 columnspan 就可以实现跨行和跨列的功能：
+
+	from tkinter import *
+	root = Tk()
+	Label(root, text="用户名").grid(row=0, sticky=W)		//第一行第一列左对齐
+	Label(root, text="密码").grid(row=1, sticky=W)		//第二行第一例左对齐
+	Entry(root).grid(row=0, column=1)
+	Entry(root, show="*").grid(row=1, column=1)
+	photo = PhotoImage(file="logo.gif")
+	Label(root, image=photo).grid(row=0, column=2, rowspan=2, padx=5, pady=5)	//rowspan表示跨几列	
+	Button(text="提交", width=10).grid(row=2, columnspan=3, pady=5)
+	mainloop()
+方法
+
+	grid(**options)
+	-- 下方表格详细列举了各个选项的具体含义和用法：
+	
+			选项			含义
+		column		1. 指定组件插入的列（0 表示第 1 列）
+					2. 默认值是 0
+		columnspan	指定用多少列（跨列）显示该组件
+		in_			1. 将该组件放到该选项指定的组件中
+					2. 指定的组件必须是该组件的父组件
+		ipadx		指定水平方向上的内边距
+		ipady		指定垂直方向上的内边距
+		padx		指定水平方向上的外边距
+		pady		指定垂直方向上的外边距
+		row			指定组件插入的行（0 表示第 1 行）
+		rowspan		指定用多少行（跨行）显示该组件
+		sticky		1. 控制组件在 grid 分配的空间中的位置
+					2. 可以使用 N, E, S, W 以及它们的组合来定位（EWSN代表东西南北，上北下南左西右东）
+					3. 使用加号（+）表示拉长填充，例如 N + S 表示将组件垂直拉长填充网格，N + S + W + E 表示填充整个网格
+					4. 不指定该值则居中显示
+	
+	grid_bbox(column=None, row=None, col2=None, row2=None)
+	-- 返回一个 4 元组描述该组件所在的限定矩形-- 如果指定 column 和 cow 参数，则返回该位置（column, cow）的组件的限定矩形描述
+	-- 如果指定 4 个参数，则返回从（column, cow）到（col2, row2）所有组件的限定矩形描述
+	-- 例如 grid_bbox(0, 0, 1, 1) 返回的是 4 个组件所在的限定矩形	
+	grid_columnconfigure(index, **options)
+	-- 设置列的属性
+	-- 注意：设置的是该组件所拥有的 grid 的列
+	-- 可以设置的选项及含义如下：
+	
+		选项	含义
+		minsize	指定该列的最小宽度
+		pad	指定该列中最大网格的水平边距
+		weight	1. 指定列与列之间的相对距离
+				2. 默认值是 0
+				3. 这个你比较难理解，小甲鱼还是详细解说下：初创建窗口的时候，grid 会自动根据组件的尺寸分配窗口的尺寸，当你拉伸窗口的尺寸时就会有空白显示出来。这个选项正是指定列与列之间是否填充空白，默认是不填充的。另外，该选项的值是指定填充空白的倍数，例如 weight = 2 的列会比 weight = 1 的列填充多一倍的空白。所以需要平均填充的话，只需要所有的列都设置 weight = 1 即可。
+		
+	grid_configure(**options)
+	-- 跟 grid() 一样
+	grid_forget()
+	-- 将组件从屏幕中“删除”
+	-- 并没有销毁该组件，只是看不到了
+	-- 可以通过 grid 或其他布局管理器显示已“删除”的组件，但该组件所在网格的选项设置不会恢复	
+	grid_info()
+	-- 以字典的形式返回当前 grid 的选项	
+	grid_location(x, y)
+	-- 返回位于（或接近）给定坐标（x, y）的网格位置
+	-- 返回值是一个 2 元组表示网格对应的（列，行）
+	grid_propagate(flag)
+	-- 如果开启，父组件会自动调节尺寸以容纳所有子组件
+	-- 默认值是开启（flag = True）
+	-- 该方法仅适用于父组件	
+	grid_remove()
+	-- 跟 grid_forget() 一样，但恢复的时候会记住该组件所在网格的选项设置	
+	grid_rowconfigure(index, **options)
+	-- 设置行的属性
+	-- 注意：设置的是该组件所拥有的 grid 的行
+	-- 可以设置的选项及含义如下：
+	
+		选项	含义
+		minsize	指定该行的最小高度
+		pad	指定该列中最大网格的垂直边距
+		weight	1. 指定行与行之间的相对距离
+				2. 默认值是 0
+				3. 这个你比较难理解，不懂可以参考上边 grid_columnconfigure() 的详细解释
+		
+	grid_size()
+	-- 返回该组件所拥有的 grid 的尺寸
+	-- 返回值是一个 2 元组，表示（列, 行）分别的网格数
+	grid_slaves(row=None, column=None)
+	-- 以列表的形式返回该组件的所有子组件
+	-- 该方法仅适用于父组件
+##3.Place布局管理器
+通常情况下不建议使用 place 布局管理器，因为对比起 pack 和 grid，place 要做更多的工作。不过纯在即合理，place 在一些特殊的情况下可以发挥妙用。请看下边例子。
+- 将子组件显示在父组件的正中间：
+
+		from tkinter import *
+		root = Tk()		
+		def callback():
+		    print("正中靶心")		
+		Button(root, text="点我", command=callback).place(relx=0.5, rely=0.5, anchor=CENTER)		
+		mainloop()
+- 在某种情况下，或许你希望一个组件可以覆盖另一个组件，那么 place 又可以派上用场了。下边例子我们演示用 Button 覆盖 Label 组件：
+
+		photo = PhotoImage(file="logo_big.gif")
+		Label(root, image=photo).pack()
+		Button(root, text="点我", command=callback).place(relx=0.5, rely=0.5, anchor=CENTER)
+- relx 和 rely 选项指定的是相对于父组件的位置，范围是 00 ~ 1.0，因此 0.5 表示位于正中间。那么 relwidth 和 relheight 选项则是指定相对于父组件的尺寸：
+
+		Label(root, bg="red").place(relx=0.5, rely=0.5, relheight=0.75, relwidth=0.75, anchor=CENTER)
+		Label(root, bg="yellow").place(relx=0.5, rely=0.5, relheight=0.5, relwidth=0.5, anchor=CENTER)
+		Label(root, bg="green").place(relx=0.5, rely=0.5, relheight=0.25, relwidth=0.25, anchor=CENTER)
+x 和 y 选项用于设置偏移（像素），如果同时设置 relx（rely）和 x（y），那 place 将优先计算 relx 和 rely，然后再实现 x 和 y 指定的偏移值。
+
+- 方法
+
+		place(**options)
+		-- 下方表格详细列举了各个选项的具体含义和用法：
+
+			选项			含义
+		anchor	1. 控制组件在 place 分配的空间中的位置
+				2. N, NE, E, SE, S, SW, W, NW, 或 CENTER 来定位（EWSN代表东西南北，上北下南左西右东）
+				3. 默认值是 NW
+		bordermode	1. 指定边框模式（INSIDE 或 OUTSIDE）
+					2. 默认值是 INSIDE
+		height	指定该组件的高度（像素）
+		in_		1. 将该组件放到该选项指定的组件中
+				2. 指定的组件必须是该组件的父组件
+		relheight	1. 指定该组件相对于父组件的高度
+					2. 取值范围 0.0 ~ 1.0
+		relwidth	1. 指定该组件相对于父组件的宽度
+					2. 取值范围 0.0 ~ 1.0
+		relx	1. 指定该组件相对于父组件的水平位置
+				2. 取值范围 0.0 ~ 1.0
+		rely	1. 指定该组件相对于父组件的垂直位置
+				2. 取值范围 0.0 ~ 1.0
+		width	指定该组件的宽度（像素）
+		x		1. 指定该组件的水平偏移位置（像素）
+				2. 如同时指定了 relx 选项，优先实现 relx 选项
+		y		1. 指定该组件的垂直偏移位置（像素）
+				2. 如同时指定了 rely 选项，优先实现 rely 选项
+		
+		place_configure(**options)
+		-- 跟 place() 一样	
+		place_forget()
+		-- 将组件从屏幕中“删除”
+		-- 并没有销毁该组件，只是看不到了
+		-- 可以通过 place 或其他布局管理器显示已“删除”的组件	
+		place_info()
+		-- 以字典的形式返回当前 place 的选项	
+		place_slaves()
+		-- 以列表的形式返回该组件的所有子组件
+		-- 该方法仅适用于父组件	
+		slaves()
+		-- 跟 place_slaves() 一样
+##4.标准对话框
+Tkinter 为了提供了三种标准对话框模块，它们分别是：
+
+	messagebox
+	filedialog
+	colorchooser
+
+注：这三个模块原来是独立的，分别是 tkMessageBox、tkFileDialog 和 tkColorChooser，需要导入才能使用。在 Python3 之后，这些模块全部被收归到 tkinter 模块的麾下。下边的所有演示都是在 Python3 下实现，如果你用的是 Python2.x，请在文件头 import tkMessageBox，然后将 messagebox 替换为 tkMessageBox 即可。
+
+1. messagebox（消息对话框）
+
+	下表为你列出了使用 messagebox 可以创建的所有标准对话框样式：
+
+		askokcancel(title, message, options)	
+		askquestion(title, message, options)	
+		askretrycancel(title, message, options)			 
+		askyesno(title, message, options)			 
+		showerror(title, message, options)	
+		showinfo(title, message, options)			 
+		showwarning(title, message, options)	
+	- 所有的这些函数都有相同的参数：
+ 
+		title 参数毋庸置疑是设置标题栏的文本
+		message 参数是设置对话框的主要文本内容，你可以用 '\n' 来实现换行
+		options 参数可以设置的选项和含义如下表所示
+
+		选项	含义
+		default	1. 设置默认的按钮（也就是按下回车响应的那个按钮）
+				2. 默认是第一个按钮（像“确定”，“是”或“重试”）
+				3. 可以设置的值根据对话框函数的不同可以选择：CANCEL，IGNORE，OK，NO，RETRY 或 YES
+		icon	1. 指定对话框显示的图标
+				2. 可以指定的值有：ERROR，INFO，QUESTION 或 WARNING
+				3. 注意：不能指定自己的图标
+		parent	1. 如果不指定该选项，那么对话框默认显示在根窗口上
+				2. 如果想要将对话框显示在子窗口 w 上，那么可以设置 parent=w
+
+	- 返回值
+
+		askokcancel()，askretrycancel() 和 askyesno() 返回布尔类型的值：
+			返回 True 表示用户点击了“确定”或“是”按钮
+			返回 False 表示用户点击了“取消”或“否”按钮
+		askquestion() 返回“yes”或“no”字符串表示用户点击了“是”或“否”按钮	
+		showerror()，showinfo() 和 showwarning() 返回“ok”表示用户按下了“是”按钮
+
+	示例
+
+		from tkinter import *
+		from tkinter import messagebox		//估计是由于messagebox模块隐藏不会自动导入，需手动导入
+		print(messagebox.askokcancel("lcscim","大家好我是老长"))
+		mainloop()
+- filedialog（文件对话框）
+
+	当你的应用程序需要使用打开文件或保存文件的功能时，文件对话框显得尤为重要。
+
+		from tkinter import *
+		root = Tk()		
+		def callback():
+		    fileName = filedialog.askopenfilename()
+		    print(fileName)		
+		Button(root, text="打开文件", command=callback).pack()		
+		mainloop()
+
+	filedialog 模块提供了两个函数：askopenfilename(**option) 和 asksaveasfilename(**option)，分别用于打开文件和保存文件。两个函数可供设置的选项是一样的，下边列举了可用的选项及含义：
+		
+		选项	含义
+		defaultextension	1. 指定文件的后缀
+							2. 例如：defaultextension=".jpg"，那么当用户输入一个文件名 "FishC" 的时候，文件名会自动添加后缀为 "FishC.jpg"
+							3. 注意：如果用户输入文件名包含后缀，那么该选项不生效
+		filetypes	1. 指定筛选文件类型的下拉菜单选项
+					2. 该选项的值是由 2 元祖构成的列表
+					3. 每个 2 元祖由（类型名，后缀）构成，例如：filetypes=[("PNG", ".png"), ("JPG", ".jpg"), ("GIF", ".gif")]
+		initialdir	1. 指定打开/保存文件的默认路径
+					2. 默认路径是当前文件夹
+		parent	1. 如果不指定该选项，那么对话框默认显示在根窗口上
+				2. 如果想要将对话框显示在子窗口 w 上，那么可以设置 parent=w
+		title	指定文件对话框的标题栏文本
+
+	返回值
+
+		1. 如果用户选择了一个文件，那么返回值是该文件的完整路径
+		2. 如果用户点击了取消按钮，那么返回值是空字符串
+
+3. colorchooser（颜色选择对话框）
+
+		from tkinter import *
+		from tkinter import colorchooser
+		root = Tk()		
+		def callback():
+		    fileName = colorchooser.askcolor()
+		    print(fileName)		
+		Button(root, text="选择颜色", command=callback).pack()		
+		mainloop()
+
+	参数
+
+		askcolor(color, **option) 函数的 color 参数用于指定初始化的颜色，默认是浅灰色；
+		option 参数可以指定的选项及含义如下：
+
+			选项	含义
+		title	指定颜色对话框的标题栏文本
+		parent	1. 如果不指定该选项，那么对话框默认显示在根窗口上
+				2. 如果想要将对话框显示在子窗口 w 上，那么可以设置 parent=w
+			
+	返回值
+		
+		1. 如果用户选择一个颜色并按下“确定”按钮后，返回值是一个 2 元祖，第 1 个元素是选择的 RGB 颜色值，第 2 个元素是对应的 16 进制颜色值
+		2. 如果用户按下“取消”按钮，那么返回值是 (None, None)
