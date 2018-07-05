@@ -558,3 +558,96 @@ Pygame 中用于控制窗口和屏幕显示的模块。函数：
 		        screen.blit(capture, cap_rect)   
 		    pygame.display.flip()
 		    clock.tick(30)
+- 图像相关
+
+	更改图像的像素格式
+
+		bg = pygame.image.load("bg.jpg").convert()	//更改图像的像素格式为Surface对象的像素格式RGB颜色
+		turtle = pygame.image.load("turtle.png").convert_alpha()	//对于包含RGBA颜色中的A（透明）改变像素格式需用此方法
+
+	示例1：
+
+		import pygame
+		import sys
+		from pygame.locals import *
+		pygame.init()
+		size = width, height = 640, 480
+		bg = (0, 0, 0)
+		clock = pygame.time.Clock()
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")
+		turtle = pygame.image.load("turtle.jpg").convert()		//转换像素对象格式
+		background = pygame.image.load("background.jpg").convert()
+		position = turtle.get_rect()
+		position.center = width // 2, height // 2
+		turtle.set_colorkey((255, 255, 255))	//设置当前颜色键
+		turtle.set_alpha(200)		//设置透明度
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()
+		    screen.blit(background, (0, 0))
+		    screen.blit(turtle, position)
+		    pygame.display.flip()
+		    clock.tick(30)
+	示例2：
+
+		import pygame
+		import sys
+		from pygame.locals import *
+		pygame.init()	
+		size = width, height = 640, 480
+		bg = (0, 0, 0)	
+		clock = pygame.time.Clock()
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")
+		turtle = pygame.image.load("turtle.png").convert_alpha()	//带有透明度的ＲＧＢＡ像素
+		background  = pygame.image.load("background.jpg").convert()
+		position = turtle.get_rect()
+		position.center = width // 2, height // 2
+		for i in range(position.width):		//遍历所有图像的像素
+		    for j in range(position.height):
+		        temp = turtle.get_at((i, j))		//get_at()获取单个像素的颜色值传入参数为像素位置
+		        if temp[3] != 0:			//获取RGBA颜色，第四个为透明度
+		            temp[3] = 200
+		        turtle.set_at((i, j), temp)		//设置RGBA颜色
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()
+		    screen.blit(background, (0, 0))
+		    screen.blit(turtle, position)
+		    pygame.display.flip()
+		    clock.tick(30)
+	示例3
+
+		import pygame
+		import sys
+		from pygame.locals import *
+		pygame.init()		
+		size = width, height = 640, 480
+		bg = (0, 0, 0)		
+		clock = pygame.time.Clock()
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")		
+		turtle = pygame.image.load("turtle.png").convert_alpha()
+		background  = pygame.image.load("background.jpg").convert()
+		position = turtle.get_rect()
+		position.center = width // 2, height // 2		
+		def blit_alpha(target, source, location, opacity):
+		    x = location[0]
+		    y = location[1]
+		    temp = pygame.Surface((source.get_width(), source.get_height())).convert()	//创建不带Alpah的对象
+		    temp.blit(target, (-x, -y ))
+		    temp.blit(source, (0, 0))
+		    temp.set_alpha(opacity)        
+		    target.blit(temp, location)		
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()		
+		    screen.blit(background, (0, 0))
+		    blit_alpha(screen, turtle, position, 200)	    
+		    pygame.display.flip()	    
+		    clock.tick(30)
+
