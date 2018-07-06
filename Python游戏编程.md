@@ -651,3 +651,193 @@ Pygame 中用于控制窗口和屏幕显示的模块。函数：
 		    pygame.display.flip()	    
 		    clock.tick(30)
 
+#7.6
+
+##1.基本图形绘制
+pygame.draw用于绘制形状的pygame模块
+
+	pygame.draw.rect	-	画一个矩形的形状
+	pygame.draw.polygon	-	画出任意数量的形状
+	pygame.draw.circle	-	围绕一个点画一个圆圈
+	pygame.draw.ellipse	-	在矩形内绘制圆形
+	pygame.draw.arc		-	绘制椭圆的局部剖面
+	pygame.draw.line	-	绘制一条直线段
+	pygame.draw.lines	-	绘制多个连续的线段
+	pygame.draw.aaline	-	绘制精细的抗锯齿线
+	pygame.draw.aalines	-	绘制连接的抗锯齿线序列
+
+- pygame.draw.rect（）画一个矩形的形状
+
+		rect（Surface，color，Rect，width = 0） - > Rect
+		surface表示绘制在哪个对象上，color指定对象的颜色，rect指定矩形的范围，width是绘制外边缘的粗细如果width为零则填充矩形
+
+		import pygame
+		import sys
+		from pygame.locals import *		
+		pygame.init()		
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)	
+		size = width, height = 640, 200
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")	
+		clock = pygame.time.Clock()	
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()
+		    screen.fill(WHITE)	    
+		    pygame.draw.rect(screen, BLACK, (50, 50, 150, 50), 0)	//对象Rect四个参数(left, top, width, height)
+		    pygame.draw.rect(screen, BLACK, (250, 50, 150, 50), 1)
+		    pygame.draw.rect(screen, BLACK, (450, 50, 150, 50), 10)
+		    pygame.display.flip()		//将完整显示Surface从内存更新到屏幕
+		    clock.tick(10)			//设置每秒钟绘制10次，将函数延迟使游戏运行速度低于每秒给定的帧数
+- pygame.draw.polygon（）画多边形
+
+		polygon（Surface，color，pointlist，width = 0） - > Rect		//第三个参数是多边形各个顶点的坐标，是一个列表
+
+		import pygame
+		import sys
+		from pygame.locals import *
+		pygame.init()
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)
+		GREEN = (0, 255, 0)
+		points = [(200, 75), (300, 25), (400, 75), (450, 25), (450, 125), (400, 75), (300, 125)]
+		size = width, height = 640, 200
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")
+		clock = pygame.time.Clock()
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()
+		    screen.fill(WHITE)  
+		    pygame.draw.polygon(screen, GREEN, points, 0)
+		    pygame.display.flip()
+		    clock.tick(10)
+- pygame.draw.circle（）围绕一个点画一个圆圈
+
+		circle（Surface，color，pos，radius，width = 0） - > Rect
+		pos参数是圆的中心，radius是大小
+
+		import pygame
+		import sys
+		from pygame.locals import *	
+		pygame.init()		
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)
+		GREEN = (0, 255, 0)
+		RED = (255, 0, 0)
+		BLUE = (0, 0, 255)		
+		size = width, height = 640, 480
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")		
+		position = size[0]//2, size[1]//2
+		moving = False		
+		clock = pygame.time.Clock()		
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()	
+		        if event.type == MOUSEBUTTONDOWN:
+		            if event.button == 1:
+		                moving = True	
+		        if event.type == MOUSEBUTTONUP:
+		            if event.button == 1:
+		                moving = False
+		    if moving:
+		        position = pygame.mouse.get_pos()		//获得鼠标光标的位置并将其指定为圆心
+		    screen.fill(WHITE)   
+		    pygame.draw.circle(screen, RED, position, 25, 1)
+		    pygame.draw.circle(screen, GREEN, position, 75, 1)
+		    pygame.draw.circle(screen, BLUE, position, 125, 1)
+		    pygame.display.flip()
+		    clock.tick(120)
+- pygame.draw.ellipse（）在矩形内绘制椭圆
+
+		ellipse（Surface，color，Rect，width = 0） - > Rect
+		在指定的矩形内绘制椭圆
+
+		import pygame
+		import sys
+		from pygame.locals import *	
+		pygame.init()	
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)
+		GREEN = (0, 255, 0)
+		RED = (255, 0, 0)
+		BLUE = (0, 0, 255)
+		size = width, height = 640, 300
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")	
+		clock = pygame.time.Clock()	
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()	
+		    screen.fill(WHITE)	    
+		    pygame.draw.ellipse(screen, BLACK, (100, 100, 440, 100), 1)
+		    pygame.draw.ellipse(screen, BLACK, (220, 50, 200, 200), 1)	
+		    pygame.display.flip()	
+		    clock.tick(120)
+- pygame.draw.arc（）绘制弧线
+
+		arc（Surface，color，Rect，start_angle，stop_angle，width = 1） - > Rect
+
+		
+		import pygame
+		import sys
+		import math
+		from pygame.locals import *	
+		pygame.init()
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)
+		GREEN = (0, 255, 0)
+		RED = (255, 0, 0)
+		BLUE = (0, 0, 255)
+		size = width, height = 640, 300
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")
+		clock = pygame.time.Clock()
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()
+		    screen.fill(WHITE)
+		    pygame.draw.arc(screen, BLACK, (100, 100, 440, 100), 0, math.pi, 1)		//起始角度0终止角度180
+		    pygame.draw.arc(screen, BLACK, (220, 50, 200, 200), math.pi, math.pi * 2, 1)		
+		    pygame.display.flip()		
+		    clock.tick(120)
+- 绘制线段pygame.draw.line（）,pygame.draw.lines（）,pygame.draw.aaline（）,pygame.draw.aalines（）
+
+		line（Surface，color，start_pos，end_pos，width = 1） - > Rect		//绘制一条线段
+		lines(Surface, color, closed, pointlist, width=1) -> Rect		//绘制一系列线条,pointlist参数是一系列由一条线连接的点如果closed参数为true，则在第一个和最后一个点之间绘制一个额外的线段。
+		aaline（Surface，color，startpos，endpos，blend = 1） - > Rect		//在曲面上绘制抗锯齿线。这将遵循剪裁矩形。受影响区域的边界框作为矩形返回。如果blend为true或1，则阴影将与现有像素阴影混合而不是覆盖它们。此函数接受端点的浮点值。
+		aalines（Surface，color，closed，pointlist，blend = 1） - > Rect		//在表面上绘制序列。您必须在点序列中至少传递两个点。closed参数是一个简单的布尔值，如果为true，则在第一个和最后一个点之间绘制一条线。布尔混合参数设置为true会将阴影与现有阴影混合而不是覆盖它们。此函数接受端点的浮点值
+
+		import pygame
+		import sys
+		from pygame.locals import *		
+		pygame.init()		
+		WHITE = (255, 255, 255)
+		BLACK = (0, 0, 0)
+		GREEN = (0, 255, 0)		
+		points = [(200, 75), (300, 25), (400, 75), (450, 25), (450, 125), (400, 75), (300, 125)]	
+		size = width, height = 640, 480
+		screen = pygame.display.set_mode(size)
+		pygame.display.set_caption("FishC Demo")	
+		clock = pygame.time.Clock()	
+		while True:
+		    for event in pygame.event.get():
+		        if event.type == QUIT:
+		            sys.exit()	
+		    screen.fill(WHITE)	    
+		    pygame.draw.lines(screen, GREEN, 1, points, 1)		//第三个参数设置为1或True相同，0和false相同
+		    pygame.draw.line(screen, BLACK, (100, 200), (540, 250), 1)
+		    pygame.draw.aaline(screen, BLACK, (100, 250), (540, 300), 1)
+		    pygame.draw.aaline(screen, BLACK, (100, 300), (540, 350), 0)	
+		    pygame.display.flip()	
+		    clock.tick(10)
+
+
+
