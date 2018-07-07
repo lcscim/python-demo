@@ -893,5 +893,323 @@ pygame.draw用于绘制形状的pygame模块
 	    main()
 
 ##3.碰撞体积
+- 仅适用于圆与圆之间的碰撞检测
 
+		import pygame
+		import sys
+		import math
+		from pygame.locals import *
+		from random import *
+		# 球类继承自Spirte类
+		class Ball(pygame.sprite.Sprite):
+		    def __init__(self, image, position, speed, bg_size):
+		        # 初始化动画精灵
+		        pygame.sprite.Sprite.__init__(self)
+		        self.image = pygame.image.load(image).convert_alpha()
+		        self.rect = self.image.get_rect()
+		        # 将小球放在指定位置
+		        self.rect.left, self.rect.top = position
+		        self.speed = speed
+		        self.width, self.height = bg_size[0], bg_size[1]
+		    def move(self):
+		        self.rect = self.rect.move(self.speed)
+		        # 如果小球的左侧出了边界，那么将小球左侧的位置改为右侧的边界 这样便实现了从左边进入，右边出来的效果
+		        if self.rect.right < 0:
+		            self.rect.left = self.width
+		        elif self.rect.left > self.width:
+		            self.rect.right = 0
+		        elif self.rect.bottom < 0:
+		            self.rect.top = self.height
+		        elif self.rect.top > self.height:
+		            self.rect.bottom = 0
+		def collide_check(item, target):		//该方法计算碰撞体积
+		    col_balls = []
+		    for each in target:
+		        distance = math.sqrt(\			math.sqrt开平方，pow是几次幂，第一个参数是底数第二个是指数
+		            math.pow((item.rect.center[0] - each.rect.center[0]), 2) + \
+		            math.pow((item.rect.center[1] - each.rect.center[1]), 2))		//计算两物体中心点间距
+		        if distance <= (item.rect.width + each.rect.width) / 2:			
+		            col_balls.append(each)				//如果两中心点的间距小于等于两物体的平均半径则将该物体添加到列表中 
+		    return col_balls
+		def main():
+		    pygame.init()
+		    ball_image = "gray_ball.png"
+		    bg_image = "background.png"
+		    running = True
+		    # 根据背景图片指定游戏界面尺寸
+		    bg_size = width, height = 1024, 681
+		    screen = pygame.display.set_mode(bg_size)
+		    pygame.display.set_caption("Play the ball - FishC Demo")
+		    background = pygame.image.load(bg_image).convert_alpha()
+		    # 用来存放小球对象的列表
+		    balls = []
+		    # 创建五个小球
+		    BALL_NUM = 5
+		    for i in range(BALL_NUM):
+		        # 位置随机，速度随机
+		        position = randint(0, width-100), randint(0, height-100)		//随机生成一个位置
+		        speed = [randint(-10, 10), randint(-10, 10)]		//随机生成一个速度
+		        ball = Ball(ball_image, position, speed, bg_size)
+		        while collide_check(ball, balls):		//如果一开始两球就碰撞了
+		            ball.rect.left, ball.rect.top = randint(0, width-100), randint(0, height-100)		//重新分配位置
+		        balls.append(ball)
+		    clock = pygame.time.Clock()
+		    while running:
+		        for event in pygame.event.get():
+		            if event.type == QUIT:
+		                sys.exit()        
+		        screen.blit(background, (0, 0))
+		        for each in balls:
+		            each.move()
+		            screen.blit(each.image, each.rect)
+		        for i in range(BALL_NUM):
+		            item = balls.pop(i)
+		            if collide_check(item, balls):
+		                item.speed[0] = -item.speed[0]
+		                item.speed[1] = -item.speed[1]
+		            balls.insert(i, item)
+		        pygame.display.flip()
+- 同样适用碰撞检测函数pygame.sprite.spritecollide（）也是需要继承pygame.sprite.Sprite
+
+	spritecollide（sprite，group，dokill，collided = None） - > Sprite_list
+	第一个参数指定被检测精灵，第二个是指定一个组（需要用sprite。Group（）生成的组），第三个参数是否从组中删除被监测的精灵，第四个回调函数指定额外的检测方法，如果为none检测精灵间的right属性
+	collide_circle(left, right) -> bool		//检测两圆之间是否碰撞
+
+		import pygame
+		import sys
+		from pygame.locals import *
+		from random import *
+		# 球类继承自Spirte类
+		class Ball(pygame.sprite.Sprite):
+		    def __init__(self, image, position, speed, bg_size):
+		        # 初始化动画精灵
+		        pygame.sprite.Sprite.__init__(self)	
+		        self.image = pygame.image.load(image).convert_alpha()
+		        self.rect = self.image.get_rect()
+		        # 将小球放在指定位置
+		        self.rect.left, self.rect.top = position
+		        self.speed = speed
+		        self.width, self.height = bg_size[0], bg_size[1]
+		        self.radius = self.rect.width / 2					//添加半径的精灵属性
+		    def move(self):
+		        self.rect = self.rect.move(self.speed)
+		        # 如果小球的左侧出了边界，那么将小球左侧的位置改为右侧的边界
+		        # 这样便实现了从左边进入，右边出来的效果
+		        if self.rect.right < 0:
+		            self.rect.left = self.width
+		        elif self.rect.left > self.width:
+		            self.rect.right = 0
+		        elif self.rect.bottom < 0:
+		            self.rect.top = self.height
+		        elif self.rect.top > self.height:
+		            self.rect.bottom = 0 
+		def main():
+		    pygame.init()		
+		    ball_image = "gray_ball.png"
+		    bg_image = "background.png"	
+		    running = True	
+		    # 根据背景图片指定游戏界面尺寸
+		    bg_size = width, height = 1024, 681
+		    screen = pygame.display.set_mode(bg_size)
+		    pygame.display.set_caption("Play the ball - FishC Demo")
+		    background = pygame.image.load(bg_image).convert_alpha()
+		    # 用来存放小球对象的列表
+		    balls = []
+		    group = pygame.sprite.Group()
+		    # 创建五个小球
+		    for i in range(5):
+		        # 位置随机，速度随机
+		        position = randint(0, width-100), randint(0, height-100)
+		        speed = [randint(-10, 10), randint(-10, 10)]
+		        ball = Ball(ball_image, position, speed, bg_size)
+		        while pygame.sprite.spritecollide(ball, group, False, pygame.sprite.collide_circle):	//调用该方法检测是否碰撞
+		            ball.rect.left, ball.rect.top = randint(0, width-100), randint(0, height-100)
+		        balls.append(ball)
+		        group.add(ball)
+		    clock = pygame.time.Clock()	
+		    while running:
+		        for event in pygame.event.get():
+		            if event.type == QUIT:
+		                sys.exit()	            
+		        screen.blit(background, (0, 0))	
+		        for each in balls:
+		            each.move()
+		            screen.blit(each.image, each.rect)
+		        for each in group:
+		            group.remove(each)
+		            if pygame.sprite.spritecollide(each, group, False, pygame.sprite.collide_circle):
+		                each.speed[0] = -each.speed[0]
+		                each.speed[1] = -each.speed[1]
+		            group.add(each
+		        pygame.display.flip()
+		        clock.tick(30)
+		if __name__ == "__main__":
+		    main()
+		
+- 播放声音和音效
+
+	- 播放音效支持wav格式，其他格式需转成改格式
+
+			pygame.mixer.Sound()
+				play()				-	开始播放声音
+				stop()				-	停止声音播放
+				fadeout()			-	淡出后停止声音播放
+				set_volume()		-	设置此声音的播放音量
+				get_volume()		-	获取播放音量
+				get_num_channels()	-	计算此声音播放的次数
+				get_length()		-	得到声音的长度
+				get_raw()			-	将该音效以二进制格式的字符串返回
+	- 播放背景音乐支持ogg格式
+
+			pygame.mixer.music
+				pygame.mixer.music.load()  ——  载入一个音乐文件用于播放
+				pygame.mixer.music.play()  ——  开始播放音乐流
+				pygame.mixer.music.rewind()  ——  重新开始播放音乐
+				pygame.mixer.music.stop()  ——  结束音乐播放
+				pygame.mixer.music.pause()  ——  暂停音乐播放
+				pygame.mixer.music.unpause()  ——  恢复音乐播放
+				pygame.mixer.music.fadeout()  ——  淡出的效果结束音乐播放
+				pygame.mixer.music.set_volume()  ——  设置音量
+				pygame.mixer.music.get_volume()  ——  获取音量
+				pygame.mixer.music.get_busy()  ——  检查是否正在播放音乐
+				pygame.mixer.music.set_pos()  ——  设置播放的位置
+				pygame.mixer.music.get_pos()  ——  获取播放的位置
+				pygame.mixer.music.queue()  ——  将一个音乐文件放入队列中，并排在当前播放的音乐之后
+				pygame.mixer.music.set_endevent()  ——  当播放结束时发出一个事件
+				pygame.mixer.music.get_endevent()  ——  获取播放结束时发送的事件
+	- 示例1
+
+			import pygame
+			import sys
+			from pygame.locals import *
+			pygame.init()	
+			pygame.mixer.init()		//初始化模块
+			pygame.mixer.music.load("bg_music.ogg")		//加载背景音乐
+			pygame.mixer.music.set_volume(0.2)			//设置音量
+			pygame.mixer.music.play()			//开始播放
+			cat_sound = pygame.mixer.Sound("cat.wav")		//加载猫的音效
+			cat_sound.set_volume(0.2)		//设置音量
+			dog_sound = pygame.mixer.Sound("dog.wav")
+			dog_sound.set_volume(0.2)
+			bg_size = width, height = 300, 200		//设置窗口
+			screen = pygame.display.set_mode(bg_size)		//设置界面
+			pygame.display.set_caption("Music - FishC Demo")		//设置标题
+			pause = False		//表示是否暂停
+			pause_image = pygame.image.load("pause.png").convert_alpha()
+			unpause_image = pygame.image.load("unpause.png").convert_alpha()		//加载两张图片
+			pause_rect = pause_image.get_rect()
+			pause_rect.left, pause_rect.top = (width - pause_rect.width) // 2, (height - pause_rect.height) // 2
+			clock = pygame.time.Clock()
+			while True:
+			    for event in pygame.event.get():
+			        if event.type == QUIT:
+			            sys.exit()
+			        if event.type == MOUSEBUTTONDOWN:	
+			            if event.button == 1:		//点击鼠标左键播放猫叫
+			                cat_sound.play()
+			            if event.button == 3:
+			                dog_sound.play()		//点击右键播放狗叫
+			        if event.type == KEYDOWN:
+			            if event.key == K_SPACE:			//按下空格将pause取反
+			                pause = not pause
+			    screen.fill((255, 255, 255))
+			    if pause:		//如果暂停，绘制暂停按钮并暂停播放音乐
+			        screen.blit(pause_image, pause_rect)
+			        pygame.mixer.music.pause()
+			    else:
+			        screen.blit(unpause_image, pause_rect)
+			        pygame.mixer.music.unpause()
+			    pygame.display.flip()	//刷新页面
+			    clock.tick(30)		//没秒30帧
+
+		- 示例2
+
+				import pygame
+				import sys
+				from pygame.locals import *
+				from random import *
+				# 球类继承自Spirte类
+				class Ball(pygame.sprite.Sprite):
+				    def __init__(self, image, position, speed, bg_size):
+				        # 初始化动画精灵
+				        pygame.sprite.Sprite.__init__(self)
+				
+				        self.image = pygame.image.load(image).convert_alpha()
+				        self.rect = self.image.get_rect()
+				        # 将小球放在指定位置
+				        self.rect.left, self.rect.top = position
+				        self.speed = speed
+				        self.width, self.height = bg_size[0], bg_size[1]
+				        self.radius = self.rect.width / 2
+				    def move(self):
+				        self.rect = self.rect.move(self.speed)
+				        # 如果小球的左侧出了边界，那么将小球左侧的位置改为右侧的边界
+				        # 这样便实现了从左边进入，右边出来的效果
+				        if self.rect.right < 0:
+				            self.rect.left = self.width
+				        elif self.rect.left > self.width:
+				            self.rect.right = 0
+				        elif self.rect.bottom < 0:
+				            self.rect.top = self.height
+				        elif self.rect.top > self.height:
+				            self.rect.bottom = 0
+				def main():
+				    pygame.init()
+				    ball_image = "gray_ball.png"
+				    bg_image = "background.png"
+				    running = True
+				    # 添加魔性的背景音乐
+				    pygame.mixer.music.load("bg_music.ogg")
+				    pygame.mixer.music.play()
+				    # 添加音效
+				    loser_sound = pygame.mixer.Sound("loser.wav")
+				    laugh_sound = pygame.mixer.Sound("laugh.wav")
+				    winner_sound = pygame.mixer.Sound("winner.wav")
+				    hole_sound = pygame.mixer.Sound("hole.wav")
+				    # 音乐播放完时游戏结束
+				    GAMEOVER = USEREVENT
+				    pygame.mixer.music.set_endevent(GAMEOVER)
+				    # 根据背景图片指定游戏界面尺寸
+				    bg_size = width, height = 1024, 681
+				    screen = pygame.display.set_mode(bg_size)
+				    pygame.display.set_caption("Play the ball - FishC Demo")
+				    background = pygame.image.load(bg_image).convert_alpha()
+				    # 用来存放小球对象的列表
+				    balls = []
+				    group = pygame.sprite.Group()
+				    # 创建五个小球
+				    for i in range(5):
+				        # 位置随机，速度随机
+				        position = randint(0, width-100), randint(0, height-100)
+				        speed = [randint(-10, 10), randint(-10, 10)]
+				        ball = Ball(ball_image, position, speed, bg_size)
+				        while pygame.sprite.spritecollide(ball, group, False, pygame.sprite.collide_circle):
+				            ball.rect.left, ball.rect.top = randint(0, width-100), randint(0, height-100)
+				        balls.append(ball)
+				        group.add(ball)
+				    clock = pygame.time.Clock()
+				    while running:
+				        for event in pygame.event.get():
+				            if event.type == QUIT:
+				                sys.exit()
+				            elif event.type == GAMEOVER:
+				                loser_sound.play()		//游戏结束播放失败音乐
+				                pygame.time.delay(2000)	//暂停两秒
+				                laugh_sound.play()		//播放嘲笑音乐
+				                running = False		//跳出循环
+				        screen.blit(background, (0, 0))
+				        for each in balls:
+				            each.move()
+				            screen.blit(each.image, each.rect)
+				        for each in group:
+				            group.remove(each)
+				            if pygame.sprite.spritecollide(each, group, False, pygame.sprite.collide_circle):
+				                each.speed[0] = -each.speed[0]
+				                each.speed[1] = -each.speed[1]
+				            group.add(each)
+				        pygame.display.flip()
+				        clock.tick(30)
+				if __name__ == "__main__":
+				    main()
+				    
 
