@@ -838,6 +838,60 @@ pygame.draw用于绘制形状的pygame模块
 		    pygame.draw.aaline(screen, BLACK, (100, 300), (540, 350), 0)	
 		    pygame.display.flip()	
 		    clock.tick(10)
+##2.动画精灵
+要使用动画精灵需要先继承pygame.sprite.Sprite，是基类
 
+	import pygame
+	import sys
+	from pygame.locals import *
+	from random import *
+	class Ball(pygame.sprite.Sprite):
+	    def __init__(self, image, position, speed, bg_size):
+	        pygame.sprite.Sprite.__init__(self)		//初始化动画精灵，并调用__init__方法
+	        self.image = pygame.image.load(image).convert_alpha()		//加载图片
+	        self.rect = self.image.get_rect()		//获取尺寸
+	        self.rect.left, self.rect.top = position
+	        self.speed = speed
+	        self.width, self.height = bg_size[0], bg_size[1]
+	    def move(self):
+	        self.rect = self.rect.move(self.speed)
+	        if self.rect.right < 0:
+	            self.rect.left = self.width
+	        elif self.rect.left > self.width:
+	            self.rect.right = 0
+	        elif self.rect.bottom < 0:
+	            self.rect.top = self.height
+	        elif self.rect.top > self.height:
+	            self.rect.bottom = 0
+	def main():
+	    pygame.init()
+	    ball_image = "gray_ball.png"
+	    bg_image = "background.png"
+	    running = True
+	    bg_size = width, height = 1024, 681
+	    screen = pygame.display.set_mode(bg_size)	//初始化窗口
+	    pygame.display.set_caption("Play the ball - FishC Demo")	//设置当前窗口标题
+	    background = pygame.image.load(bg_image).convert_alpha()	//加载背景图片
+	    balls = []
+	    for i in range(5):
+	        position = randint(0, width-100), randint(0, height-100)	//设置范围，以免出背景范围
+	        speed = [randint(-10, 10), randint(-10, 10)]		
+	        ball = Ball(ball_image, position, speed, bg_size)
+	        balls.append(ball)
+	    clock = pygame.time.Clock()		//刷新页面
+	    while running:
+	        for event in pygame.event.get():
+	            if event.type == QUIT:
+	                sys.exit()
+	        screen.blit(background, (0, 0))	//将背景图加载到页面上
+	        for each in balls:			//将每个球加载到页面上
+	            each.move()
+	            screen.blit(each.image, each.rect)
+	        pygame.display.flip()		//刷新页面
+	        clock.tick(30)		//设置每秒30帧
+	if __name__ == "__main__":
+	    main()
+
+##3.碰撞体积
 
 
