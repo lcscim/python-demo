@@ -1592,23 +1592,23 @@ pygame.draw用于绘制形状的pygame模块
 ###1.1
 
 	# main.py
-	import pygame
-	import sys
-	import traceback
-	import myplane
+	import pygame		//导入游戏模块
+	import sys			//访问系统特定的参数和功能
+	import traceback	//处理异常栈
+	import myplane		
 	import bullet
 	import enemy
 	import supply
-	from pygame.locals import *
-	from random import *
-	pygame.init()
-	pygame.mixer.init()
-	bg_size = width, height = 480, 700
-	screen = pygame.display.set_mode(bg_size)
-	pygame.display.set_caption("飞机大战 -- FishC Demo")
-	background = pygame.image.load("images/background.png").convert()
+	from pygame.locals import *		//该模块包含pygame使用的各种常量
+	from random import *	//随机数模块
+	pygame.init()	//初始化pygame模块
+	pygame.mixer.init()		//初始化mixer模块
+	bg_size = width, height = 480, 700		//设置背景尺寸
+	screen = pygame.display.set_mode(bg_size)		//初始化窗口或屏幕以进行显示
+	pygame.display.set_caption("飞机大战 -- FishC Demo")		//设置当前窗口标题
+	background = pygame.image.load("images/background.png").convert()	//加载背景图片并更改像素格式
 	# 载入游戏音乐
-	pygame.mixer.music.load("sound/game_music.ogg")
+	pygame.mixer.music.load("sound/game_music.ogg")		//加载音乐设置音量
 	pygame.mixer.music.set_volume(0.2)
 	bullet_sound = pygame.mixer.Sound("sound/bullet.wav")
 	bullet_sound.set_volume(0.2)
@@ -1634,17 +1634,17 @@ pygame.draw用于绘制形状的pygame模块
 	me_down_sound.set_volume(0.2)
 	
 	def main():
-	    pygame.mixer.music.play(-1)
-	    clock = pygame.time.Clock()
+	    pygame.mixer.music.play(-1)		//传入-1设置音乐无限循环
+	    clock = pygame.time.Clock()		//创建一个对象跟踪事件
 	    running = True
 	    while running:
 	        for event in pygame.event.get():
 	            if event.type == QUIT:
 	                pygame.quit()
 	                sys.exit()
-	        screen.blit(background, (0, 0))
-	        pygame.display.flip()
-	        clock.tick(60)
+	        screen.blit(background, (0, 0))	
+	        pygame.display.flip()		//更新屏幕
+	        clock.tick(60)		//设置帧数60
 	        
 	if __name__ == "__main__":
 	    try:
