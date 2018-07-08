@@ -1585,6 +1585,11 @@ pygame.draw用于绘制形状的pygame模块
 		        traceback.print_exc()
 		        pygame.quit()
 		        input()
+
+#7.8
+
+##1.实战，飞机大战
+###1.1
     
 
 
