@@ -3266,45 +3266,39 @@ pygame.draw用于绘制形状的pygame模块
     
 ##1.2敌机enemy
 
-	import pygame
-	from random import *
-	class SmallEnemy(pygame.sprite.Sprite):
-	    def __init__(self, bg_size):
-	        pygame.sprite.Sprite.__init__(self)
+	import pygame		//导入游戏模块
+	from random import *		//导入生成随机数模块
+	class SmallEnemy(pygame.sprite.Sprite):		//创建小敌机类，使用游戏精灵继承自pygame.sprite.Sprite基类
+	    def __init__(self, bg_size):		//设置构造函数
+	        pygame.sprite.Sprite.__init__(self)		//调用父类构造方法
 	
-	        self.image = pygame.image.load("images/enemy1.png").convert_alpha()
-	        self.destroy_images = []
-	        self.destroy_images.extend([\
+	        self.image = pygame.image.load("images/enemy1.png").convert_alpha()		//加载图片并设置像素格式
+	        self.destroy_images = []		//创建空列表存放加载销毁飞机图片语句
+	        self.destroy_images.extend([\	
 	            pygame.image.load("images/enemy1_down1.png").convert_alpha(), \
 	            pygame.image.load("images/enemy1_down2.png").convert_alpha(), \
 	            pygame.image.load("images/enemy1_down3.png").convert_alpha(), \
 	            pygame.image.load("images/enemy1_down4.png").convert_alpha() \
-	            ])
-	        self.rect = self.image.get_rect()
-	        self.width, self.height = bg_size[0], bg_size[1]
-	        self.speed = 2
-	        self.active = True
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-5 * self.height, 0)
-	        self.mask = pygame.mask.from_surface(self.image)
+	            ])		//使用extend向列表中加载列表
+	        self.rect = self.image.get_rect()		//获取图片矩形区域
+	        self.width, self.height = bg_size[0], bg_size[1]	//设置宽度和高度为传入参数的宽度和高度
+	        self.speed = 2		//设置速度
+	        self.active = True		//设置存活参数
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-5 * self.height, 0)
+			//设置位置为随机生成，高度位置为在距离界面顶端5个机身位开始刷新
+	        self.mask = pygame.mask.from_surface(self.image)		//设置小敌机的有效碰撞体积
 	
-	    def move(self):
+	    def move(self):		//设置移动函数，当飞机加载到页面中时，设置高度为原高度加自身速度，否则重置敌机位置
 	        if self.rect.top < self.height:
 	            self.rect.top += self.speed
 	        else:
 	            self.reset()
 	
-	    def reset(self):
+	    def reset(self):		//设置重置函数，将活动参数设置为TRUE，重新设置飞机位置
 	        self.active = True
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-5 * self.height, 0)
-	
-	
-	class MidEnemy(pygame.sprite.Sprite):
-	    energy = 8
-	    
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-5 * self.height, 0)
+	class MidEnemy(pygame.sprite.Sprite):		//设置中型敌机，大部分作用同小敌机
+	    energy = 8		//设置中型敌机生命值
 	    def __init__(self, bg_size):
 	        pygame.sprite.Sprite.__init__(self)
 	
@@ -3320,34 +3314,25 @@ pygame.draw用于绘制形状的pygame模块
 	        self.rect = self.image.get_rect()
 	        self.width, self.height = bg_size[0], bg_size[1]
 	        self.speed = 1
-	        self.active = True
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-10 * self.height, -self.height)
+	        self.active = True		//存活参数
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-10 * self.height, -self.height)
 	        self.mask = pygame.mask.from_surface(self.image)
-	        self.energy = MidEnemy.energy
-	        self.hit = False
+	        self.energy = MidEnemy.energy		//设置生命值
+	        self.hit = False		//碰撞参数
 	
 	    def move(self):
 	        if self.rect.top < self.height:
 	            self.rect.top += self.speed
 	        else:
 	            self.reset()
-	
 	    def reset(self):
-	        self.active = True
-	        self.energy = MidEnemy.energy
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-10 * self.height, -self.height)
-	
-	
-	class BigEnemy(pygame.sprite.Sprite):
+	        self.active = True	
+	        self.energy = MidEnemy.energy	//重新设置生命值
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-10 * self.height, -self.height)
+	class BigEnemy(pygame.sprite.Sprite):		//设置大型敌机，与中型敌机基本相同
 	    energy = 20
-	    
 	    def __init__(self, bg_size):
 	        pygame.sprite.Sprite.__init__(self)
-	
 	        self.image1 = pygame.image.load("images/enemy3_n1.png").convert_alpha()
 	        self.image2 = pygame.image.load("images/enemy3_n2.png").convert_alpha()
 	        self.image_hit = pygame.image.load("images/enemy3_hit.png").convert_alpha()
@@ -3364,25 +3349,19 @@ pygame.draw用于绘制形状的pygame模块
 	        self.width, self.height = bg_size[0], bg_size[1]
 	        self.speed = 1
 	        self.active = True
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-15 * self.height, -5 * self.height)
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-15 * self.height, -5 * self.height)
 	        self.mask = pygame.mask.from_surface(self.image1)
 	        self.energy = BigEnemy.energy
 	        self.hit = False
-	
 	    def move(self):
 	        if self.rect.top < self.height:
 	            self.rect.top += self.speed
 	        else:
 	            self.reset()
-	
 	    def reset(self):
 	        self.active = True
 	        self.energy = BigEnemy.energy
-	        self.rect.left, self.rect.top = \
-	                        randint(0, self.width - self.rect.width), \
-	                        randint(-15 * self.height, -5 * self.height)
+	        self.rect.left, self.rect.top =randint(0, self.width - self.rect.width),randint(-15 * self.height, -5 * self.height)
 
 ##1.3己方飞机模块myplane
 
@@ -3433,27 +3412,27 @@ pygame.draw用于绘制形状的pygame模块
 	        self.invincible = True
 ##1.4补给模块supply
 
-	import pygame
-	from random import *
-	class Bullet_Supply(pygame.sprite.Sprite):
-	    def __init__(self, bg_size):
-	        pygame.sprite.Sprite.__init__(self)
-	        self.image = pygame.image.load("images/bullet_supply.png").convert_alpha()
-	        self.rect = self.image.get_rect()
-	        self.width, self.height = bg_size[0], bg_size[1]
-	        self.rect.left, self.rect.bottom = randint(0, self.width - self.rect.width), -100
-	        self.speed = 5
-	        self.active = False
-	        self.mask = pygame.mask.from_surface(self.image)
-	    def move(self):
+	import pygame	//导入游戏模块
+	from random import *		//导入随机数模块
+	class Bullet_Supply(pygame.sprite.Sprite):	//设置子弹补给，使用动画精灵，继承pygame.sprite.Sprite基类
+	    def __init__(self, bg_size):	//设置构造方法
+	        pygame.sprite.Sprite.__init__(self)		//重写父类构造方法
+	        self.image = pygame.image.load("images/bullet_supply.png").convert_alpha()		//加载子弹补给图片并转换像素
+	        self.rect = self.image.get_rect()		//获取图片位置
+	        self.width, self.height = bg_size[0], bg_size[1]	//由传入参数设置宽和高
+	        self.rect.left, self.rect.bottom = randint(0, self.width - self.rect.width), -100	//设置生成位置
+	        self.speed = 5		//设置速度
+	        self.active = False		//设置存活参数
+	        self.mask = pygame.mask.from_surface(self.image)		//设置碰撞有效区域
+	    def move(self):		//设置移动方法
 	        if self.rect.top < self.height:
 	            self.rect.top += self.speed
 	        else:
 	            self.active = False
-	    def reset(self):
+	    def reset(self):		//设置刷新方法
 	        self.active = True
 	        self.rect.left, self.rect.bottom =randint(0, self.width - self.rect.width), -100
-	class Bomb_Supply(pygame.sprite.Sprite):
+	class Bomb_Supply(pygame.sprite.Sprite):	//设置炸弹补给与子弹补给类似
 	    def __init__(self, bg_size):
 	        pygame.sprite.Sprite.__init__(self)
 	        self.image = pygame.image.load("images/bomb_supply.png").convert_alpha()
@@ -3475,35 +3454,35 @@ pygame.draw用于绘制形状的pygame模块
 ##1.5主函数main
 
 	# main.py
-	import pygame
-	import sys
-	import traceback
-	import myplane
-	import enemy
-	import bullet
-	import supply
+	import pygame		//导入游戏模块
+	import sys			//导入sys模块用于负责程序与python解释器的交互，提供了一系列的函数和变量，用于操控python的运行时环境。
+	import traceback	//导入traceback模块用于从程序运行的堆栈中提取，格式化或打印程序目前执行的上下文信息
+	import myplane		//导入飞机模块
+	import enemy		//导入敌机模块
+	import bullet		//导入子弹模块
+	import supply		//导入补给模块
 	
-	from pygame.locals import *
-	from random import *
+	from pygame.locals import *		//该模块包含pygame的各种常量
+	from random import *	//导入随机数模块
 	
-	pygame.init()
-	pygame.mixer.init()
+	pygame.init()		//初始化所有导入的pygame模块
+	pygame.mixer.init()		//初始化混音器模块
 	
-	bg_size = width, height = 480, 700
-	screen = pygame.display.set_mode(bg_size)
-	pygame.display.set_caption("飞机大战 -- FishC Demo")
+	bg_size = width, height = 480, 700		//设置主程序大小为多少
+	screen = pygame.display.set_mode(bg_size)	//对程序窗口进行设置
+	pygame.display.set_caption("飞机大战 -- FishC Demo")		//设置窗口标题
 	
-	background = pygame.image.load("images/background.png").convert()
+	background = pygame.image.load("images/background.png").convert()	//设置窗口背景
 	
-	BLACK = (0, 0, 0)
+	BLACK = (0, 0, 0)		//常用颜色色值
 	WHITE = (255, 255, 255)
 	GREEN = (0, 255, 0)
 	RED = (255, 0, 0)
 	
 	# 载入游戏音乐
-	pygame.mixer.music.load("sound/game_music.ogg")
-	pygame.mixer.music.set_volume(0.2)
-	bullet_sound = pygame.mixer.Sound("sound/bullet.wav")
+	pygame.mixer.music.load("sound/game_music.ogg")		//加载游戏背景音
+	pygame.mixer.music.set_volume(0.2)		//设置音量
+	bullet_sound = pygame.mixer.Sound("sound/bullet.wav")	//加载游戏音效
 	bullet_sound.set_volume(0.2)
 	bomb_sound = pygame.mixer.Sound("sound/use_bomb.wav")
 	bomb_sound.set_volume(0.2)
@@ -3526,20 +3505,19 @@ pygame.draw用于绘制形状的pygame模块
 	me_down_sound = pygame.mixer.Sound("sound/me_down.wav")
 	me_down_sound.set_volume(0.2)
 	
-	
-	def add_small_enemies(group1, group2, num):
+	def add_small_enemies(group1, group2, num):		//添加小型敌机方法
 	    for i in range(num):
 	        e1 = enemy.SmallEnemy(bg_size)
 	        group1.add(e1)
 	        group2.add(e1)
 	
-	def add_mid_enemies(group1, group2, num):
+	def add_mid_enemies(group1, group2, num):		//添加中型敌机方法
 	    for i in range(num):
 	        e2 = enemy.MidEnemy(bg_size)
 	        group1.add(e2)
 	        group2.add(e2)
 	
-	def add_big_enemies(group1, group2, num):
+	def add_big_enemies(group1, group2, num):		//添加大型敌机方法
 	    for i in range(num):
 	        e3 = enemy.BigEnemy(bg_size)
 	        group1.add(e3)
@@ -3550,16 +3528,15 @@ pygame.draw用于绘制形状的pygame模块
 	        each.speed += inc
 	
 	def main():
-	    pygame.mixer.music.play(-1)
+	    pygame.mixer.music.play(-1)		//设置背景音乐循环播放
 	
 	    # 生成我方飞机
-	    me = myplane.MyPlane(bg_size)
-	
-	    enemies = pygame.sprite.Group()
+	    me = myplane.MyPlane(bg_size)		//实例化己方飞机对象
+	    enemies = pygame.sprite.Group()		//创建用于保存和管理多个Sprite对象的容器类
 	
 	    # 生成敌方小型飞机
-	    small_enemies = pygame.sprite.Group()
-	    add_small_enemies(small_enemies, enemies, 15)
+	    small_enemies = pygame.sprite.Group()	//创建用于保存和管理多个小敌机的容器类
+	    add_small_enemies(small_enemies, enemies, 15)	//向该容器添加15个敌机向总容器添加15个敌机
 	
 	    # 生成敌方中型飞机
 	    mid_enemies = pygame.sprite.Group()
