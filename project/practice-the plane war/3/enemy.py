@@ -4,7 +4,7 @@ from random import *
 class SmallEnemy(pygame.sprite.Sprite):
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
-
+        #设置加载小飞机损毁画面
         self.image = pygame.image.load("images/enemy1.png").convert_alpha()
         self.destroy_images = []
         self.destroy_images.extend([\
@@ -16,6 +16,7 @@ class SmallEnemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.width, self.height = bg_size[0], bg_size[1]
         self.speed = 2
+        #设置存活参数为true，然后在碰撞事件中将其设置为false然后调用reset重新创建
         self.active = True
         self.rect.left, self.rect.top = \
                         randint(0, self.width - self.rect.width), \
@@ -38,7 +39,7 @@ class SmallEnemy(pygame.sprite.Sprite):
 class MidEnemy(pygame.sprite.Sprite):
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
-
+        #设置中等飞机损毁画面
         self.image = pygame.image.load("images/enemy2.png").convert_alpha()
         self.destroy_images = []
         self.destroy_images.extend([\
@@ -63,7 +64,7 @@ class MidEnemy(pygame.sprite.Sprite):
             self.reset()
 
     def reset(self):
-        self.active = True
+        self.active = True      
         self.rect.left, self.rect.top = \
                         randint(0, self.width - self.rect.width), \
                         randint(-10 * self.height, -self.height)
@@ -72,7 +73,7 @@ class MidEnemy(pygame.sprite.Sprite):
 class BigEnemy(pygame.sprite.Sprite):
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
-
+        #设置大型敌机损毁画面
         self.image1 = pygame.image.load("images/enemy3_n1.png").convert_alpha()
         self.image2 = pygame.image.load("images/enemy3_n2.png").convert_alpha()
         self.destroy_images = []
