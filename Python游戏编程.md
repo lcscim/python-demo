@@ -3558,10 +3558,10 @@ pygame.draw用于绘制形状的pygame模块
 	    bullet2_index = 0
 	    BULLET2_NUM = 8
 	    for i in range(BULLET2_NUM//2):
-	        bullet2.append(bullet.Bullet2((me.rect.centerx-33, me.rect.centery)))
+	        bullet2.append(bullet.Bullet2((me.rect.centerx-33, me.rect.centery)))	//添加子弹2并设置位置
 	        bullet2.append(bullet.Bullet2((me.rect.centerx+30, me.rect.centery)))
 	
-	    clock = pygame.time.Clock()
+	    clock = pygame.time.Clock()		//创建一个时间对象来帮助跟踪时间
 	
 	    # 中弹图片索引
 	    e1_destroy_index = 0
@@ -3571,16 +3571,16 @@ pygame.draw用于绘制形状的pygame模块
 	
 	    # 统计得分
 	    score = 0
-	    score_font = pygame.font.Font("font/font.ttf", 36)
+	    score_font = pygame.font.Font("font/font.ttf", 36)	//从文件创造一个新的font对象，第一个字体文件，第二个大小
 	
 	    # 标志是否暂停游戏
-	    paused = False
-	    pause_nor_image = pygame.image.load("images/pause_nor.png").convert_alpha()
-	    pause_pressed_image = pygame.image.load("images/pause_pressed.png").convert_alpha()
-	    resume_nor_image = pygame.image.load("images/resume_nor.png").convert_alpha()
-	    resume_pressed_image = pygame.image.load("images/resume_pressed.png").convert_alpha()
-	    paused_rect = pause_nor_image.get_rect()
-	    paused_rect.left, paused_rect.top = width - paused_rect.width - 10, 10
+	    paused = False		//设置游戏暂停参数
+	    pause_nor_image = pygame.image.load("images/pause_nor.png").convert_alpha()	//加载暂停图片
+	    pause_pressed_image = pygame.image.load("images/pause_pressed.png").convert_alpha()	//鼠标悬停时加载的图片
+	    resume_nor_image = pygame.image.load("images/resume_nor.png").convert_alpha()	//加载开始图片
+	    resume_pressed_image = pygame.image.load("images/resume_pressed.png").convert_alpha()//加载鼠标悬停开始图片
+	    paused_rect = pause_nor_image.get_rect()	//获取暂停图片矩形区域
+	    paused_rect.left, paused_rect.top = width - paused_rect.width - 10, 10		//设置图片位置
 	    paused_image = pause_nor_image
 	
 	    # 设置难度级别
@@ -3596,7 +3596,7 @@ pygame.draw用于绘制形状的pygame模块
 	    bullet_supply = supply.Bullet_Supply(bg_size)
 	    bomb_supply = supply.Bomb_Supply(bg_size)
 	    SUPPLY_TIME = USEREVENT
-	    pygame.time.set_timer(SUPPLY_TIME, 30 * 1000)
+	    pygame.time.set_timer(SUPPLY_TIME, 30 * 1000)	//创建重复时间每隔30秒
 	
 	    # 超级子弹定时器
 	    DOUBLE_BULLET_TIME = USEREVENT + 1
@@ -3608,9 +3608,9 @@ pygame.draw用于绘制形状的pygame模块
 	    INVINCIBLE_TIME = USEREVENT + 2
 	
 	    # 生命数量
-	    life_image = pygame.image.load("images/life.png").convert_alpha()
+	    life_image = pygame.image.load("images/life.png").convert_alpha()	//加载生命值图片
 	    life_rect = life_image.get_rect()
-	    life_num = 3
+	    life_num = 3	//设置生命数量
 	
 	    # 用于阻止重复打开记录文件
 	    recorded = False
@@ -3631,8 +3631,8 @@ pygame.draw用于绘制形状的pygame模块
 	    running = True
 	
 	    while running:
-	        for event in pygame.event.get():
-	            if event.type == QUIT:
+	        for event in pygame.event.get():	//从队列中获取事件
+	            if event.type == QUIT:		//如果事件标识符是QUIT
 	                pygame.quit()
 	                sys.exit()
 	
@@ -3956,7 +3956,8 @@ pygame.draw用于绘制形状的pygame模块
 	
 	            # 绘制结束画面
 	            record_score_text = score_font.render("Best : %d" % record_score, True, (255, 255, 255))
-	            screen.blit(record_score_text, (50, 50))
+				//在新界面绘制文字，第一个参数文本，第二个参数是否开启抗锯齿，第三个是颜色
+	            screen.blit(record_score_text, (50, 50))	//将文字添加到界面上
 	            
 	            gameover_text1 = gameover_font.render("Your Score", True, (255, 255, 255))
 	            gameover_text1_rect = gameover_text1.get_rect()
