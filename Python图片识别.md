@@ -1,4 +1,4 @@
-#0710
+#0710（已弃用）
 tips：
 
 1. https://www.cnblogs.com/wzben/p/5930538.html教程
@@ -52,7 +52,7 @@ tips：
 			那么我们把图片文件重命名 mjorcen.normal.exp0.jpg在转tif。
 		2、生成box文件
 	
-			tesseract mjorcen.normal.exp0.jpg mjorcen.normal.exp0 -l chi_sim batch.nochop makebox
+			tesseract mjorcen.normal.exp0.png mjorcen.normal.exp0 -l chi_sim batch.nochop makebox
 		3、打开jTessBoxEditor矫正错误并训练
 	
 			打开train.bat找到tif图，打开，并校正。
@@ -60,7 +60,7 @@ tips：
 
 		只要在命令行输入命令即可。
 
-			tesseract  mjorcen.normal.exp0.jpg mjorcen.normal.exp0  nobatch box.train
+			tesseract  mjorcen.normal.exp0.png mjorcen.normal.exp0  nobatch box.train
 			unicharset_extractor mjorcen.normal.exp0.box
 		
 		新建一个font_properties文件里面内容写入 normal 0 0 0 0 0 表示默认普通字体,没有后缀
@@ -80,6 +80,114 @@ tips：
 		1、把 normal.traineddata 复制到Tesseract-OCR 安装目录下的tessdata文件夹中
 		2、识别命令：
 		
-			tesseract mjorcen.normal.exp0.jpg mjorcen.normal.exp0 -l normal
-		
+			tesseract mjorcen.normal.exp0.png mjorcen.normal.exp0 -l normal
+
+##2.在python中代码实现
+
+	from PIL import Image
+	import pytesseract
+	text=pytesseract.image_to_string(Image.open('test.png'),lang='chi_sim')
+	print(text)
+
+#7.11
+tips:
+1. 管理面板http://console.bce.baidu.com/ai/#/ai/ocr/app/list
+2. 开发文档https://cloud.baidu.com/doc/OCR/OCR-Python-SDK.html
+
+
+##1.使用百度OCR
+示例语句：
+
+	from aip import AipOcr
+
+	#你的 APPID AK SK
+	APP_ID = '你的 App ID'		
+	API_KEY = '你的 Api Key'
+	SECRET_KEY = '你的 Secret Key'
+	client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+
+	#读取图片
+	def get_file_content(filePath):
+	    with open(filePath, 'rb') as fp:
+	        return fp.read()
+	image = get_file_content('example.jpg')
+	
+	#调用通用文字识别, 图片参数为本地图片
+	client.basicGeneral(image);
+	
+	#如果有可选参数
+	options = {}
+	options["language_type"] = "CHN_ENG"
+	options["detect_direction"] = "true"
+	options["detect_language"] = "true"
+	options["probability"] = "true"
+	
+	#带参数调用通用文字识别, 图片参数为本地图片
+	client.basicGeneral(image, options)
+	
+	#调用通用文字识别, 图片参数为远程url图片
+	url = "https//www.x.com/sample.jpg"
+	client.basicGeneralUrl(url);
+	
+	#如果有可选参数
+	options = {}
+	options["language_type"] = "CHN_ENG"
+	options["detect_direction"] = "true"
+	options["detect_language"] = "true"
+	options["probability"] = "true"
+	
+	#带参数调用通用文字识别, 图片参数为远程url图片
+	client.basicGeneralUrl(url, options)
+通用文字识别 请求参数详情：
+
+	参数名称	 是否必选	类型	  可选值范围	  默认值	   说明
+	image	  是	  	   string			         图像数据，base64编码，要求base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式
+	url		  是	       string			        图片完整URL，URL长度不超过1024字节，URL对应的图片base64编码后大小不超过4M，最短边至少15px，最长边最大	4096px,支持jpg/png/bmp格式，当image字段存在时url字段失效
+	language_type	否	string	CHN_ENG  CHN_ENG  识别语言类型，默认为CHN_ENG。可选值包括：
+								ENG					- CHN_ENG：中英文混合；
+								POR					- ENG：英文；
+								FRE					- POR：葡萄牙语；
+								GER					- FRE：法语；
+								ITA					- GER：德语；
+								SPA					- ITA：意大利语；
+								RUS					- SPA：西班牙语；
+								JAP					- RUS：俄语；
+								KOR					- JAP：日语；
+													- KOR：韩语；
+								
+	detect_direction 否	string	true 	false	是否检测图像朝向，默认不检测，即：false。朝向是指输入图像是正常方向、逆时针旋转90/180/270度。可选值包括:
+										false				- true：检测朝向；
+															- false：不检测朝向。
+	detect_language	否	string	true	false	是否检测语言，默认不检测。当前支持（中文、英语、日语、韩语）							
+								false			
+	probability		否	string	true 				是否返回识别结果中每一行的置信
+								false
+
+示例：
+
+	from aip import AipOcr
+	# 定义常量  
+	APP_ID = '11521768'
+	API_KEY = 'HU6vkBZNSzBNCjc03wmKURKA'
+	SECRET_KEY = 'RwtseKzRBdqPQDt8y5i8Nu6zYBXVOjR2'
+	# 初始化文字识别分类器
+	aipOcr=AipOcr(APP_ID, API_KEY, SECRET_KEY)
+	# 读取图片  
+	filePath = "test.png"
+	def get_file_content(filePath):
+	    with open(filePath, 'rb') as fp:
+	        return fp.read()
+	# 定义参数变量
+	options = {
+	    'detect_direction': 'true',
+	    'language_type': 'CHN_ENG',
+	}
+	# 网络图片文字文字识别接口
+	result = aipOcr.webImage(get_file_content(filePath),options)
+	# 如果图片是url 调用示例如下
+	# result = apiOcr.webImage('http://www.xxxxxx.com/img.jpg')
+	print(result)
+示例输出结果：
+
+	{'log_id': 3630035229987430278, 'direction': 0, 'words_result_num': 1, 'words_result': [{'words': '庆幸还年轻,还可以做一个无拘无束的浪子。有肉吃肉,无肉喝水'}]}
 		
