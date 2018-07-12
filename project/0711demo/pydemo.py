@@ -1,6 +1,5 @@
 from aip import AipOcr
 
-
 # 定义常量  
 APP_ID = '11521768'
 API_KEY = 'HU6vkBZNSzBNCjc03wmKURKA'
@@ -21,6 +20,8 @@ options = {
     'detect_direction': 'true',
     'language_type': 'CHN_ENG',
 }
+# 新建文件来存储
+file_name = open('ocr_text.txt','w')
 
 # 网络图片文字文字识别接口
 result = aipOcr.webImage(get_file_content(filePath),options)
@@ -28,4 +29,8 @@ result = aipOcr.webImage(get_file_content(filePath),options)
 # 如果图片是url 调用示例如下
 # result = apiOcr.webImage('http://www.xxxxxx.com/img.jpg')
 
-print(result)
+f = result.get('words_result')
+for i in f:
+    file_name.write(i.get('words')+'\n')
+
+file_name.close()
