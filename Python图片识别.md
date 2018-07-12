@@ -96,6 +96,9 @@ tips:
 
 
 ##1.使用百度OCR
+安装百度ocr
+
+	执行pip install baidu-aip
 示例语句：
 
 	from aip import AipOcr
@@ -190,4 +193,82 @@ tips:
 示例输出结果：
 
 	{'log_id': 3630035229987430278, 'direction': 0, 'words_result_num': 1, 'words_result': [{'words': '庆幸还年轻,还可以做一个无拘无束的浪子。有肉吃肉,无肉喝水'}]}
+
+将输出文字保存：
+
+	from aip import AipOcr
+	# 定义常量  
+	APP_ID = '11521768'
+	API_KEY = 'HU6vkBZNSzBNCjc03wmKURKA'
+	SECRET_KEY = 'RwtseKzRBdqPQDt8y5i8Nu6zYBXVOjR2'
+	# 初始化文字识别分类器
+	aipOcr=AipOcr(APP_ID, API_KEY, SECRET_KEY)
+	# 读取图片  
+	filePath = "ry.jpg"
+	def get_file_content(filePath):
+	    with open(filePath, 'rb') as fp:
+	        return fp.read()
+	# 定义参数变量
+	options = {
+	    'detect_direction': 'true',
+	    'language_type': 'CHN_ENG',
+	}
+	# 新建文件来存储
+	file_name = open('text-a.txt','w')
+	# 网络图片文字文字识别接口
+	result = aipOcr.webImage(get_file_content(filePath),options)
+	# 如果图片是url 调用示例如下
+	# result = apiOcr.webImage('http://www.xxxxxx.com/img.jpg')
+	f = result.get('words_result')
+	for i in f:
+	    file_name.write(i.get('words'))
+	file_name.close()
+#7.12
+
+
+##1.百度OCR识别表格
+
+	from aip import AipOcr
+	import urllib.request
+	import time
+	
+	# 定义常量  
+	APP_ID = '11521768'
+	API_KEY = 'HU6vkBZNSzBNCjc03wmKURKA'
+	SECRET_KEY = 'RwtseKzRBdqPQDt8y5i8Nu6zYBXVOjR2'
+	
+	# 初始化文字识别分类器
+	client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+	
+	# 读取图片  
+	def get_file_content(filePath):
+	    with open(filePath, 'rb') as fp:
+	        return fp.read()
+	
+	image = get_file_content('ry.jpg')
+	
+	wzsb = client.tableRecognitionAsync(image)		//获得请求数据，返回示例如下行红字
+	
+	# {'result': [{'request_id': '11521768_379174'}], 'log_id': 153140371183330}
+	
+	requestId = wzsb.get('result')[0].get('request_id')		//获取下载request_id
+	time.sleep(20)		//由于识别需要时间，所以需要先将程序睡眠20秒左右
+	
+	""" 调用表格识别结果 """
+	# client.getTableRecognitionResult(requestId);
+	
+	""" 如果有可选参数 """
+	# options = {}
+	# options['request_type'] = 'excel'
+	
+	""" 带参数调用表格识别结果 """
+	# client.getTableRecognitionResult(requestId,options);
+
+	result = client.getTableRecognitionResult(requestId)	//表格识别结果 返回数据参数详情如下行红字
+	# { result: { result_data: 'url',ret_msg: '未开始', request_id: '10829160_178511',percent: 0,ret_code: 1 },log_id: 151852085326438 }
+	url = result.get('result').get('result_data')	//获取返回值得URL
+	response = urllib.request.urlopen(url)		//剩余几句将程序下载到本地
+	exc = response.read()
+	with open('test.xls', 'wb') as f:
+	    f.write(exc)
 		
