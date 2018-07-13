@@ -34,7 +34,6 @@ time.sleep(20)
 """ 带参数调用表格识别结果 """
 result = client.getTableRecognitionResult(requestId)
 url = result.get('result').get('result_data')
-
 response = urllib.request.urlopen(url)
 exc = response.read()
 

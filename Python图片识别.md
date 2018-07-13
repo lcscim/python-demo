@@ -252,7 +252,7 @@ tips:
 	# {'result': [{'request_id': '11521768_379174'}], 'log_id': 153140371183330}
 	
 	requestId = wzsb.get('result')[0].get('request_id')		//获取下载request_id
-	time.sleep(20)		//由于识别需要时间，所以需要先将程序睡眠20秒左右
+	time.sleep(20)		//由于识别需要时间，所以需要先将程序睡眠20秒左右,程序睡眠时间依据文件大小而定
 	
 	""" 调用表格识别结果 """
 	# client.getTableRecognitionResult(requestId);
