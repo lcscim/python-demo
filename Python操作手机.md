@@ -104,3 +104,18 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。官方文
 			查看进程
 			查看实时资源占用情况
 			其它
+#7.14
+
+tips:
+
+
+##1.appium
+appium 是一个自动化测试开源工具，支持 iOS 平台和 Android 平台上的原生应用，web应用和混合应用。是一个跨平台的工具：它允许测试人员在不同的平台（iOS，Android）使用同一套API来写自动化测试脚本，这样大大增加了iOS和Android测试套件间代码的复用性。
+
+###1.1安装
+1. 如果使用 Android 模拟器运行测试的话需要安装ANDROID SDK。教程地址：
+
+	http://www.testclass.net/appium/appium-base-sdk/
+2. 安装 appium Server，教程地址http://www.testclass.net/appium/appium-base-server/
+
+	下载地址：
