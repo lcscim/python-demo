@@ -118,4 +118,37 @@ appium 是一个自动化测试开源工具，支持 iOS 平台和 Android 平�
 	http://www.testclass.net/appium/appium-base-sdk/
 2. 安装 appium Server，教程地址http://www.testclass.net/appium/appium-base-server/
 
-	下载地址：
+	下载地址：https://bitbucket.org/appium/appium.app/downloads/
+3. 对于Python，需安装python-client，安装与测试http://www.testclass.net/appium/appium-base-python/
+
+	使用pip安装语句如下
+
+		pip install Appium-Python-Client
+	安装后使用以下内容测试：
+
+		from appium import webdriver
+		desired_caps = {}
+		desired_caps['platformName'] = 'Android'
+		desired_caps['platformVersion'] = '6.0'
+		desired_caps['deviceName'] = 'Android Emulator'
+		desired_caps['appPackage'] = 'com.android.calculator2'
+		desired_caps['appActivity'] = '.Calculator'
+		driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+		driver.find_element_by_name("1").click()		
+		driver.find_element_by_name("5").click()		
+		driver.find_element_by_name("9").click()		
+		driver.find_element_by_name("DEL").click()		
+		driver.find_element_by_name("9").click()	
+		driver.find_element_by_name("5").click()	
+		driver.find_element_by_name("+").click()	
+		driver.find_element_by_name("6").click()	
+		driver.find_element_by_name("=").click()	
+		driver.quit()
+	注意：使用安卓虚拟机测试以安卓6.0版本测试，其他不保证正常运行
+4. 由于appium server很久没更新， Appium-desktop出现为其续命，语法有些改变
+
+	下载地址：https://github.com/appium/appium-desktop/releases
+	
+
+
+
