@@ -504,3 +504,33 @@ Appium的辅助类，主要针对手势操作，比如滑动、长按、拖动�
 		String content = "some data for the file";
 		byte[] data = Base64.encodeBase64(content.getBytes());
 		driver.pushFile("sdcard/test.txt", data);
+##1.9 获取android app的Activity
+方法一
+
+	如有你有待测项目的源码，那么直接查看源码就好。如果没有，那么请联系有源码的同学，这是推荐方法。
+
+方法二
+
+	如果你没有代码，那么可以反编译该app。
+	这里将用到2个工具，分别是dex2jar和jd-gui。你可以在这里下载目前为止的最新版本以及示例apk。
+	我们以工具包里的ContactManager.apk为例，简单介绍一下反编译的流程。
+	1，重命名ContactManager.apk为ContactManager.zip并解压得到文件classes.dex；
+	2，解压dex2jar-0.0.9.15.zip，并从命令行进入该文件夹；
+	3，运行命令
+		d2j-dex2jar.bat path_to\classes.dex
+		在当前文件夹下得到classes-dex2jar.jar；
+	4，解压jd-gui-0.3.6.windows.zip得到文件jd-gui.exe；
+	5，使用jd-gui.exe打开classes-dex2jar.jar；
+方法三
+
+	使用log查看大法(嗯，windows上没grep不幸福，好在有powershell的Select-String，可以拿来勉强一用)，直接搬砖。
+
+		a、启动待测apk
+		b、开启日志输出：adb logcat>D:/log.txt
+		c、关闭日志输出：ctrl+c
+		d、查看日志
+	找寻：
+
+	Displayed com.mm.android.hsy/.ui.LoginActivity: +3s859ms
+	appPackage = com.mm.android.hsy
+	appActivity = .ui.LoginActivity
