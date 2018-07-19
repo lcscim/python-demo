@@ -97,3 +97,34 @@
 adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 
 - 官方文档：https://github.com/mzlogin/awesome-adb/blob/master/README.en.md#reference-links
+
+##7.Python机器学习
+- OpenCV OpenCV是一个基于BSD许可（开源）发行的跨平台计算机视觉库，可以运行在Linux、Windows、Android和Mac OS操作系统上。它轻量级而且高效——由一系列 C 函数和少量 C++ 类构成，同时提供了Python、Ruby、MATLAB等语言的接口，实现了图像处理和计算机视觉方面的很多通用算法。OpenCV用C++语言编写，它的主要接口也是C++语言，但是依然保留了大量的C语言接口。该库也有大量的Python、Java and MATLAB/OCTAVE（版本2.5）的接口。这些语言的API接口函数可以通过在线文档获得。如今也提供对于C#、Ch、Ruby,GO的支持。
+
+	文档地址：https://docs.opencv.org/2.4/modules/refman.html
+- numpy NumPy系统是Python的一种开源的数值计算扩展。这种工具可用来存储和处理大型矩阵，比Python自身的嵌套列表（nested list structure)结构要高效的多（该结构也可以用来表示矩阵（matrix））。一个用python实现的科学计算包。包括：1、一个强大的N维数组对象Array；2、比较成熟的（广播）函数库；3、用于整合C/C++和Fortran代码的工具包；4、实用的线性代数、傅里叶变换和随机数生成函数。numpy和稀疏矩阵运算包scipy配合使用更加方便。NumPy（Numeric Python）提供了许多高级的数值编程工具，如：矩阵数据类型、矢量处理，以及精密的运算库。专为进行严格的数字处理而产生。多为很多大型金融公司使用，以及核心的科学计算组织如：Lawrence Livermore，NASA用其处理一些本来使用C++，Fortran或Matlab等所做的任务。
+
+	文档地址：https://docs.scipy.org/doc/numpy/index.html
+- shutil 模块对文件和文件集合提供了许多高级操作。特别是，提供了支持文件复制和删除的功能。
+
+	文档地址：https://docs.python.org/2/library/shutil.html
+- colorsys 模块定义了在计算机监视器中使用的RGB（红绿蓝）颜色空间和三个其他坐标系统中表示的颜色之间的颜色值的双向转换：YIQ，HLS（色调亮度饱和度）和HSV（色调饱和度值）。所有这些颜色空间中的坐标都是浮点值。在YIQ空间中，Y坐标介于0和1之间，但I和Q坐标可以是正数或负数。在所有其他空间中，坐标都在0和1之间。
+
+	文档地址：https://docs.python.org/2/library/colorsys.html
+- scipy 是数学，科学和工程的开源软件。
+
+	文档地址：https://docs.scipy.org/doc/scipy/reference/
+- Matplotlib 是一个Python 2D绘图库，可以生成各种硬拷贝格式和跨平台交互式环境的出版物质量数据。Matplotlib可用于Python脚本，Python和IPython shell，Jupyter笔记本，Web应用程序服务器和四个图形用户界面工具包。
+
+	文档地址：https://matplotlib.org/contents.html 
+- Scikit learn 也简称sklearn，是机器学习领域当中最知名的python模块之一。sklearn包含了很多机器学习的方式：
+
+		Classification 分类
+		Regression 回归
+		Clustering 非监督分类
+		Dimensionality reduction 数据降维
+		Model Selection 模型选择
+		Preprocessing 数据与处理
+	使用sklearn可以很方便地让我们实现一个机器学习算法。一个复杂度算法的实现，使用sklearn可能只需要调用几行API即可。所以学习sklearn，可以有效减少我们特定任务的实现周期。
+	
+	文档地址：http://scikit-learn.org/stable/modules/classes.html

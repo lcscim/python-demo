@@ -434,147 +434,10 @@ k-近邻算法的一般流程：
 
 	在kNN_test02.py文件中编写名为showdatas的函数，用来将数据可视化。编写代码如下：
 
-		
-# -*- coding: UTF-8 -*-
-from matplotlib.font_manager import FontProperties
-import matplotlib.lines as mlines
-import matplotlib.pyplot as plt
-import numpy as np
-
-"""
-函数说明:打开并解析文件，对数据进行分类：1代表不喜欢,2代表魅力一般,3代表极具魅力
-
-Parameters:
-    filename - 文件名
-Returns:
-    returnMat - 特征矩阵
-    classLabelVector - 分类Label向量
-
-Modify:
-    2017-03-24
-"""
-def file2matrix(filename):
-    #打开文件
-    fr = open(filename)
-    #读取文件所有内容
-    arrayOLines = fr.readlines()
-    #得到文件行数
-    numberOfLines = len(arrayOLines)
-    #返回的NumPy矩阵,解析完成的数据:numberOfLines行,3列
-    returnMat = np.zeros((numberOfLines,3))
-    #返回的分类标签向量
-    classLabelVector = []
-    #行的索引值
-    index = 0
-    for line in arrayOLines:
-        #s.strip(rm)，当rm空时,默认删除空白符(包括'\n','\r','\t',' ')
-        line = line.strip()
-        #使用s.split(str="",num=string,cout(str))将字符串根据'\t'分隔符进行切片。
-        listFromLine = line.split('\t')
-        #将数据前三列提取出来,存放到returnMat的NumPy矩阵中,也就是特征矩阵
-        returnMat[index,:] = listFromLine[0:3]
-        #根据文本中标记的喜欢的程度进行分类,1代表不喜欢,2代表魅力一般,3代表极具魅力
-        if listFromLine[-1] == 'didntLike':
-            classLabelVector.append(1)
-        elif listFromLine[-1] == 'smallDoses':
-            classLabelVector.append(2)
-        elif listFromLine[-1] == 'largeDoses':
-            classLabelVector.append(3)
-        index += 1
-    return returnMat, classLabelVector
-
-"""
-函数说明:可视化数据
-
-Parameters:
-    datingDataMat - 特征矩阵
-    datingLabels - 分类Label
-Returns:
-    无
-Modify:
-    2017-03-24
-"""
-def showdatas(datingDataMat, datingLabels):
-    #设置汉字格式
-    font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
-    #将fig画布分隔成1行1列,不共享x轴和y轴,fig画布的大小为(13,8)
-    #当nrow=2,nclos=2时,代表fig画布被分为四个区域,axs[0][0]表示第一行第一个区域
-    fig, axs = plt.subplots(nrows=2, ncols=2,sharex=False, sharey=False, figsize=(13,8))
-
-    numberOfLabels = len(datingLabels)
-    LabelsColors = []
-    for i in datingLabels:
-        if i == 1:
-            LabelsColors.append('black')
-        if i == 2:
-            LabelsColors.append('orange')
-        if i == 3:
-            LabelsColors.append('red')
-    #画出散点图,以datingDataMat矩阵的第一(飞行常客例程)、第二列(玩游戏)数据画散点数据,散点大小为15,透明度为0.5
-    axs[0][0].scatter(x=datingDataMat[:,0], y=datingDataMat[:,1], color=LabelsColors,s=15, alpha=.5)
-    #设置标题,x轴label,y轴label
-    axs0_title_text = axs[0][0].set_title(u'每年获得的飞行常客里程数与玩视频游戏所消耗时间占比',FontProperties=font)
-    axs0_xlabel_text = axs[0][0].set_xlabel(u'每年获得的飞行常客里程数',FontProperties=font)
-    axs0_ylabel_text = axs[0][0].set_ylabel(u'玩视频游戏所消耗时间占',FontProperties=font)
-    plt.setp(axs0_title_text, size=9, weight='bold', color='red') 
-    plt.setp(axs0_xlabel_text, size=7, weight='bold', color='black') 
-    plt.setp(axs0_ylabel_text, size=7, weight='bold', color='black')
-
-    #画出散点图,以datingDataMat矩阵的第一(飞行常客例程)、第三列(冰激凌)数据画散点数据,散点大小为15,透明度为0.5
-    axs[0][1].scatter(x=datingDataMat[:,0], y=datingDataMat[:,2], color=LabelsColors,s=15, alpha=.5)
-    #设置标题,x轴label,y轴label
-    axs1_title_text = axs[0][1].set_title(u'每年获得的飞行常客里程数与每周消费的冰激淋公升数',FontProperties=font)
-    axs1_xlabel_text = axs[0][1].set_xlabel(u'每年获得的飞行常客里程数',FontProperties=font)
-    axs1_ylabel_text = axs[0][1].set_ylabel(u'每周消费的冰激淋公升数',FontProperties=font)
-    plt.setp(axs1_title_text, size=9, weight='bold', color='red') 
-    plt.setp(axs1_xlabel_text, size=7, weight='bold', color='black') 
-    plt.setp(axs1_ylabel_text, size=7, weight='bold', color='black')
-
-    #画出散点图,以datingDataMat矩阵的第二(玩游戏)、第三列(冰激凌)数据画散点数据,散点大小为15,透明度为0.5
-    axs[1][0].scatter(x=datingDataMat[:,1], y=datingDataMat[:,2], color=LabelsColors,s=15, alpha=.5)
-    #设置标题,x轴label,y轴label
-    axs2_title_text = axs[1][0].set_title(u'玩视频游戏所消耗时间占比与每周消费的冰激淋公升数',FontProperties=font)
-    axs2_xlabel_text = axs[1][0].set_xlabel(u'玩视频游戏所消耗时间占比',FontProperties=font)
-    axs2_ylabel_text = axs[1][0].set_ylabel(u'每周消费的冰激淋公升数',FontProperties=font)
-    plt.setp(axs2_title_text, size=9, weight='bold', color='red') 
-    plt.setp(axs2_xlabel_text, size=7, weight='bold', color='black') 
-    plt.setp(axs2_ylabel_text, size=7, weight='bold', color='black')
-    #设置图例
-    didntLike = mlines.Line2D([], [], color='black', marker='.',
-                      markersize=6, label='didntLike')
-    smallDoses = mlines.Line2D([], [], color='orange', marker='.',
-                      markersize=6, label='smallDoses')
-    largeDoses = mlines.Line2D([], [], color='red', marker='.',
-                      markersize=6, label='largeDoses')
-    #添加图例
-    axs[0][0].legend(handles=[didntLike,smallDoses,largeDoses])
-    axs[0][1].legend(handles=[didntLike,smallDoses,largeDoses])
-    axs[1][0].legend(handles=[didntLike,smallDoses,largeDoses])
-    #显示图片
-    plt.show()
-
-"""
-函数说明:main函数
-
-Parameters:
-    无
-Returns:
-    无
-
-Modify:
-    2017-03-24
-"""
-if __name__ == '__main__':
-    #打开的文件名
-    filename = "datingTestSet.txt"
-    #打开并处理数据
-    datingDataMat, datingLabels = file2matrix(filename)
-    showdatas(datingDataMat, datingLabels)
-
 		# -*- coding: UTF-8 -*-
-		from matplotlib.font_manager import FontProperties
-		import matplotlib.lines as mlines
-		import matplotlib.pyplot as plt
+		from matplotlib.font_manager import FontProperties	//用于跨平台查找，管理和使用字体的模块。
+		import matplotlib.lines as mlines	//此模块包含所有可以使用各种线条样式，标记和颜色绘制的2D线类。
+		import matplotlib.pyplot as plt	//该matplotlib.pyplot模块包含的功能允许您快速生成多种图形。有关展示matplotlib.pyplot模块使用的示例
 		import numpy as np
 		 
 		"""
@@ -713,3 +576,645 @@ if __name__ == '__main__':
 	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_10.jpg)
 	计算方法如图2.4所示
 	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_11.jpg)
+
+	我们很容易发现，上面方程中数字差值最大的属性对计算结果的影响最大，也就是说，每年获取的飞行常客里程数对于计算结果的影响将远远大于表2.1中其他两个特征-玩视频游戏所耗时间占比和每周消费冰淇淋公斤数的影响。而产生这种现象的唯一原因，仅仅是因为飞行常客里程数远大于其他特征值。但海伦认为这三种特征是同等重要的，因此作为三个等权重的特征之一，飞行常客里程数并不应该如此严重地影响到计算结果。
+
+	在处理这种不同取值范围的特征值时，我们通常采用的方法是将数值归一化，如将取值范围处理为０到１或者-１到１之间。下面的公式可以将任意取值范围的特征值转化为０到１区间内的值：
+
+		newValue = (oldValue - min) / (max - min)
+
+	其中min和max分别是数据集中的最小特征值和最大特征值。虽然改变数值取值范围增加了分类器的复杂度，但为了得到准确结果，我们必须这样做。在kNN_test02.py文件中编写名为autoNorm的函数，用该函数自动将数据归一化。
+
+		import numpy as np
+ 
+		"""
+		函数说明:打开并解析文件，对数据进行分类：1代表不喜欢,2代表魅力一般,3代表极具魅力
+		 
+		Parameters:
+		    filename - 文件名
+		Returns:
+		    returnMat - 特征矩阵
+		    classLabelVector - 分类Label向量
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def file2matrix(filename):
+		    #打开文件
+		    fr = open(filename)
+		    #读取文件所有内容
+		    arrayOLines = fr.readlines()
+		    #得到文件行数
+		    numberOfLines = len(arrayOLines)
+		    #返回的NumPy矩阵,解析完成的数据:numberOfLines行,3列
+		    returnMat = np.zeros((numberOfLines,3))
+		    #返回的分类标签向量
+		    classLabelVector = []
+		    #行的索引值
+		    index = 0
+		    for line in arrayOLines:
+		        #s.strip(rm)，当rm空时,默认删除空白符(包括'\n','\r','\t',' ')
+		        line = line.strip()
+		        #使用s.split(str="",num=string,cout(str))将字符串根据'\t'分隔符进行切片。
+		        listFromLine = line.split('\t')
+		        #将数据前三列提取出来,存放到returnMat的NumPy矩阵中,也就是特征矩阵
+		        returnMat[index,:] = listFromLine[0:3]
+		        #根据文本中标记的喜欢的程度进行分类,1代表不喜欢,2代表魅力一般,3代表极具魅力
+		        if listFromLine[-1] == 'didntLike':
+		            classLabelVector.append(1)
+		        elif listFromLine[-1] == 'smallDoses':
+		            classLabelVector.append(2)
+		        elif listFromLine[-1] == 'largeDoses':
+		            classLabelVector.append(3)
+		        index += 1
+		    return returnMat, classLabelVector
+		 
+		"""
+		函数说明:对数据进行归一化
+		 
+		Parameters:
+		    dataSet - 特征矩阵
+		Returns:
+		    normDataSet - 归一化后的特征矩阵
+		    ranges - 数据范围
+		    minVals - 数据最小值
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def autoNorm(dataSet):
+		    #获得数据的最小值
+		    minVals = dataSet.min(0)
+		    maxVals = dataSet.max(0)
+		    #最大值和最小值的范围
+		    ranges = maxVals - minVals
+		    #shape(dataSet)返回dataSet的矩阵行列数
+		    normDataSet = np.zeros(np.shape(dataSet))
+		    #返回dataSet的行数
+		    m = dataSet.shape[0]
+		    #原始值减去最小值
+		    normDataSet = dataSet - np.tile(minVals, (m, 1))
+		    #除以最大和最小值的差,得到归一化数据
+		    normDataSet = normDataSet / np.tile(ranges, (m, 1))
+		    #返回归一化数据结果,数据范围,最小值
+		    return normDataSet, ranges, minVals
+		 
+		"""
+		函数说明:main函数
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-03-24
+		"""
+		if __name__ == '__main__':
+		    #打开的文件名
+		    filename = "datingTestSet.txt"
+		    #打开并处理数据
+		    datingDataMat, datingLabels = file2matrix(filename)
+		    normDataSet, ranges, minVals = autoNorm(datingDataMat)
+		    print(normDataSet)
+		    print(ranges)
+		    print(minVals)
+- 测试算法：验证分类器
+
+	机器学习算法一个很重要的工作就是评估算法的正确率，通常我们只提供已有数据的90%作为训练样本来训练分类器，而使用其余的10%数据去测试分类器，检测分类器的正确率。需要注意的是，10%的测试数据应该是随机选择的，由于海伦提供的数据并没有按照特定目的来排序，所以我们可以随意选择10%数据而不影响其随机性。
+
+		import numpy as np
+		import operator
+		 
+		"""
+		函数说明:kNN算法,分类器
+		 
+		Parameters:
+		    inX - 用于分类的数据(测试集)
+		    dataSet - 用于训练的数据(训练集)
+		    labes - 分类标签
+		    k - kNN算法参数,选择距离最小的k个点
+		Returns:
+		    sortedClassCount[0][0] - 分类结果
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def classify0(inX, dataSet, labels, k):
+		    #numpy函数shape[0]返回dataSet的行数
+		    dataSetSize = dataSet.shape[0]
+		    #在列向量方向上重复inX共1次(横向),行向量方向上重复inX共dataSetSize次(纵向)
+		    diffMat = np.tile(inX, (dataSetSize, 1)) - dataSet
+		    #二维特征相减后平方
+		    sqDiffMat = diffMat**2
+		    #sum()所有元素相加,sum(0)列相加,sum(1)行相加
+		    sqDistances = sqDiffMat.sum(axis=1)
+		    #开方,计算出距离
+		    distances = sqDistances**0.5
+		    #返回distances中元素从小到大排序后的索引值
+		    sortedDistIndices = distances.argsort()
+		    #定一个记录类别次数的字典
+		    classCount = {}
+		    for i in range(k):
+		        #取出前k个元素的类别
+		        voteIlabel = labels[sortedDistIndices[i]]
+		        #dict.get(key,default=None),字典的get()方法,返回指定键的值,如果值不在字典中返回默认值。
+		        #计算类别次数
+		        classCount[voteIlabel] = classCount.get(voteIlabel,0) + 1
+		    #python3中用items()替换python2中的iteritems()
+		    #key=operator.itemgetter(1)根据字典的值进行排序
+		    #key=operator.itemgetter(0)根据字典的键进行排序
+		    #reverse降序排序字典
+		    sortedClassCount = sorted(classCount.items(),key=operator.itemgetter(1),reverse=True)
+		    #返回次数最多的类别,即所要分类的类别
+		    return sortedClassCount[0][0]
+		 
+		"""
+		函数说明:打开并解析文件，对数据进行分类：1代表不喜欢,2代表魅力一般,3代表极具魅力
+		 
+		Parameters:
+		    filename - 文件名
+		Returns:
+		    returnMat - 特征矩阵
+		    classLabelVector - 分类Label向量
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def file2matrix(filename):
+		    #打开文件
+		    fr = open(filename)
+		    #读取文件所有内容
+		    arrayOLines = fr.readlines()
+		    #得到文件行数
+		    numberOfLines = len(arrayOLines)
+		    #返回的NumPy矩阵,解析完成的数据:numberOfLines行,3列
+		    returnMat = np.zeros((numberOfLines,3))
+		    #返回的分类标签向量
+		    classLabelVector = []
+		    #行的索引值
+		    index = 0
+		    for line in arrayOLines:
+		        #s.strip(rm)，当rm空时,默认删除空白符(包括'\n','\r','\t',' ')
+		        line = line.strip()
+		        #使用s.split(str="",num=string,cout(str))将字符串根据'\t'分隔符进行切片。
+		        listFromLine = line.split('\t')
+		        #将数据前三列提取出来,存放到returnMat的NumPy矩阵中,也就是特征矩阵
+		        returnMat[index,:] = listFromLine[0:3]
+		        #根据文本中标记的喜欢的程度进行分类,1代表不喜欢,2代表魅力一般,3代表极具魅力
+		        if listFromLine[-1] == 'didntLike':
+		            classLabelVector.append(1)
+		        elif listFromLine[-1] == 'smallDoses':
+		            classLabelVector.append(2)
+		        elif listFromLine[-1] == 'largeDoses':
+		            classLabelVector.append(3)
+		        index += 1
+		    return returnMat, classLabelVector
+		 
+		"""
+		函数说明:对数据进行归一化
+		 
+		Parameters:
+		    dataSet - 特征矩阵
+		Returns:
+		    normDataSet - 归一化后的特征矩阵
+		    ranges - 数据范围
+		    minVals - 数据最小值
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def autoNorm(dataSet):
+		    #获得数据的最小值
+		    minVals = dataSet.min(0)
+		    maxVals = dataSet.max(0)
+		    #最大值和最小值的范围
+		    ranges = maxVals - minVals
+		    #shape(dataSet)返回dataSet的矩阵行列数
+		    normDataSet = np.zeros(np.shape(dataSet))
+		    #返回dataSet的行数
+		    m = dataSet.shape[0]
+		    #原始值减去最小值
+		    normDataSet = dataSet - np.tile(minVals, (m, 1))
+		    #除以最大和最小值的差,得到归一化数据
+		    normDataSet = normDataSet / np.tile(ranges, (m, 1))
+		    #返回归一化数据结果,数据范围,最小值
+		    return normDataSet, ranges, minVals
+		 
+		 
+		"""
+		函数说明:分类器测试函数
+		 
+		Parameters:
+		    无
+		Returns:
+		    normDataSet - 归一化后的特征矩阵
+		    ranges - 数据范围
+		    minVals - 数据最小值
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def datingClassTest():
+		    #打开的文件名
+		    filename = "datingTestSet.txt"
+		    #将返回的特征矩阵和分类向量分别存储到datingDataMat和datingLabels中
+		    datingDataMat, datingLabels = file2matrix(filename)
+		    #取所有数据的百分之十
+		    hoRatio = 0.10
+		    #数据归一化,返回归一化后的矩阵,数据范围,数据最小值
+		    normMat, ranges, minVals = autoNorm(datingDataMat)
+		    #获得normMat的行数
+		    m = normMat.shape[0]
+		    #百分之十的测试数据的个数
+		    numTestVecs = int(m * hoRatio)
+		    #分类错误计数
+		    errorCount = 0.0
+		 
+		    for i in range(numTestVecs):
+		        #前numTestVecs个数据作为测试集,后m-numTestVecs个数据作为训练集
+		        classifierResult = classify0(normMat[i,:], normMat[numTestVecs:m,:],
+		            datingLabels[numTestVecs:m], 4)
+		        print("分类结果:%d\t真实类别:%d" % (classifierResult, datingLabels[i]))
+		        if classifierResult != datingLabels[i]:
+		            errorCount += 1.0
+		    print("错误率:%f%%" %(errorCount/float(numTestVecs)*100))
+		 
+		"""
+		函数说明:main函数
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-03-24
+		"""
+		if __name__ == '__main__':
+		    datingClassTest()
+	运行上述代码，得到结果如图2.5所示:
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_13.jpg)
+- 使用算法：构建完整可用系统
+
+	我们可以给海伦一个小段程序，通过该程序海伦会在约会网站上找到某个人并输入他的信息。程序会给出她对男方喜欢程度的预测值。
+
+		import numpy as np
+		import operator
+		 
+		"""
+		函数说明:kNN算法,分类器
+		 
+		Parameters:
+		    inX - 用于分类的数据(测试集)
+		    dataSet - 用于训练的数据(训练集)
+		    labes - 分类标签
+		    k - kNN算法参数,选择距离最小的k个点
+		Returns:
+		    sortedClassCount[0][0] - 分类结果
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def classify0(inX, dataSet, labels, k):
+		    #numpy函数shape[0]返回dataSet的行数
+		    dataSetSize = dataSet.shape[0]
+		    #在列向量方向上重复inX共1次(横向),行向量方向上重复inX共dataSetSize次(纵向)
+		    diffMat = np.tile(inX, (dataSetSize, 1)) - dataSet
+		    #二维特征相减后平方
+		    sqDiffMat = diffMat**2
+		    #sum()所有元素相加,sum(0)列相加,sum(1)行相加
+		    sqDistances = sqDiffMat.sum(axis=1)
+		    #开方,计算出距离
+		    distances = sqDistances**0.5
+		    #返回distances中元素从小到大排序后的索引值
+		    sortedDistIndices = distances.argsort()
+		    #定一个记录类别次数的字典
+		    classCount = {}
+		    for i in range(k):
+		        #取出前k个元素的类别
+		        voteIlabel = labels[sortedDistIndices[i]]
+		        #dict.get(key,default=None),字典的get()方法,返回指定键的值,如果值不在字典中返回默认值。
+		        #计算类别次数
+		        classCount[voteIlabel] = classCount.get(voteIlabel,0) + 1
+		    #python3中用items()替换python2中的iteritems()
+		    #key=operator.itemgetter(1)根据字典的值进行排序
+		    #key=operator.itemgetter(0)根据字典的键进行排序
+		    #reverse降序排序字典
+		    sortedClassCount = sorted(classCount.items(),key=operator.itemgetter(1),reverse=True)
+		    #返回次数最多的类别,即所要分类的类别
+		    return sortedClassCount[0][0]
+		 
+		 
+		"""
+		函数说明:打开并解析文件，对数据进行分类：1代表不喜欢,2代表魅力一般,3代表极具魅力
+		 
+		Parameters:
+		    filename - 文件名
+		Returns:
+		    returnMat - 特征矩阵
+		    classLabelVector - 分类Label向量
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def file2matrix(filename):
+		    #打开文件
+		    fr = open(filename)
+		    #读取文件所有内容
+		    arrayOLines = fr.readlines()
+		    #得到文件行数
+		    numberOfLines = len(arrayOLines)
+		    #返回的NumPy矩阵,解析完成的数据:numberOfLines行,3列
+		    returnMat = np.zeros((numberOfLines,3))
+		    #返回的分类标签向量
+		    classLabelVector = []
+		    #行的索引值
+		    index = 0
+		    for line in arrayOLines:
+		        #s.strip(rm)，当rm空时,默认删除空白符(包括'\n','\r','\t',' ')
+		        line = line.strip()
+		        #使用s.split(str="",num=string,cout(str))将字符串根据'\t'分隔符进行切片。
+		        listFromLine = line.split('\t')
+		        #将数据前三列提取出来,存放到returnMat的NumPy矩阵中,也就是特征矩阵
+		        returnMat[index,:] = listFromLine[0:3]
+		        #根据文本中标记的喜欢的程度进行分类,1代表不喜欢,2代表魅力一般,3代表极具魅力
+		        if listFromLine[-1] == 'didntLike':
+		            classLabelVector.append(1)
+		        elif listFromLine[-1] == 'smallDoses':
+		            classLabelVector.append(2)
+		        elif listFromLine[-1] == 'largeDoses':
+		            classLabelVector.append(3)
+		        index += 1
+		    return returnMat, classLabelVector
+		 
+		"""
+		函数说明:对数据进行归一化
+		 
+		Parameters:
+		    dataSet - 特征矩阵
+		Returns:
+		    normDataSet - 归一化后的特征矩阵
+		    ranges - 数据范围
+		    minVals - 数据最小值
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def autoNorm(dataSet):
+		    #获得数据的最小值
+		    minVals = dataSet.min(0)
+		    maxVals = dataSet.max(0)
+		    #最大值和最小值的范围
+		    ranges = maxVals - minVals
+		    #shape(dataSet)返回dataSet的矩阵行列数
+		    normDataSet = np.zeros(np.shape(dataSet))
+		    #返回dataSet的行数
+		    m = dataSet.shape[0]
+		    #原始值减去最小值
+		    normDataSet = dataSet - np.tile(minVals, (m, 1))
+		    #除以最大和最小值的差,得到归一化数据
+		    normDataSet = normDataSet / np.tile(ranges, (m, 1))
+		    #返回归一化数据结果,数据范围,最小值
+		    return normDataSet, ranges, minVals
+		 
+		"""
+		函数说明:通过输入一个人的三维特征,进行分类输出
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-03-24
+		"""
+		def classifyPerson():
+		    #输出结果
+		    resultList = ['讨厌','有些喜欢','非常喜欢']
+		    #三维特征用户输入
+		    precentTats = float(input("玩视频游戏所耗时间百分比:"))
+		    ffMiles = float(input("每年获得的飞行常客里程数:"))
+		    iceCream = float(input("每周消费的冰激淋公升数:"))
+		    #打开的文件名
+		    filename = "datingTestSet.txt"
+		    #打开并处理数据
+		    datingDataMat, datingLabels = file2matrix(filename)
+		    #训练集归一化
+		    normMat, ranges, minVals = autoNorm(datingDataMat)
+		    #生成NumPy数组,测试集
+		    inArr = np.array([ffMiles, precentTats, iceCream])
+		    #测试集归一化
+		    norminArr = (inArr - minVals) / ranges
+		    #返回分类结果
+		    classifierResult = classify0(norminArr, normMat, datingLabels, 3)
+		    #打印结果
+		    print("你可能%s这个人" % (resultList[classifierResult-1]))
+		 
+		"""
+		函数说明:main函数
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-03-24
+		"""
+		if __name__ == '__main__':
+		    classifyPerson()
+	在cmd中，运行程序，并输入数据(12,44000,0.5)，预测结果是"你可能有些喜欢这个人"，也就是这个人魅力一般。一共有三个档次：讨厌、有些喜欢、非常喜欢，对应着不喜欢的人、魅力一般的人、极具魅力的人。结果如图2.6所示。
+
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_14_modify2.png)
+
+#7.19
+
+##1.k-近邻算法实战之sklearn手写数字识别
+1. 实战背景
+
+	对于需要识别的数字已经使用图形处理软件，处理成具有相同的色彩和大小：宽高是32像素x32像素。尽管采用本文格式存储图像不能有效地利用内存空间，但是为了方便理解，我们将图片转换为文本格式，数字的文本格式如图3.1所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_15.jpg)
+	与此同时，这些文本格式存储的数字的文件命名也很有特点，格式为：数字的值_该数字的样本序号，如图3.2所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_16.jpg)
+	对于这样已经整理好的文本，我们可以直接使用Python处理，进行数字预测。数据集分为训练集和测试集，使用上小结的方法，自己设计k-近邻算法分类器，可以实现分类。数据集和实现代码下载地址：数据集下载
+
+	这里不再讲解自己用Python写的k-邻域分类器的方法，因为这不是本小节的重点。接下来，我们将使用强大的第三方Python科学计算库Sklearn构建手写数字系统。
+2. sklearn简介
+
+	Scikit learn 也简称sklearn，是机器学习领域当中最知名的python模块之一。sklearn包含了很多机器学习的方式：
+
+		Classification 分类
+		Regression 回归
+		Clustering 非监督分类
+		Dimensionality reduction 数据降维
+		Model Selection 模型选择
+		Preprocessing 数据与处理
+	使用sklearn可以很方便地让我们实现一个机器学习算法。一个复杂度算法的实现，使用sklearn可能只需要调用几行API即可。所以学习sklearn，可以有效减少我们特定任务的实现周期。
+3. sklearn安装
+
+	在安装sklearn之前，需要安装两个库，即numpy+mkl和scipy。不要使用pip3直接进行安装，因为pip3默安装的是numpy，而不是numpy+mkl。第三方库下载地址：http://www.lfd.uci.edu/~gohlke/pythonlibs/
+
+	这个网站的使用方法，我在之前的文章里有讲过：http://blog.csdn.net/c406495762/article/details/60156205
+
+	找到对应python版本的numpy+mkl和scipy，下载安装即可，如图3.3和图3.4所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_17.jpg)
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_18.jpg)
+	使用pip3安装好这两个whl文件后，使用如下指令安装sklearn。
+
+		pip install -U scikit-learn
+4. sklearn实现k-近邻算法简介
+
+	官网英文文档：http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
+
+	sklearn.neighbors模块实现了k-近邻算法，内容如图3.5所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_19.jpg)
+	我们使用sklearn.neighbors.KNeighborsClassifier就可以是实现上小结，我们实现的k-近邻算法。KNeighborsClassifier函数一共有8个参数，如图3.6所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_20.jpg)
+	KNneighborsClassifier参数说明：
+
+	n_neighbors：默认为5，就是k-NN的k的值，选取最近的k个点。
+
+		weights：默认是uniform，参数可以是uniform、distance，也可以是用户自己定义的函数。uniform是均等的权重，就说所有的邻近点的权重都是相等的。distance是不均等的权重，距离近的点比距离远的点的影响大。用户自定义的函数，接收距离的数组，返回一组维数相同的权重。
+	
+		algorithm：快速k近邻搜索算法，默认参数为auto，可以理解为算法自己决定合适的搜索算法。除此之外，用户也可以自己指定搜索算法ball_tree、kd_tree、brute方法进行搜索，brute是蛮力搜索，也就是线性扫描，当训练集很大时，计算非常耗时。kd_tree，构造kd树存储数据以便对其进行快速检索的树形数据结构，kd树也就是数据结构中的二叉树。以中值切分构造的树，每个结点是一个超矩形，在维数小于20时效率高。ball tree是为了克服kd树高纬失效而发明的，其构造过程是以质心C和半径r分割样本空间，每个节点是一个超球体。
+	
+		leaf_size：默认是30，这个是构造的kd树和ball树的大小。这个值的设置会影响树构建的速度和搜索速度，同样也影响着存储树所需的内存大小。需要根据问题的性质选择最优的大小。
+	
+		metric：用于距离度量，默认度量是minkowski，也就是p=2的欧氏距离(欧几里德度量)。
+	
+		p：距离度量公式。在上小结，我们使用欧氏距离公式进行距离度量。除此之外，还有其他的度量方法，例如曼哈顿距离。这个参数默认为2，也就是默认使用欧式距离公式进行距离度量。也可以设置为1，使用曼哈顿距离公式进行距离度量。
+	
+		metric_params：距离公式的其他关键参数，这个可以不管，使用默认的None即可。
+	
+		n_jobs：并行处理设置。默认为1，临近点搜索并行工作数。如果为-1，那么CPU的所有cores都用于并行工作。
+
+	KNeighborsClassifier提供了以一些方法供我们使用，如图3.7所示。
+	![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_21.jpg)
+5. sklearn小试牛刀
+
+	我们知道数字图片是32x32的二进制图像，为了方便计算，我们可以将32x32的二进制图像转换为1x1024的向量。对于sklearn的KNeighborsClassifier输入可以是矩阵，不用一定转换为向量，不过为了跟自己写的k-近邻算法分类器对应上，这里也做了向量化处理。然后构建kNN分类器，利用分类器做预测。创建kNN_test04.py文件，编写代码如下：
+	
+		import numpy as np
+		import operator
+		from os import listdir
+		from sklearn.neighbors import KNeighborsClassifier as kNN
+		 
+		"""
+		函数说明:将32x32的二进制图像转换为1x1024向量。
+		 
+		Parameters:
+		    filename - 文件名
+		Returns:
+		    returnVect - 返回的二进制图像的1x1024向量
+		 
+		Modify:
+		    2017-07-15
+		"""
+		def img2vector(filename):
+		    #创建1x1024零向量
+		    returnVect = np.zeros((1, 1024))
+		    #打开文件
+		    fr = open(filename)
+		    #按行读取
+		    for i in range(32):
+		        #读一行数据
+		        lineStr = fr.readline()
+		        #每一行的前32个元素依次添加到returnVect中
+		        for j in range(32):
+		            returnVect[0, 32*i+j] = int(lineStr[j])
+		    #返回转换后的1x1024向量
+		    return returnVect
+		 
+		"""
+		函数说明:手写数字分类测试
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-07-15
+		"""
+		def handwritingClassTest():
+		    #测试集的Labels
+		    hwLabels = []
+		    #返回trainingDigits目录下的文件名
+		    trainingFileList = listdir('trainingDigits')
+		    #返回文件夹下文件的个数
+		    m = len(trainingFileList)
+		    #初始化训练的Mat矩阵,测试集
+		    trainingMat = np.zeros((m, 1024))
+		    #从文件名中解析出训练集的类别
+		    for i in range(m):
+		        #获得文件的名字
+		        fileNameStr = trainingFileList[i]
+		        #获得分类的数字
+		        classNumber = int(fileNameStr.split('_')[0])
+		        #将获得的类别添加到hwLabels中
+		        hwLabels.append(classNumber)
+		        #将每一个文件的1x1024数据存储到trainingMat矩阵中
+		        trainingMat[i,:] = img2vector('trainingDigits/%s' % (fileNameStr))
+		    #构建kNN分类器
+		    neigh = kNN(n_neighbors = 3, algorithm = 'auto')
+		    #拟合模型, trainingMat为训练矩阵,hwLabels为对应的标签
+		    neigh.fit(trainingMat, hwLabels)
+		    #返回testDigits目录下的文件列表
+		    testFileList = listdir('testDigits')
+		    #错误检测计数
+		    errorCount = 0.0
+		    #测试数据的数量
+		    mTest = len(testFileList)
+		    #从文件中解析出测试集的类别并进行分类测试
+		    for i in range(mTest):
+		        #获得文件的名字
+		        fileNameStr = testFileList[i]
+		        #获得分类的数字
+		        classNumber = int(fileNameStr.split('_')[0])
+		        #获得测试集的1x1024向量,用于训练
+		        vectorUnderTest = img2vector('testDigits/%s' % (fileNameStr))
+		        #获得预测结果
+		        # classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
+		        classifierResult = neigh.predict(vectorUnderTest)
+		        print("分类返回结果为%d\t真实结果为%d" % (classifierResult, classNumber))
+		        if(classifierResult != classNumber):
+		            errorCount += 1.0
+		    print("总共错了%d个数据\n错误率为%f%%" % (errorCount, errorCount/mTest * 100))
+		 
+		 
+		"""
+		函数说明:main函数
+		 
+		Parameters:
+		    无
+		Returns:
+		    无
+		 
+		Modify:
+		    2017-07-15
+		"""
+		if __name__ == '__main__':
+		    handwritingClassTest()
+	运行结果：![](http://cuijiahua.com/wp-content/uploads/2017/11/ml_1_22.jpg)
+
+	上述代码使用的algorithm参数是auto，更改algorithm参数为brute，使用暴力搜索，你会发现，运行时间变长了，变为10s+。更改n_neighbors参数，你会发现，不同的值，检测精度也是不同的。自己可以尝试更改这些参数的设置，加深对其函数的理解。
+##2.总结
+1. kNN算法的优缺点
+
+	优点
+	
+	简单好用，容易理解，精度高，理论成熟，既可以用来做分类也可以用来做回归；
+	可用于数值型数据和离散型数据；
+	训练时间复杂度为O(n)；无数据输入假定；
+	对异常值不敏感
+	缺点
+	
+	计算复杂性高；空间复杂性高；
+	样本不平衡问题（即有些类别的样本数量很多，而其它样本的数量很少）；
+	一般数值很大的时候不用这个，计算量太大。但是单个样本又不能太少，否则容易发生误分。
+	最大的缺点是无法给出数据的内在含义。
+2. 其他
+
+	关于algorithm参数kd_tree的原理，可以查看《统计学方法 李航》书中的讲解；
+	关于距离度量的方法还有切比雪夫距离、马氏距离、巴氏距离等；
