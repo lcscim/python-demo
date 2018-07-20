@@ -50,6 +50,12 @@
 - pyOpenSSL最初是由MartinSjögren创建的，因为Python 2.1中标准库中的SSL支持（当pyOpenSSL项目开始时Python的当代版本）受到严格限制。当时用于Python的其他OpenSSL包装器也有限，尽管方式不同。
 
 	相关内容地址：https://pyopenssl.org/en/stable/introduction.html#development
+- Splinter是一个使用Python测试Web应用程序的开源工具。它允许您自动执行浏览器操作，例如访问URL和与其项目交互。
+
+	文档地址：http://splinter.readthedocs.io/en/latest/index.html
+- bs4 Beautiful Soup是一个可以从HTML或XML文件中提取数据的Python库.它能够通过你喜欢的转换器实现惯用的文档导航,查找,修改文档的方式.Beautiful Soup会帮你节省数小时甚至数天的工作时间.
+
+	文档地址：http://beautifulsoup.readthedocs.io/zh_CN/v4.4.0/
 ##2.PythonGUI编程
 主要有一个
 
