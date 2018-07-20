@@ -128,3 +128,6 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 	使用sklearn可以很方便地让我们实现一个机器学习算法。一个复杂度算法的实现，使用sklearn可能只需要调用几行API即可。所以学习sklearn，可以有效减少我们特定任务的实现周期。
 	
 	文档地址：http://scikit-learn.org/stable/modules/classes.html
+- operator- 标准运算符作为函数该operator模块导出一组与Python的内部运算符相对应的高效函数。
+
+	文档地址：https://docs.python.org/3/library/operator.html#module-operator
