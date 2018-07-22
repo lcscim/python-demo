@@ -2571,8 +2571,24 @@ Fiddler是位于客户端和服务器端的HTTP代理，也是目前最常用的
 ##2.1抓取守望先锋APP队伍logo并命名
 
 	import requests
-	from urllib.request import urlretrieve	//导入该模块方法
+	from urllib.request import urlretrieve
+	import os
 	
+	def save_img(img_url,file_name,file_path):
+	    try:
+	        if not os.path.exists(file_path):
+	            #os.mkdir(file_path)
+	            os.makedirs(file_path)
+	        #获得图片后缀
+	        file_suffix = os.path.splitext(img_url)[1]
+	        #拼接图片名（包含路径）
+	        filename = '{}{}{}{}'.format(file_path,os.sep,file_name,file_suffix)
+	       #下载图片，并保存到文件夹中
+	        urlretrieve(img_url,filename=filename)
+	    except IOError as e:
+	        print(str(e))
+	    except Exception as e:
+	        print(str(e))
 	if __name__ == '__main__':
 	    headers = {'Host': 'api.overwatchleague.cn',
 	               'Connection': 'Keep-Alive',
@@ -2583,9 +2599,12 @@ Fiddler是位于客户端和服务器端的HTTP代理，也是目前最常用的
 	    req = requests.get(url=heros_url, headers=headers).json().get('content')
 	    print('一共有%d个队伍' %len(req))
 	    for i in req:
-	        filename = i.get('competitor').get('name')+'.jpg'
+	        filename = i.get('competitor').get('name')
 	        logo_url = i.get('competitor').get('logo')
-	        urlretrieve(url = logo_url, filename = filename)
+	        iconname = i.get('competitor').get('name')
+	        icon_url = i.get('competitor').get('icon')
+	        save_img(logo_url,filename,'image\logo')
+	        save_img(icon_url,iconname,'image\icon')
 urllib.request.urlretrieve（url，filename = None，reporthook = None，data = None ）
 
 将URL表示的网络对象复制到本地文件。如果URL指向本地文件，则除非提供filename，否则不会复制该对象。返回一个元组，其中filename是可以在其下找到对象的本地文件名，而headers是返回的对象返回方法（对于远程对象）。

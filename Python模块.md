@@ -56,6 +56,9 @@
 - bs4 Beautiful Soup是一个可以从HTML或XML文件中提取数据的Python库.它能够通过你喜欢的转换器实现惯用的文档导航,查找,修改文档的方式.Beautiful Soup会帮你节省数小时甚至数天的工作时间.
 
 	文档地址：http://beautifulsoup.readthedocs.io/zh_CN/v4.4.0/
+- requests Requests是一个优雅而简单的Python HTTP库，专为人类而构建
+
+	文档地址：http://docs.python-requests.org/zh_CN/latest/user/quickstart.html
 ##2.PythonGUI编程
 主要有一个
 
