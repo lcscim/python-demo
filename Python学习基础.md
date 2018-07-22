@@ -2568,5 +2568,34 @@ Fiddler是位于客户端和服务器端的HTTP代理，也是目前最常用的
 
 电脑上安装fiddler：https://www.telerik.com/fiddler，下载地址：https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe
 
+##2.1抓取守望先锋APP队伍logo并命名
+
+	import requests
+	from urllib.request import urlretrieve	//导入该模块方法
+	
+	if __name__ == '__main__':
+	    headers = {'Host': 'api.overwatchleague.cn',
+	               'Connection': 'Keep-Alive',
+	               'Accept-Encoding': 'gzip',
+	               'User-Agent': 'okhttp/3.6.0'
+	               }
+	    heros_url = "https://api.overwatchleague.cn/ranking"
+	    req = requests.get(url=heros_url, headers=headers).json().get('content')
+	    print('一共有%d个队伍' %len(req))
+	    for i in req:
+	        filename = i.get('competitor').get('name')+'.jpg'
+	        logo_url = i.get('competitor').get('logo')
+	        urlretrieve(url = logo_url, filename = filename)
+urllib.request.urlretrieve（url，filename = None，reporthook = None，data = None ）
+
+将URL表示的网络对象复制到本地文件。如果URL指向本地文件，则除非提供filename，否则不会复制该对象。返回一个元组，其中filename是可以在其下找到对象的本地文件名，而headers是返回的对象返回方法（对于远程对象）。
+
+前两个参数都已知，第三个参数（如果存在）是一个可调用的，在建立网络连接时将调用一次，之后在每个块读取之后调用一次。callable将传递三个参数; 到目前为止传输的块数，块大小（以字节为单位）以及文件的总大小。第三个参数可能是-1旧的FTP服务器，它们不会返回文件大小以响应检索请求。
+
+	
+
+	
+    
+
 
 
