@@ -2611,7 +2611,260 @@ urllib.request.urlretrieve（url，filename = None，reporthook = None，data = 
 
 前两个参数都已知，第三个参数（如果存在）是一个可调用的，在建立网络连接时将调用一次，之后在每个块读取之后调用一次。callable将传递三个参数; 到目前为止传输的块数，块大小（以字节为单位）以及文件的总大小。第三个参数可能是-1旧的FTP服务器，它们不会返回文件大小以响应检索请求。
 
+#7.23
+
+##1. 爬虫2
+网络爬虫的第一步就是根据URL，获取网页的HTML信息。在Python3中，可以使用urllib.request和requests进行网页爬取。
+
+urllib库是python内置的，无需我们额外安装，只要安装了Python就可以使用这个库。
+requests库是第三方库，需要我们自己安装。
+
+requests库的基础方法如下：
+![](https://img-blog.csdn.net/20170928142920593?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYzQwNjQ5NTc2Mg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+- 小说下载
+
+		from bs4 import BeautifulSoup	//导入HTML相关包
+		import requests		
+		if __name__ == "__main__":
+		     target = 'http://www.biqukan.com/1_1094/5403177.html'	//指定地址
+		     req = requests.get(url = target)		//获取网页对象
+		     html = req.text	//.text是现成的字符串，.content还要编码，但是.text不是所有时候显示都正常，这是就需要用.content进行手动编码。.content.decode('utf-8')，中文常用utf-8和GBK，GB2312等。这样可以手工选择文字编码方式。
+		     bf = BeautifulSoup(html,"lxml")	//使用lxml解析器对网页字符串进行解析
+		     texts = bf.find_all('div', class_ = 'showtxt')
+		     print(texts[0].text.replace('\xa0'*8,'\n\n'))
+
+	.text是现成的字符串，.content还要编码，但是.text不是所有时候显示都正常，这是就需要用.content进行手动编码。.content.decode('utf-8')，中文常用utf-8和GBK，GB2312等。这样可以手工选择文字编码方式。
 	
+	find_all(name , attrs , recursive , string , **kwargs ) 方法搜索当前tag的所有tag子节点,并判断是否符合过滤器的条件
+
+		name 参数可以查找所有名字为 name 的tag,字符串对象会被自动忽略掉.
+		
+		按照CSS类名搜索tag的功能非常实用,但标识CSS类名的关键字 class 在Python中是保留字,使用 class 做参数会导致语法错误.从Beautiful Soup的4.1.1版本开始,可以通过 class_ 参数搜索有指定CSS类名的tag
+
+
+		from bs4 import BeautifulSoup
+		import requests
+		if __name__ == "__main__":
+		     server = 'http://www.biqukan.com/'
+		     target = 'http://www.biqukan.com/1_1094/'
+		     req = requests.get(url = target)
+		     html = req.text
+		     div_bf = BeautifulSoup(html,'lxml')
+		     div = div_bf.find_all('div', class_ = 'listmain')
+		     a_bf = BeautifulSoup(str(div[0]),'lxml')
+		     a = a_bf.find_all('a')
+		     for each in a:
+		          print(each.string, server + each.get('href'))
+
+- 查找并下载方法
+
+		from bs4 import BeautifulSoup
+		import requests, sys
+		
+		class downloader(object):
+		
+		    def __init__(self):
+		        self.server = 'http://www.biqukan.com/'
+		        self.target = 'http://www.biqukan.com/1_1094/'
+		        self.names = []            #存放章节名
+		        self.urls = []            #存放章节链接
+		        self.nums = 0            #章节数
+		
+		    def get_download_url(self):
+		        req = requests.get(url = self.target)	#获取网页对象
+		        html = req.text		#获取网页文本
+		        div_bf = BeautifulSoup(html,'lxml')		
+		        div = div_bf.find_all('div', class_ = 'listmain')
+		        a_bf = BeautifulSoup(str(div[0]),'lxml')
+		        a = a_bf.find_all('a')
+		        self.nums = len(a[15:])                                #剔除不必要的章节，并统计章节数
+		        for each in a[15:]:
+		            self.names.append(each.string)
+		            self.urls.append(self.server + each.get('href'))
+		
+		    def get_contents(self, target):
+		        req = requests.get(url = target)
+		        html = req.text
+		        bf = BeautifulSoup(html,'lxml')
+		        texts = bf.find_all('div', class_ = 'showtxt')
+		        texts = texts[0].text.replace('\xa0'*8,'\n\n')
+		        return texts
+		
+		    def writer(self, name, path, text):
+		        write_flag = True
+		        with open(path, 'a', encoding='utf-8') as f:
+		            f.write(name + '\n')
+		            f.writelines(text)
+		            f.write('\n\n')
+		
+		if __name__ == "__main__":
+		    dl = downloader()
+		    dl.get_download_url()
+		    print('《一年永恒》开始下载：')
+		    for i in range(dl.nums):
+		        dl.writer(dl.names[i], '一念永恒.txt', dl.get_contents(dl.urls[i]))
+		        sys.stdout.write("  已下载:%.3f%%" %  float(i/dl.nums) + '\r')
+				# 在标准输出上输出字符串，与print语句的作用相似在屏幕上打印字符串
+		        sys.stdout.flush()
+				# 刷新输出
+		    print('《一年永恒》下载完成')
+
+##2. 下载图片
+
+	import requests, json, time, sys
+	from contextlib import closing
+	
+	class get_photos(object):
+	
+	    def __init__(self):
+	        self.photos_id = []
+	        self.download_server = 'https://unsplash.com/photos/xxx/download?force=trues'
+	        self.target = 'http://unsplash.com/napi/feeds/home'
+	        self.headers = {'authorization':'Client-ID c94869b36aa272dd62dfaeefed769d4115fb3189a9d1ec88ed457207747be626'}
+	
+	    """
+	    函数说明:获取图片ID
+	    Parameters:
+	        无
+	    Returns:
+	        无
+	    Modify:
+	        2017-09-13
+	    """   
+	    def get_ids(self):
+	        req = requests.get(url=self.target, headers=self.headers, verify=False)
+	        html = json.loads(req.text)
+	        next_page = html['next_page']
+	        for each in html['photos']:
+	            self.photos_id.append(each['id'])
+	        time.sleep(1)
+	        for i in range(5):
+	            req = requests.get(url=next_page, headers=self.headers, verify=False)
+	            html = json.loads(req.text)
+	            next_page = html['next_page']
+	            for each in html['photos']:
+	                self.photos_id.append(each['id'])
+	            time.sleep(1)
+	
+	
+	    """
+	    函数说明:图片下载
+	    Parameters:
+	        无
+	    Returns:
+	        无
+	    Modify:
+	        2017-09-13
+	    """   
+	    def download(self, photo_id, filename):
+	        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36'}
+	        target = self.download_server.replace('xxx', photo_id)
+	        with closing(requests.get(url=target, stream=True, verify = False, headers = self.headers)) as r:
+	            with open('%d.jpg' % filename, 'ab+') as f:
+	                for chunk in r.iter_content(chunk_size = 1024):
+	                    if chunk:
+	                        f.write(chunk)
+	                        f.flush()
+	
+	if __name__ == '__main__':
+	    gp = get_photos()
+	    print('获取图片连接中:')
+	    gp.get_ids()
+	    print('图片下载中:')
+	    for i in range(len(gp.photos_id)):
+	        print('  正在下载第%d张图片' % (i+1))
+	        gp.download(gp.photos_id[i], (i+1))
+##3. 爱奇艺VIP视频下载
+
+	import requests,re, json, sys
+	from bs4 import BeautifulSoup
+	from urllib import request
+	
+	class video_downloader():
+	    def __init__(self, url):
+	        self.server = 'http://api.xfsub.com'
+	        self.api = 'http://api.xfsub.com/xfsub_api/?url='
+	        self.get_url_api = 'http://api.xfsub.com/xfsub_api/url.php'
+	        self.url = url.split('#')[0]
+	        self.target = self.api + self.url
+	        self.s = requests.session()
+	
+	    """
+	    函数说明:获取key、time、url等参数
+	    Parameters:
+	        无
+	    Returns:
+	        无
+	    Modify:
+	        2017-09-18
+	    """
+	    def get_key(self):
+	        req = self.s.get(url=self.target)
+	        req.encoding = 'utf-8'
+	        self.info = json.loads(re.findall('"url.php",\ (.+),', req.text)[0])    #使用正则表达式匹配结果，将匹配的结果存入info变量中
+	
+	    """
+	    函数说明:获取视频地址
+	    Parameters:
+	        无
+	    Returns:
+	        video_url - 视频存放地址
+	    Modify:
+	        2017-09-18
+	    """
+	    def get_url(self):
+	        data = {'time':self.info['time'],
+	            'key':self.info['key'],
+	            'url':self.info['url'],
+	            'type':''}
+	        req = self.s.post(url=self.get_url_api,data=data)
+	        url = self.server + json.loads(req.text)['url']
+	        req = self.s.get(url)
+	        bf = BeautifulSoup(req.text,'xml')                                        #因为文件是xml格式的，所以要进行xml解析。
+	        video_url = bf.find('file').string                                        #匹配到视频地址
+	        return video_url
+	
+	    """
+	    函数说明:回调函数，打印下载进度
+	    Parameters:
+	        a b c - 返回信息
+	    Returns:
+	        无
+	    Modify:
+	        2017-09-18
+	    """
+	    def Schedule(self, a, b, c):
+	        per = 100.0*a*b/c
+	        if per > 100 :
+	            per = 1
+	        sys.stdout.write("  " + "%.2f%% 已经下载的大小:%ld 文件大小:%ld" % (per,a*b,c) + '\r')
+	        sys.stdout.flush()
+	
+	    """
+	    函数说明:视频下载
+	    Parameters:
+	        url - 视频地址
+	        filename - 视频名字
+	    Returns:
+	        无
+	    Modify:
+	        2017-09-18
+	    """
+	    def video_download(self, url, filename):
+	        request.urlretrieve(url=url,filename=filename,reporthook=self.Schedule)
+	
+	
+	if __name__ == '__main__':
+	    url = 'http://www.iqiyi.com/v_19rr7qhfg0.html#vfrm=19-9-0-1'
+	    vd = video_downloader(url)
+	    filename = '加勒比海盗5'
+	    print('%s下载中:' % filename)
+	    vd.get_key()
+	    video_url = vd.get_url()
+	    print('  获取地址成功:%s' % video_url)
+	    vd.video_download(video_url, filename+'.mp4')
+	    print('\n下载完成！')
 
 	
     

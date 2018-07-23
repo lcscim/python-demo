@@ -140,3 +140,12 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - operator- 标准运算符作为函数该operator模块导出一组与Python的内部运算符相对应的高效函数。
 
 	文档地址：https://docs.python.org/3/library/operator.html#module-operator
+##8. 进程和线程
+- multiprocessing multiprocessing模块就是跨平台版本的多进程模块。
+
+	文档地址：https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing.pool
+- subprocess 模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出。
+
+	文档地址：https://docs.python.org/3/library/subprocess.html#module-subprocess
+
+	
