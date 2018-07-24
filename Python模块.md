@@ -147,5 +147,9 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - subprocess 模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出。
 
 	文档地址：https://docs.python.org/3/library/subprocess.html#module-subprocess
+- threading- 基于线程的并行性该模块在较低级别_thread模块之上构建更高级别的线程接口
+
+	文档地址：https://docs.python.org/3.6/library/threading.html
+- 
 
 	
