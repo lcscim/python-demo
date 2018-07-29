@@ -294,3 +294,245 @@ Workbook类是XlsxWriter模块公开的主类，它是您需要直接实例化�
 ##22.使用VBA宏
 ##23.使用Python Pandas和XlsxWriter
 
+
+#7.29
+
+##1.使用 Python 读写 Excel 文件（1）
+openpyxl 模块简单易用、功能广泛，单元格格式/图片/表格/公式/筛选/批注/文件保护等功能应有尽有，图表功能是其一大亮点。
+
+- 安装 openpyxl 模块
+
+	打开 cmd 命令行窗口，输入 pip install openpyxl 命令即可 “一键安装”
+- 示例创建并保存 Excel 文件
+
+		import openpyxl
+		# 新建工作表
+		wb = openpyxl.Workbook()
+		# 获取活跃的工作表
+		ws = wb.active
+		# 数据可以直接赋值给单元格
+		ws['A1'] = 520
+		# 可以整行添加
+		ws.append([1, 2, 3])
+		# Python 类型将自动转换
+		import datetime
+		ws['A3'] = datetime.datetime.now()
+		# 保存文件
+		wb.save("demo.xlsx")
+
+- 爬取豆瓣数据并保存表格
+
+		import requests		# 导入处理HTTP模块
+		import bs4		# 导入提取xmls数据模块
+		import re		# 正则表达式模块
+		import openpyxl		# Excel处理模块
+		
+		def open_url(url):
+		    # 使用代理
+		    # proxies = {"http": "127.0.0.1:1080", "https": "127.0.0.1:1080"}
+		    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36'}
+		
+		    # res = requests.get(url, headers=headers, proxies=proxies)
+		    res = requests.get(url, headers=headers)	# 获取连接对象
+		
+		    return res
+		
+		def find_movies(res):
+		    soup = bs4.BeautifulSoup(res.text, 'html.parser')
+			# 对 连接对象读取内容，并使用html.parse python标准库解析
+		    # 电影名
+		    movies = []
+		    targets = soup.find_all("div", class_="hd")	# 查找所有div标签并且class属性为hd
+		    for each in targets:
+		        movies.append(each.a.span.text)	# 遍历结果并添加到空集合中
+		
+		    # 评分
+		    ranks = []
+		    targets = soup.find_all("span", class_="rating_num")
+		    for each in targets:
+		        ranks.append(each.text)
+		
+		    # 资料
+		    messages = []
+		    targets = soup.find_all("div", class_="bd")
+		    for each in targets:
+		        try:
+		            messages.append(each.p.text.split('\n')[1].strip() + each.p.text.split('\n')[2].strip())
+		        except:
+		            continue
+		
+		    result = []
+		    length = len(movies)
+		    for i in range(length):
+		        result.append([movies[i], ranks[i], messages[i]])
+		
+		    return result
+		
+		# 找出一共有多少个页面
+		def find_depth(res):
+		    soup = bs4.BeautifulSoup(res.text, 'html.parser')
+		    depth = soup.find('span', class_='next').previous_sibling.previous_sibling.text
+		
+		    return int(depth)
+		
+		def save_to_excel(result):
+		    wb = openpyxl.Workbook()
+		    ws = wb.active
+		
+		    ws['A1'] = "电影名称"
+		    ws['B1'] = "评分"
+		    ws['C1'] = "资料"
+		
+		    for each in result:
+		        ws.append(each)
+		
+		    wb.save("豆瓣TOP250电影.xlsx")
+		
+		def main():
+		    host = "https://movie.douban.com/top250"
+		    res = open_url(host)
+		    depth = find_depth(res)
+		
+		    result = []
+		    for i in range(depth):
+		        url = host + '/?start=' + str(25 * i)
+		        res = open_url(url)
+		        result.extend(find_movies(res))
+		
+		    '''
+		    with open("test.txt", "w", encoding="utf-8") as f:
+		        for each in result:
+		            f.write(each)
+		    '''
+		
+		    save_to_excel(result)
+		    
+		if __name__ == "__main__":
+		    main()
+	Beautiful Soup支持Python标准库中的HTML解析器,还支持一些第三方的解析器，如果我们不安装它，则 Python 会使用 Python默认的解析器，lxml 解析器更加强大，速度更快，推荐安装。
+
+	下面是常见解析器：
+	![](https://images2015.cnblogs.com/blog/997599/201706/997599-20170601215456586-1362956505.png)
+##2.使用 Python 读写 Excel 文件（2）
+- 打开 Excel 文件
+
+	使用 openpyxl.load_workbook() 函数可以打开一个已存在的 Excel 文件。
+
+		>>> import openpyxl
+		>>> wb = openpyxl.load_workbook(r"C:\Users\goodb\Desktop\豆瓣TOP250电影.xlsx")
+		>>> type(wb)
+		
+		<class 'openpyxl.workbook.workbook.Workbook'>
+- 获取工作表
+
+	上一节我们通过 active 属性可以获取当前激活的工作表。如果你想获取当期工作簿中所有的工作表，可以使用 get_sheet_names() 方法（不推荐使用）或者直接打印 sheetnames 属性
+
+		>>> wb.get_sheet_names()
+		['Sheet']
+		>>> print(wb.sheetnames)
+		['Sheet']
+	通过 get_sheet_by_name() 方法可以找到指定名称对应的工作表（get_sheet_by_name() 方法已经不推荐使用，官方推荐使用更 Pythonic 的 wb["SheetName"] 方式来获取指定工作表）
+
+		>>> print(wb['Sheet'])
+		<Worksheet "Sheet">
+	但如果传入一个不存在的工作表名称，程序会报错
+- 创建和删除工作表
+
+	利用 create_sheet() 和 remove_sheet() 方法可以创建和删除工作表。create_sheet() 默认创建的工作表是存放在现有工作表的后面，名字是 Sheet1,2,3 这样排下去。但我们可以通过参数来修改这一默认设置，index 参数指定新工作表插入的位置（0 表示第一个位置），title 参数指定工作表的名称
+
+		>>> nws = wb.create_sheet(index = 0, title = "FishC Demo")
+		>>> print(wb.get_sheet_names())
+		['FishC Demo', 'Sheet']
+	删除工作表使用 remove_sheet() 方法，该方法只有一个参数，就是制定待删除的工作表对象。这里需要注意一下，光给个名字是不够的，需要给它一个工作表对象.所以，删除名称为 “FishC Demo” 的工作表，应该这么写
+
+		wb.remove_sheet(wb.get_sheet_by_name("FishC Demo"))
+- 定位单元格
+
+	获取工作表之后，可以通过像 Python 字典索引那样去定位单元格。单元格对象，拥有 row、column 和 coordinate 属性，代表单元格的行、列和坐标：
+
+		>>> c = ws['A2']
+		>>> c.row
+		2
+		>>> c.column
+		'A'
+		>>> c.coordinate
+		'A2'
+	通过 value 属性可以访问该单元格的值：
+		
+		>>> ws['A2'].value
+		'肖申克的救赎'
+	还可以通过 offset(row, column) 方法，定位距离该单元格 row 行 column 列偏移的另一个单元格：
+	
+		>>> d = c.offset(2, 0)
+		>>> d.coordinate
+		'A4'
+		>>> d.value
+		'这个杀手不太冷'
+- 获取字母编号列数
+
+	 Excel 工作表是以字母为编号，即 ABCDEFG...Z，到达 Z 之后就从 AA 开始继续编号，所以列的话是以二十六进制的形式来表示数据的。
+	
+	提供了 get_column_letter() 和 colunm_index_from_string() 方法来帮助大家进行转换。比如我们想知道第 496 列如何表示，可以使用 openpyxl.cell.cellget_column_letter(496) 方法进行转换（确实是有两个 cell 哈）
+		
+		>>> openpyxl.cell.cell.get_column_letter(496)
+		'SB'
+	如果我们知道列的编号是 “JB”，可以使用 openpyxl.cell.cell.column_index_from_string('JB') 方法得知其实际上位于第几列：
+	
+		>>> openpyxl.cell.cell.column_index_from_string('JB')
+		262
+- 访问多个单元格
+
+	openpyxl 允许将工作表对象进行切片操作，即表示一个范围内的多个单元格
+
+		>>> for each_movie in ws['A2':'B10']:
+	        for each_cell in each_movie:
+	                print(each_cell.value, end=' ')
+	        print('\n')
+
+		肖申克的救赎 9.6 
+		
+		霸王别姬 9.5 
+		
+		这个杀手不太冷 9.4 
+		
+		阿甘正传 9.4 
+		
+		美丽人生 9.5 
+		
+		千与千寻 9.2 
+		
+		辛德勒的名单 9.4 
+		
+		泰坦尼克号 9.2 
+		
+		盗梦空间 9.3
+	对于一个范围内的多个单元格，openpyxl 是遵循 “先行后列” 的原则进行迭代的。我们还可以通过工作表的 rows 和 columns 属性获取当前工作表下所有行或列的迭代。
+
+		>>> for each_row in ws.rows:
+        print(each_row[0].value)
+
+		电影名称
+		肖申克的救赎
+		霸王别姬
+		这个杀手不太冷
+		阿甘正传
+		美丽人生
+		千与千寻
+		辛德勒的名单
+		泰坦尼克号
+		盗梦空间
+		……
+	如果不想一次性迭代所有的行或列，可以使用 iter_rows() 和 iter_columns() 方法进行控制
+
+		>>> for each_row in ws.iter_rows(min_row=2, min_col=1, max_row=4, max_col=2):
+        print(each_row[0].value)
+		
+		肖申克的救赎
+		霸王别姬
+		这个杀手不太冷
+- 拷贝工作表
+
+	拷贝整个工作表，可以使用工作簿对象的 copy_worksheet() 方法：
+
+		>>> new = wb.copy_worksheet(ws)
+		>>> wb.save(r"C:\Users\goodb\Desktop\豆瓣TOP250电影.xlsx")
