@@ -536,3 +536,354 @@ openpyxl 模块简单易用、功能广泛，单元格格式/图片/表格/公�
 
 		>>> new = wb.copy_worksheet(ws)
 		>>> wb.save(r"C:\Users\goodb\Desktop\豆瓣TOP250电影.xlsx")
+
+##3.使用 Python 读写 Excel 文件（3）
+- 个性化工作表标签栏
+
+	修改标签栏的颜色
+
+		>>> import openpyxl
+		>>> # 创建工作簿
+		>>> wb = openpyxl.Workbook()
+		>>> # 创建工作表
+		>>> ws1 = wb.create_sheet(title = "小甲鱼")
+		>>> ws2 = wb.create_sheet(title = "不二如是")
+		>>> ws3 = wb.create_sheet(title = "风介")
+		>>> ws4 = wb.create_sheet(title = "小泡")
+		>>> # 个性化工作表
+		>>> ws1.sheet_properties.tabColor = "FF0000"
+		>>> ws2.sheet_properties.tabColor = "00FF00"
+		>>> ws3.sheet_properties.tabColor = "0000FF"
+		>>> ws4.sheet_properties.tabColor = "8B008B"
+		>>> # 保存
+		>>> wb.save(r"C:\Users\goodb\Desktop\test.xlsx")
+
+- 调整行高和列宽
+
+	在 Excel 中要修改行高和列宽，只需要通过鼠标的拖拽操作就可以实现。使用 openpyxl，同样可以通过修改工作表的 row_dimensions 和 column_dimensions 来实现同样的操作。
+
+	在 row_dimentions 中，使用具体的数字来表示将要修改第几行的高度，比如 row_dimentions[2].height = 100 是将第 1 行的高度修改为 100；
+
+	在 column_dimentions 中，则要使用字母来表示对应的列号，比如 column_dimentions['C'].width = 50，是将第 C 列的宽度修改为 50。
+- 合并和拆分单元格
+
+	利用工作表的 merge_cells() 和 unmerge_cells() 可以快速地合并和拆分指定区域的单元格。
+
+		>>> # 合并单元格
+		>>> ws1.merge_cells('A1:C3')
+		>>> # 给合并后的单元格赋值
+		>>> ws1['A1'] = "I love FishC.com!"
+		>>> wb.save(r"C:\Users\goodb\Desktop\test.xlsx")
+
+		>>> # 拆分单元格
+		>>> ws1.unmerge_cells('A1:C2')
+		>>> wb.save(r"C:\Users\goodb\Desktop\test.xlsx")
+
+- 冻结窗口
+
+	设置工作表的 freeze_panes 属性即可实现冻结窗口。
+	![](http://xxx.fishc.org/forum/201801/18/175326f985y3b0zwgyz89f.png)
+	![](http://xxx.fishc.org/forum/201801/18/180056gz901xnih7hz1hw3.png)
+
+	比如上面人口普查的表格，理想的情况是将蓝色的行和黄色的列冻结起来。那么我们可以将 freeze_panes 设置为 'B8' 即可：
+
+		>>> wb = openpyxl.load_workbook(r"C:\Users\goodb\Desktop\A0101a.xlsx")
+		>>> ws = wb.active
+		>>> ws.freeze_panes = 'B8'
+		>>> wb.save(r"C:\Users\goodb\Desktop\A0101a.xlsx")
+
+	如果需要解冻，只需要将 freeze_panes 设置为 None 或 'A1' 即可。
+##4.使用 Python 读写 Excel 文件（4）
+- 设置单元格的字体
+
+	修改字体需要实例化一个 Font 类（位于 openpyxl.styles 中），参数如下：
+
+		name：			字体名称
+		size：			字体尺寸
+		bold：			True（加粗）/ False（不加粗）
+		italic：			True（倾斜）/ False（不倾斜）
+		vertAlign：		'None'（默认）/ 'superscript'（上标）/ 'subscript'（下标）
+		underline：		'None'（默认）/ 'single'（单下划线）/ 'double'（双下划线）/ 		'singleAccounting'（会计用单下划线）/ 'doubleAccounting'（会计用双下划线）
+		strike：			'True'（显示删除线）/ 'False'（不显示删除线）
+		color：			字体的颜色
+	示例：
+
+		>>> from openpyxl import Workbook
+		>>> from openpyxl.styles import Font
+		>>> 
+		>>> wb = Workbook()
+		>>> ws = wb.active
+		>>> 
+		>>> b2 = ws['B2']
+		>>> b2.value = "FishC"
+		>>> bold_red_font = Font(bold=True, color="FF0000")
+		>>> b2.font = bold_red_font
+		>>> 
+		>>> b3 = ws['B3']
+		>>> b3.value = "FishC"
+		>>> italic_strike_blue_16_font = Font(italic=True, strike=True, color="0000FF", size=16)
+		>>> b3.font = italic_strike_blue_16_font
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo1.xlsx")
+
+- 填充单元格
+
+	填充单元格的背景颜色，我们可以通过实例化 PatternFill 类来实现，参数如下：
+
+		fill_type：填充类型
+		start_color / fgColor：背景颜色
+		end_color / bgColor：图案颜色
+	其中，fill_type 参数指定填充类型，可以使用的方案有：'None'（不填充）/ 'solid'（实心填充）/ 'darkGray'（75%灰色）'mediumGray'（50%灰色）/ 'lightGray'（25%灰色）/ 'gray125'（12.5%灰色）/ 'gray0625'（6.25%灰色）/ 'darkHorizontal'（水平条纹）/ 'darkVertical'（垂直条纹）/ 'darkDown'（逆对角线条纹）/ 'darkUp'（对角线条纹）/ 'darkGrid'（对角线剖面线）/ 'darkTrellis'（粗对角线剖面线）/ 'lightHorizontal'（细水平条纹）/ 'lightVertical'（细垂直条纹）/ 'lightDown'（细逆对角线条纹）/ 'lightUp'（细对角线条纹）/ 'lightGrid'（细水平剖面线）/ 'lightTrellis'（细对角线剖面线）
+
+	示例1：
+
+		>>> from openpyxl.styles import PatternFill
+		>>> 
+		>>> yellow_fill = PatternFill(fill_type="solid", fgColor="FFFF00")
+		>>> b2.fill = yellow_fill
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo2.xlsx")
+
+	渐进填充需要实例化一个叫 GradientFill 类，参数如下：
+
+		fill_type：'linear'（线性渐变）/ 'path'（中心扩散）
+		degree：旋转角度
+		stop：一个元组 (OO, XX)，OO 为起始颜色，XX 为结束颜色
+	示例2：
+
+		>>> from openpyxl.styles import GradientFill
+		>>> 
+		>>> red2green_fill = GradientFill(fill_type="linear", stop=("FF0000", "00FF00"))
+		>>> b3.fill = red2green_fill
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo2.xlsx")
+
+- 设置边框
+
+	实例化 Border 类可以设置单元格的边框：
+
+		left：指定左侧边框线类型和颜色
+		right：指定右侧边框线类型和颜色
+		top：指定顶端边框线类型和颜色
+		bottom：指定低端边框线类型和颜色
+		diagonal：指定对角线类型和颜色
+		diagonalUp：是否绘制左下角到右上角的对角线
+		diagonalDown：是否绘制左上角到右下角的对角线
+		diagonal_direction：指定对角线方向
+		outline：指定轮廓线类型和颜色
+		vertical：指定垂直线类型和颜色
+		horizontal：指定水平线类型和颜色
+	但在此之前，我们需要先实例化构成边框的 Side 类，即边框线类型和颜色：
+
+		border_style：'mediumDashDotDot'（_.._.._）/ 'mediumDashed'（_ _ _）/ 'thin'（_____）/ 'thick'（___）/ 'dashDotDot'（_.._.._.._）/ 'double'（双横线^_^）/ 'dotted'（..........）/ 'hair'（_____）/ 'dashed'（_ _ _ _）/ 'mediumDashDot'（_._._._）/ 'slantDashDot'（_._._._）/ 'dashDot'（_._._._）/ 'medium'（____）
+
+		lor：指定线条的颜色
+	
+	下面我们为 'B2' 单元格格绘制两条对角线，为 'B3' 单元添加一个双横线构成的边框：
+
+		>>> from openpyxl.styles import Border, Side
+		>>> 
+		>>> thin_side = Side(border_style="thin", color="000000")
+		>>> double_side = Side(border_style="double", color="FF0000")
+		>>> 
+		>>> b2.border = Border(diagonal=thin_side, diagonalUp=True, diagonalDown=True)
+		>>> b3.border = Border(left=double_side, top=double_side, right=double_side, bottom=double_side)
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo3.xlsx")
+
+- 文本对齐
+
+	经常设置的还有文本对齐，比如将标题居中之类的……文本对齐我们实例化 Alignment 类实现，参数如下：
+
+		horizontal：'general'（常规）/ 'justify'（两端对齐）/ 'right'（靠右）/ 'centerContinuous'（跨列居中）/ 'distributed'（分散对齐）/ 'fill'（填充）/ 'center'（居中）/ 'left'（靠左）
+		vertical：'center'（垂直居中）/ 'top'（靠上）/ 'bottom'（靠下）/ 'justify'（两端对齐）/ 'distributed'（分散对齐）
+		text_rotation：指定文本旋转角度
+		wrap_text：是否自动换行
+		shrink_to_fit：是否缩小字体填充
+		indent：指定缩进
+	下面我们将 'A1' 到 'C2' 的单元格合并，然后居中显示其中的文本：
+
+		>>> from openpyxl.styles import Alignment
+		>>> 
+		>>> ws.merge_cells('A1:C2')
+		>>> ws['A1'].value = "I love FishC.com"
+		>>> 
+		>>> center_alignment = Alignment(horizontal='center', vertical='center')
+		>>> ws['A1'].alignment = center_alignment
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo4.xlsx")
+
+- 命名样式
+
+	前面我们对单元格的每一种样式进行单独赋值，比如要指定 'A1' 单元格的字体颜色，文本对齐和边框，那么就需要进行三次的赋值：
+
+		ws['A1'].font = ...
+		ws['A1'].alignment = ...
+		ws['A1'].border = ...
+	openpyxl 有一个命名样式的功能，也就是设置样式模板。使用命名样式只需要四个步骤：
+
+		实例化一个 NamedStyle 类
+		初始化命名样式
+		注册命名样式到工作簿中
+		将单元格的 style 属性赋值为命名样式
+	示例：
+		
+		>>> from openpyxl.styles import NamedStyle
+		>>> 
+		>>> highlight = NamedStyle(name="highlight")
+		>>> highlight.font = Font(bold=True, size=20)
+		>>> highlight.alignment = Alignment(horizontal='center', vertical='center')
+		>>> 
+		>>> wb.add_named_style(highlight)
+		>>> 
+		>>> ws['A1'].style = highlight
+		>>> 
+		>>> ws['B5'].value = "LOVE"
+		>>> ws['B5'].style = highlight
+		>>> wb.save(r"C:\Users\goodb\Desktop\demo5.xlsx")
+
+##5.使用 Python 读写 Excel 文件（5）
+- 数字格式
+
+	实际上，Excel 只有 2 种数据类型：一种是文本，另一种是数字。
+
+		>>> import openpyxl
+		>>> 
+		>>> wb = openpyxl.Workbook()
+		>>> ws = wb.active
+		>>> 
+		>>> ws.append(['文本', '数字'])
+		>>> ws['A2'] = '520'
+		>>> ws['B2'] = 520
+		>>> 
+		>>> wb.save(r"C:\Users\goodb\Desktop\test.xlsx")
+
+	文本类型的数据是左对齐，而数字则是右对齐。左侧单元格以文本的形式来存放数字，Excel 其实对你的做法是持有怀疑的态度（左上角有个绿色的三角形，点它会有提示）：
+	![](http://xxx.fishc.org/forum/201802/12/184048c9ig4xnx8m8ltddi.png)
+	
+	openpyxl 有个 guess_types 的功能，言下之意就是能够自动 “猜测” 出单元格的数据类型：
+
+		# 打开后 openpyxl 会根据字符串中的具体内容 “猜测” 出合适的数据类型
+		wb.guess_types = True
+	文本即字符串，所见即所得.但数字不同，数字可以有各种各样的显示效果可供选择。openpyxl 内置了下面这些自定义格式：
+
+		定义名称					自定义格式		显示效果				注释
+		FORMAT_GENERAL			'General'		    520			不包含任何特定的数字格式
+		FORMAT_TEXT				   '@'			520				以文本的形式显示
+		FORMAT_NUMBER			   '0'				520
+		FORMAT_NUMBER_00		 '0.00'			 520.00
+		FORMAT_NUMBER_COMMA_SEPARATED1	'#,##0.00'	1,314.00
+		FORMAT_NUMBER_COMMA_SEPARATED2	'#,##0.00_-' 1,314.000   最右侧多了一个空格
+		FORMAT_PERCENTAGE			'0%'			99%
+		FORMAT_PERCENTAGE_00	  '0.00%'			99.99%
+		FORMAT_DATE_YYYYMMDD2	'yyyy-mm-dd'	2018-02-14	本表中所演示的日期是：2018-2-14
+		FORMAT_DATE_YYMMDD		'yy-mm-dd'		18-02-14
+		FORMAT_DATE_DDMMYY		'dd/mm/yy'		14/02/18
+		FORMAT_DATE_DMYSLASH	'd/m/y'			14/2/18
+		FORMAT_DATE_DMYMINUS	'd-m-y'			14-2-18
+		FORMAT_DATE_DMMINUS		'd-m'			14-2
+		FORMAT_DATE_MYMINUS		'm-y'			2-18
+		FORMAT_DATE_XLSX14		'mm-dd-yy'		02-14-18
+		FORMAT_DATE_XLSX15		'd-mmm-yy'		14-Feb-18
+		FORMAT_DATE_XLSX16		'd-mmm'			14-Feb
+		FORMAT_DATE_XLSX17		'mmm-yy'		Feb-18
+		FORMAT_DATE_XLSX22		'm/d/yy h:mm'	2/14/18 0:00
+		FORMAT_DATE_DATETIME	'yyyy-mm-dd h:mm:ss'	2018-02-14 0:00:00
+		FORMAT_DATE_TIME1		'h:mm AM/PM'	12:00 AM
+		FORMAT_DATE_TIME2		'h:mm:ss AM/PM'	12:00:00 AM
+		FORMAT_DATE_TIME3		'h:mm'			0:00
+		FORMAT_DATE_TIME4		'h:mm:ss'		0:00:00
+		FORMAT_DATE_TIME5		'mm:ss'			00:00
+		FORMAT_DATE_TIMEDELTA	'[hh]:mm:ss'	00:00:00
+		FORMAT_CURRENCY_USD_SIMPLE	'"$"#,##0.00_-'	$5,201,314.000		最右侧多了一个空格
+		FORMAT_CURRENCY_USD	'$#,##0_-'	$5,201,3140		最右侧多了一个空格
+		FORMAT_CURRENCY_EUR_SIMPLE	'[$EUR ]#,##0.00_-'	EUR 5,201,314.000 最右侧多了一个空格
+			
+	我们尝试总结一些基本规律，这样我们还可以自己 “改造” 出一些个性化的：
+
+		'y'，'m'，'d' 分别表示年，月，日，'yy' 表示用两个数字代表年份，'yyyy' 则是四个数字
+		'0' 和 '#' 均是数字占位符，两者的区别是 '0' 会自动用数字 0 补齐，而 '#' 不会（比如实际数字是 520，自定义格式为 "0000" 的单元格显示是 0520，而自定义格式为 "####" 的单元格依然显示 520）
+		在自定义格式字符串中，添加字符或文字都会直接显示在相应的位置中（比如实际数字是 88.8，自定义格式为 "#,###.00元" 的单元格显示是 88.80元）
+
+	在 openpyxl 中使用数字格式，只需要将自定义格式或者预先定义好的名称赋值给单元格的 number_format 属性即可：
+
+		import openpyxl
+		import datetime
+		
+		wb = openpyxl.Workbook()
+		ws = wb.active
+		
+		ws['A1'].number_format = "#,###.00元"
+		ws['A1'] = 88.8
+		
+		ws['A2'] = datetime.datetime.today()
+		ws['A2'].number_format = "yyyy-mm-dd"
+		
+		wb.save(r"number.xlsx")
+
+	示例：
+
+		import openpyxl
+		from openpyxl.styles.colors import RED, GREEN, BLUE, YELLOW
+		
+		wb = openpyxl.Workbook()
+		ws = wb.active
+		
+		ws['A1'].number_format = "[RED]+#,###.00;[GREEN]-#,###.00"
+		ws['A1'] = 99
+		# 当值为正数时使用[RED]+#,###.00;格式化
+		ws['A2'].number_format = "[RED]+#,###.00;[GREEN]-#,###.00"
+		ws['A2'] = -99
+		# 当值为负数时使用[GREEN]-#,###.00 格式化
+		ws['A3'].number_format = "[RED];[GREEN];[BLUE];[YELLOW]"
+		ws['A3'] = 0
+		
+		ws['A4'].number_format = "[RED];[GREEN];[BLUE];[YELLOW]"
+		ws['A4'] = "FishC"
+		
+		wb.save(r"number.xlsx")
+	程序实现如下：
+	![](http://xxx.fishc.org/forum/201802/26/174146oinkzjobedeawlde.png)
+	自定义格式字符串还可以通过分号，为单元格可能出现的 4 种类型的数据设置不同的格式，这 4 种类型分别是：
+
+			正值;负值;零值;文本
+	另一个很实用的技巧是：[定义好的颜色] 表示该单元格字体的颜色
+
+	那么，"[RED]+#,###.00;[GREEN]-#,###.00" 的含义是：
+	
+	当单元格的值是 “正值” 时，自定义格式为 "[RED]+#,###.00"
+	当单元格的值是 “负值” 时，自定义格式为 "[GREEN]-#,###.00"
+	
+	所以，"[RED];[GREEN];[BLUE];[YELLOW]" 表示的就是当单元格的值为 “正值”、“负值”、“零值” 和 “文本” 时分别将字体显示为 “红色”、“绿色”、“蓝色” 和 “黄色”。
+	
+	中括号里面还可以附加条件，比如 "[=1]男;[=0]女"，那么单元格中只要值为 1 则显示 “男”，值为 0 显示 “女”（如果是其他值将不能正确显示）。
+	
+	最后，还可以将取值范围和颜色规则搭配使用，比如 "[<60][RED]不及格;[>=60]及格"：
+
+		ws['A5'].number_format = "[=1]男;[=0]女"
+		ws['A5'] = 0
+		ws['A6'].number_format = "[=1]男;[=0]女"
+		ws['A6'] = 1
+		ws['A7'].number_format = "[=1]男;[=0]女"
+		ws['A7'] = 2
+		ws['A8'].number_format = "[<60][RED]不及格;[>=60][GREEN]及格"
+		ws['A8'] = 58
+		ws['A9'].number_format = "[<60][RED]不及格;[>=60][GREEN]及格"
+		ws['A9'] = 68
+##6. 使用Python读写Excel文件（6）
+
+- 函数
+
+	通过 Excel 可以进行各种数据处理、统计分析、辅助决策，甚至有些做量化投资的童鞋也很倾向于使用 Excel 进行建模和规划。 
+
+	想要完成这些个“骚”操作，Excel 的公式函数你是绕不过去的。
+	
+	公式始终以等号 (=) 开头，后面可以跟数字、数学运算符（如 + 或 - 号用于加减）和内置 Excel 函数，后者可以真正扩大公式的功能。
+	
+	Excel 的内置函数总共有 400+ 个，每一个都讲那是不科学滴，所以小甲鱼抽取出最常用的一些个函数跟大家聊一聊。
+	
+	如果在工作中遇到不同的需求，可以在微软的官网上找到对应类别的函数用法 
+	
+		https://support.office.com/zh-cn/article/excel-%E5%87%BD%E6%95%B0%EF%BC%88%E6%8C%89%E7%B1%BB%E5%88%AB%E5%88%97%E5%87%BA%EF%BC%89-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb?ui=zh-CN&rs=zh-CN&ad=CN
+	
+	SUM 函数用于对单元格中的值求和。
