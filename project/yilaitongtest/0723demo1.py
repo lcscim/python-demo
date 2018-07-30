@@ -1,48 +1,28 @@
-import sys  
-import re  
-import urllib2  
-import urllib  
-import requests  
-import cookielib  
-  
-## 这段代码是用于解决中文报错的问题    
-reload(sys)    
-sys.setdefaultencoding("utf8")    
-#####################################################  
-#登录人人  
-loginurl = 'http://www.yilaitong.net/index.php?s=/Home/PCLogin/login.html'  
-logindomain = 'yilaitong.net'  
-  
-class Login(object):  
-      
-    def __init__(self):  
-        self.name = ''  
-        self.passwprd = ''  
-        self.domain = ''  
-  
-        self.cj = cookielib.LWPCookieJar()              
-        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))   
-        urllib2.install_opener(self.opener)      
-      
-    def setLoginInfo(self,username,password,domain):  
-        '''''设置用户登录信息'''  
-        self.name = username  
-        self.pwd = password  
-        self.domain = domain  
-  
-    def login(self):  
-        '''''登录网站'''  
-        loginparams = {'domain':self.domain,'UserName':self.name, 'password':self.pwd}  
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}  
-        req = urllib2.Request(loginurl, urllib.urlencode(loginparams),headers=headers)    
-        response = urllib2.urlopen(req)  
-        self.operate = self.opener.open(req)  
-        thePage = response.read()          
-          
-if __name__ == '__main__':     
-    userlogin = Login()  
-    username = '18903827778'  
-    password = 'a123456'  
-    domain = logindomain  
-    userlogin.setLoginInfo(username,password,domain)  
-    userlogin.login()  
+from urllib import request
+from urllib import error
+from urllib import parse
+from http import cookiejar
+
+if __name__ == '__main__':
+    #登陆地址
+    login_url = 'http://www.yilaitong.net/index.php'    
+    #User-Agent信息                   
+    user_agent = r'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36'
+    #Headers信息
+    head = {'User-Agnet': user_agent, 'Connection': 'keep-alive'}
+    #登陆Form_Data信息
+    Login_Data = {}
+    Login_Data['UserName'] = '18903827778'       #改成你自己的用户名
+    Login_Data['password'] = 'a123456'        #改成你自己的密码
+    #使用urlencode方法转换标准格式
+    logingpostdata = parse.urlencode(Login_Data).encode('utf-8')
+    #声明一个CookieJar对象实例来保存cookie
+    cookie = cookiejar.CookieJar()
+    #利用urllib.request库的HTTPCookieProcessor对象来创建cookie处理器,也就CookieHandler
+    cookie_support = request.HTTPCookieProcessor(cookie)
+    #通过CookieHandler创建opener
+    opener = request.build_opener(cookie_support)
+    #创建Request对象
+    req1 = request.Request(url=login_url, data=logingpostdata, headers=head)
+    response1 = opener.open(req1)
+    print(response1.read().decode('utf-8'))
