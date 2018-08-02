@@ -37,8 +37,9 @@ def save_price(a):
     for i in range(len(a)):
         salename = a[i].get('sale')
         url = a[i].get('url')
+        sale = a[i].get('sale')
         wb.create_sheet(index = i, title = salename)
-        wb[salename]['A1'] = "型号"
+        wb[salename]['A1'] = "{}型号".format(sale)
         wb[salename]['B1'] = "价格"
         wb[salename]['A1'].style = highlight
         wb[salename]['B1'].style = highlight
@@ -54,8 +55,28 @@ def save_price(a):
             c += 1
             
         wb[salename]['C1'] = find_url(url)[1]
+        wb[salename].merge_cells('C1:D1')
+        wb[salename]['C1'].style = highlight
+        
     wb.save('测试报价.xlsx')
 
+def format_excel():
+    wb = openpyxl.load_workbook("测试报价.xlsx")
+    ws = wb['苹果']['B2:B{}'.format(wb['苹果'].max_row)]
+    for each in ws:
+        for each_cell in each:
+            print(each_cell)
+            '''
+            if each_cell.value < 4000:
+                each_cell.value += 100
+                print(each_cell.value)
+            else:
+                each_cell.value+=150
+                print(each_cell.value)
+            '''
+    
+    
 if __name__ == '__main__':
-    save_price(yltbj.bjurls())
+    #save_price(yltbj.bjurls())
+    format_excel()
 
