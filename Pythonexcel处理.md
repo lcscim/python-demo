@@ -562,9 +562,9 @@ openpyxl 模块简单易用、功能广泛，单元格格式/图片/表格/公�
 
 	在 Excel 中要修改行高和列宽，只需要通过鼠标的拖拽操作就可以实现。使用 openpyxl，同样可以通过修改工作表的 row_dimensions 和 column_dimensions 来实现同样的操作。
 
-	在 row_dimentions 中，使用具体的数字来表示将要修改第几行的高度，比如 row_dimentions[2].height = 100 是将第 1 行的高度修改为 100；
+	在 row_dimentions 中，使用具体的数字来表示将要修改第几行的高度，比如 row_dimensions[2].height = 100 是将第 1 行的高度修改为 100；
 
-	在 column_dimentions 中，则要使用字母来表示对应的列号，比如 column_dimentions['C'].width = 50，是将第 C 列的宽度修改为 50。
+	在 column_dimentions 中，则要使用字母来表示对应的列号，比如 column_dimensions['C'].width = 50，是将第 C 列的宽度修改为 50。
 - 合并和拆分单元格
 
 	利用工作表的 merge_cells() 和 unmerge_cells() 可以快速地合并和拆分指定区域的单元格。
