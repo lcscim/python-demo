@@ -4,6 +4,7 @@ import yltbj
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
 from openpyxl.styles import NamedStyle
+import datetime
 
 def find_url(url):
     headers = {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 5.1; MI PAD 2 MIUI/V9.6.1.0.LACCNFD)',
@@ -23,7 +24,7 @@ def find_url(url):
     result = []
     length = len(name)
     for b in range(length):
-        result.append([name[b],price[b]])
+        result.append([name[b],'','',price[b]])
 
     return [result,time]
 def save_price(a):
@@ -47,36 +48,64 @@ def save_price(a):
         c = 2
         
         for each in find_url(url)[0]:
-            wb[salename].append(each)
-            ws = wb[salename]['A{}'.format(c)]
-            ws1 = wb[salename]['B{}'.format(c)]
-            ws.alignment = Alignment(horizontal='center', vertical='center')
-            ws1.alignment = Alignment(horizontal='center', vertical='center')
-            c += 1
+            if each[0].find('耳机') == -1:
+                if each[0].find('移动') == -1:
+                    if each[0].find('电信') == -1:
+                        wb[salename].append(each)
+                        ws = wb[salename]['A{}'.format(c)]
+                        ws1 = wb[salename]['D{}'.format(c)]
+                        ws.alignment = Alignment(horizontal='center', vertical='center')
+                        ws1.alignment = Alignment(horizontal='center', vertical='center')
+                        c += 1
+                    else:
+                        continue
+                else:
+                    continue
+            else:
+                continue
             
         wb[salename]['C1'] = find_url(url)[1]
         wb[salename].merge_cells('C1:D1')
         wb[salename]['C1'].style = highlight
         
-    wb.save('测试报价.xlsx')
+    wb.save('{}报价.xlsx'.format(datetime.date.today()))
 
-def format_excel():
-    wb = openpyxl.load_workbook("测试报价.xlsx")
-    ws = wb['苹果']['B2:B{}'.format(wb['苹果'].max_row)]
+def get_new_num(sale):
+    wb = openpyxl.load_workbook('{}报价.xlsx'.format(datetime.date.today()))
+    
+    rows = wb['{}'.format(sale)].max_row
+    ws = wb['{}'.format(sale)]['D2:D{}'.format(rows)]
+    newnums = []
+    if sale == '苹果':
+        a = 4000
+        b = 100
+        c = 150
+    elif sale == '华为':
+        a = 2000
+        b = 100
+        c = 150
+    elif sale == '小米':
+        a = 2000
+        b = 100
+        c = 150
+    elif sale == '魅族':
+        a = 1800
+        b = 100
+        c = 150
     for each in ws:
         for each_cell in each:
-            print(each_cell)
-            '''
-            if each_cell.value < 4000:
-                each_cell.value += 100
-                print(each_cell.value)
+            if each_cell.value < a:
+                newnums.append(each_cell.value + b)
             else:
-                each_cell.value+=150
-                print(each_cell.value)
-            '''
+                newnums.append(each_cell.value + c)
     
-    
+    for j in range(rows-1):
+        wb['{}'.format(sale)]['B{}'.format(j+2)] = newnums[j]
+        
+    wb.save('{}报价.xlsx'.format(datetime.date.today()))
 if __name__ == '__main__':
-    #save_price(yltbj.bjurls())
-    format_excel()
+    save_price(yltbj.bjurls())
+    for i in range(len(yltbj.bjurls())):
+        sale = yltbj.bjurls()[i].get('sale')
+        get_new_num(sale)
 
