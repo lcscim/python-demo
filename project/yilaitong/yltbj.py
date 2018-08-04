@@ -7,6 +7,8 @@ def bjurls():
     return urls
 def jybj():
     otherurls = [{"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=228","home":"3a33","sale":"苹果"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=287","home":"2c29","sale":"魅族"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=392","home":"2c43","sale":"小米"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=483","home":"2a26","sale":"小米"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=283","home":"1c32","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=3054","home":"1d09","sale":"华为"},

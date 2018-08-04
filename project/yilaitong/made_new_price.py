@@ -4,7 +4,6 @@ import yltbj
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
 from openpyxl.styles import NamedStyle
-import datetime
 
 def find_url(url):
     headers = {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 5.1; MI PAD 2 MIUI/V9.6.1.0.LACCNFD)',
@@ -70,10 +69,10 @@ def save_price(a):
         wb[salename].merge_cells('C1:D1')
         wb[salename]['C1'].style = highlight
         
-    wb.save('{}报价.xlsx'.format(datetime.date.today()))
+    wb.save('报价.xlsx')
 
 def get_new_num(sale):
-    wb = openpyxl.load_workbook('{}报价.xlsx'.format(datetime.date.today()))
+    wb = openpyxl.load_workbook('报价.xlsx')
     rows = wb['{}'.format(sale)].max_row
     ws = wb['{}'.format(sale)]['D2:D{}'.format(rows)]
     newnums = []
@@ -107,11 +106,11 @@ def get_new_num(sale):
     for j in range(rows-1):
         wb['{}'.format(sale)]['B{}'.format(j+2)] = newnums[j]
         
-    wb.save('{}报价.xlsx'.format(datetime.date.today()))
+    wb.save('报价.xlsx')
 
 def checkout(sale,url):
     
-    wb = openpyxl.load_workbook('{}报价.xlsx'.format(datetime.date.today()))
+    wb = openpyxl.load_workbook('报价.xlsx')
     wb.guess_types = True
     rows = wb['{}'.format(sale)].max_row
     wsa = wb['{}'.format(sale)]['A2:A{}'.format(rows)]
@@ -131,7 +130,7 @@ def checkout(sale,url):
         if each[0] in name:
             num = name.index(each[0])
             if zhi[num] != 0: 
-                wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2
+                wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2+10
             else:
                 wb['{}'.format(sale)]['D{}'.format(num+2)] = each[3]
         else:
@@ -156,11 +155,11 @@ def checkout(sale,url):
                 continue
 
 
-    wb.save('{}报价.xlsx'.format(datetime.date.today()))
+    wb.save('报价.xlsx')
 
 def zong_price():
     pinpai = ['苹果','华为','小米','魅族']
-    wb = openpyxl.load_workbook('{}报价.xlsx'.format(datetime.date.today()))
+    wb = openpyxl.load_workbook('报价.xlsx')
     wb.guess_types = True
     wb.create_sheet(index = len(pinpai), title = '总报价')
     for i in range(len(pinpai)):
@@ -208,7 +207,7 @@ def zong_price():
                 wb['总报价']['G{}'.format(x+1)] = a[x]
                 wb['总报价']['H{}'.format(x+1)] = b[x]
                     
-    wb.save('{}报价.xlsx'.format(datetime.date.today()))
+    wb.save('报价.xlsx')
            
 if __name__ == '__main__':
     
