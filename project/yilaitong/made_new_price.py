@@ -1,9 +1,28 @@
 import requests
 import openpyxl
-import yltbj
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
 from openpyxl.styles import NamedStyle
+
+def bjurls():
+    urls = [{"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=435","home":"2d09","sale":"苹果"},
+            {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=487","home":"2a45","sale":"华为"},
+            {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=496","home":"2b03","sale":"小米"},
+            {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=273","home":"2d04","sale":"魅族"}]
+            
+    return urls
+def jybj():
+    otherurls = [{"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=228","home":"3a33","sale":"苹果"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=287","home":"2c29","sale":"魅族"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=392","home":"2c43","sale":"小米"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=483","home":"2a26","sale":"小米"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=283","home":"1c32","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=3054","home":"1d09","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=420","home":"1c20","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=353","home":"2a16","sale":"魅族"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=183","home":"1d13","sale":"小米"}]
+    return otherurls
 
 def find_url(url):
     headers = {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 5.1; MI PAD 2 MIUI/V9.6.1.0.LACCNFD)',
@@ -135,16 +154,20 @@ def checkout(sale,url):
                 wb['{}'.format(sale)]['D{}'.format(num+2)] = each[3]
         else:
             
-            if each[0].find('耳机') == -1:
-                if each[0].find('移动') == -1:
-                    if each[0].find('电信') == -1:
-                        if each[0].find('手环') == -1:
-                            wb[sale].append(each)
-                            ws = wb[sale]['A{}'.format(c)]
-                            ws1 = wb[sale]['D{}'.format(c)]
-                            ws.alignment = Alignment(horizontal='center', vertical='center')
-                            ws1.alignment = Alignment(horizontal='center', vertical='center')
-                            c += 1
+            if each[0].count('--') == 2:
+                
+                if each[0].find('耳机') == -1:
+                    if each[0].find('移动') == -1:
+                        if each[0].find('电信') == -1:
+                            if each[0].find('手环') == -1:
+                                wb[sale].append(each)
+                                ws = wb[sale]['A{}'.format(c)]
+                                ws1 = wb[sale]['D{}'.format(c)]
+                                ws.alignment = Alignment(horizontal='center', vertical='center')
+                                ws1.alignment = Alignment(horizontal='center', vertical='center')
+                                c += 1
+                            else:
+                                continue
                         else:
                             continue
                     else:
@@ -152,6 +175,7 @@ def checkout(sale,url):
                 else:
                     continue
             else:
+                
                 continue
 
 
@@ -211,16 +235,16 @@ def zong_price():
            
 if __name__ == '__main__':
     
-    save_price(yltbj.bjurls())
+    save_price(bjurls())
 
-    for j in range(len(yltbj.jybj())):
-        jy_sale = yltbj.jybj()[j].get('sale')
-        jy_url = yltbj.jybj()[j].get('url')
+    for j in range(len(jybj())):
+        jy_sale = jybj()[j].get('sale')
+        jy_url = jybj()[j].get('url')
         checkout(jy_sale,jy_url)
         get_new_num(jy_sale)
     
-    for i in range(len(yltbj.bjurls())):
-        sale = yltbj.bjurls()[i].get('sale')
+    for i in range(len(bjurls())):
+        sale = bjurls()[i].get('sale')
         get_new_num(sale)
     
     zong_price()

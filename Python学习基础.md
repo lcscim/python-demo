@@ -2866,6 +2866,37 @@ requests库的基础方法如下：
 	    vd.video_download(video_url, filename+'.mp4')
 	    print('\n下载完成！')
 
+
+#8.4
+
+
+##1.pyinstaller
+- 下载pyinstaller采用命令行操作的办法:
+
+	在cmd命令行中，输入代码：
+		pip install pyinstaller
+	或者采用更新、升级的方法：
+		pip install --upgrade pyinstaller
+- 使用pyinstaller打包py文件成exe程序
+
+	将cmd的目录切换至（命令：cd 文件路径(注意空格)）需要打包的py文件目录下
+
+	并输入代码，格式为使用命令：pyinstaller -F 文件名（带后缀py）：
+		
+		pyinstaller -F test.py
+	常用参数说明：
+
+		–icon=图标路径
+		-F 打包成一个exe文件
+		-w 使用窗口，无控制台
+		-c 使用控制台，无窗口
+		-D 创建一个目录，里面包含exe以及其他一些依赖性文件
+		pyinstaller -h 来查看参数
+	回车后，代码迅速操作，直到操作结束。
+
+	pyinstaller 改变生成exe程序的图标
+		pyinstaller -F --icon=my.ico test.py
+	my.ico 是一个图标名，和当前的test.py文件在同一个目录下
 	
     
 
