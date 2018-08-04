@@ -3,6 +3,7 @@ import openpyxl
 from openpyxl.styles import Font
 from openpyxl.styles import Alignment
 from openpyxl.styles import NamedStyle
+import time
 
 def bjurls():
     urls = [{"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=435","home":"2d09","sale":"苹果"},
@@ -87,7 +88,7 @@ def save_price(a):
         wb[salename]['C1'] = find_url(url)[1]
         wb[salename].merge_cells('C1:D1')
         wb[salename]['C1'].style = highlight
-        
+        time.sleep(1)
     wb.save('报价.xlsx')
 
 def get_new_num(sale):
@@ -242,10 +243,12 @@ if __name__ == '__main__':
         jy_url = jybj()[j].get('url')
         checkout(jy_sale,jy_url)
         get_new_num(jy_sale)
+        time.sleep(1)
     
     for i in range(len(bjurls())):
         sale = bjurls()[i].get('sale')
         get_new_num(sale)
+        time.sleep(1)
     
     zong_price()
     
