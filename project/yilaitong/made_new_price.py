@@ -150,7 +150,7 @@ def checkout(sale,url):
         if each[0] in name:
             num = name.index(each[0])
             if zhi[num] != 0: 
-                wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2+10
+                wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2
             else:
                 wb['{}'.format(sale)]['D{}'.format(num+2)] = each[3]
         else:
