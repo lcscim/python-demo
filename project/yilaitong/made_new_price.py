@@ -66,24 +66,29 @@ def save_price(a):
         c = 2
         
         for each in find_url(url)[0]:
-            if each[0].find('耳机') == -1:
-                if each[0].find('移动') == -1:
-                    if each[0].find('电信') == -1:
-                        if each[0].find('手环') == -1:
-                            wb[salename].append(each)
-                            ws = wb[salename]['A{}'.format(c)]
-                            ws1 = wb[salename]['D{}'.format(c)]
-                            ws.alignment = Alignment(horizontal='center', vertical='center')
-                            ws1.alignment = Alignment(horizontal='center', vertical='center')
-                            c += 1
+            if each[0].count('--') == 2:
+                if each[0].find('耳机') == -1:
+                    if each[0].find('移动') == -1:
+                        if each[0].find('电信') == -1:
+                            if each[0].find('手环') == -1:
+                                wb[salename].append(each)
+                                ws = wb[salename]['A{}'.format(c)]
+                                ws1 = wb[salename]['D{}'.format(c)]
+                                ws.alignment = Alignment(horizontal='center', vertical='center')
+                                ws1.alignment = Alignment(horizontal='center', vertical='center')
+                                c += 1
+                            else:
+                                continue
                         else:
                             continue
                     else:
                         continue
                 else:
                     continue
+
             else:
                 continue
+            
             
         wb[salename]['C1'] = find_url(url)[1]
         wb[salename].merge_cells('C1:D1')
@@ -149,13 +154,13 @@ def checkout(sale,url):
     for each in find_url(url)[0]:
         if each[0] in name:
             num = name.index(each[0])
-            if zhi[num] != 0:
-                if each[3] != 0:
+            if zhi[num] != '0':
+                if each[3] != '0':
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2 + 2
                 else:
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = zhi[num]
             else:
-                if each[3] != 0:
+                if each[3] != '0':
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = each[3]
                 else:
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = 0
