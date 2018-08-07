@@ -154,6 +154,11 @@ def checkout(sale,url):
     for each in find_url(url)[0]:
         if each[0] in name:
             num = name.index(each[0])
+            if int(each[3]) >= int(zhi[num]):
+                wb['{}'.format(sale)]['D{}'.format(num+2)] = int(each[3])+10
+            else:
+                wb['{}'.format(sale)]['D{}'.format(num+2)] = int(zhi[num])+10
+            '''
             if zhi[num] != '0':
                 if each[3] != '0':
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = (int(each[3])+int(zhi[num]))/2 + 2
@@ -164,6 +169,7 @@ def checkout(sale,url):
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = each[3]
                 else:
                     wb['{}'.format(sale)]['D{}'.format(num+2)] = 0
+            '''
         else:
             
             if each[0].count('--') == 2:
