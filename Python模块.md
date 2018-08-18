@@ -150,6 +150,9 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - threading- 基于线程的并行性该模块在较低级别_thread模块之上构建更高级别的线程接口
 
 	文档地址：https://docs.python.org/3.6/library/threading.html
-- 
+##9. Python网络编程
+- socket- 低级网络接口
+
+	文档地址：https://docs.python.org/3.6/library/socket.html
 
 	
