@@ -1,7 +1,5 @@
 import openpyxl
 from openpyxl.styles import Font
-from openpyxl.styles import Alignment
-from openpyxl.styles import NamedStyle
 
 wb = openpyxl.load_workbook('817.xlsx')
 ws = wb['订单列表']
@@ -12,34 +10,48 @@ for each in ws['C2:C{}'.format(rows-1)]:
         if each_cell.value not in names:
             names.append(each_cell.value)
 
-for i in range(len(names)):
-    wb.create_sheet(index = i+1,title = names[i][:4])
-    wb[names[i][:4]].guess_types = True
-    wb[names[i][:4]]['A1'] = '商品名称'
-    wb[names[i][:4]]['B1'] = '商品数量'
-    wb[names[i][:4]]['C1'] = '收货人'
-    wb[names[i][:4]]['D1'] = '收货电话'
-    wb[names[i][:4]]['E1'] = '收货地址'
-    wb[names[i][:4]]['A1'].font = Font(bold=True, size=15)
-    wb[names[i][:4]]['B1'].font = Font(bold=True, size=15)
-    wb[names[i][:4]]['C1'].font = Font(bold=True, size=15)
-    wb[names[i][:4]]['D1'].font = Font(bold=True, size=15)
-    wb[names[i][:4]]['E1'].font = Font(bold=True, size=15)
-    wb[names[i][:4]].column_dimensions['A'].width = 40
-    wb[names[i][:4]].column_dimensions['E'].width = 50
-    wb[names[i][:4]].column_dimensions['D'].width = 15
-    '''
+def geshi(name,i):
+    wb.create_sheet(index = i+1,title = names[i][:30])
+    wb[names[i][:30]].guess_types = True
+    wb[names[i][:30]]['A1'] = '商品名称'
+    wb[names[i][:30]]['B1'] = '商品数量'
+    wb[names[i][:30]]['C1'] = '收货人'
+    wb[names[i][:30]]['D1'] = '收货电话'
+    wb[names[i][:30]]['E1'] = '收货地址'
+    wb[names[i][:30]]['A1'].font = Font(bold=True, size=15)
+    wb[names[i][:30]]['B1'].font = Font(bold=True, size=15)
+    wb[names[i][:30]]['C1'].font = Font(bold=True, size=15)
+    wb[names[i][:30]]['D1'].font = Font(bold=True, size=15)
+    wb[names[i][:30]]['E1'].font = Font(bold=True, size=15)
+    wb[names[i][:30]].column_dimensions['A'].width = 40
+    wb[names[i][:30]].column_dimensions['E'].width = 50
+    wb[names[i][:30]].column_dimensions['D'].width = 15
+    j = 2
     for a in range(rows-2):
+        
         if names[i] == ws['C{}'.format(a+2)].value:
-            wb[names[i][:4]]['A{}'.format(a+2)] = ws['C{}'.format(a+2)].value
-            wb[names[i][:4]]['B{}'.format(a+2)] = ws['E{}'.format(a+2)].value
-            wb[names[i][:4]]['C{}'.format(a+2)] = ws['K{}'.format(a+2)].value
-            wb[names[i][:4]]['D{}'.format(a+2)] = ws['L{}'.format(a+2)].value
-            wb[names[i][:4]]['E{}'.format(a+2)] = ws['M{}'.format(a+2)].value
+            
+            wb[names[i][:30]]['A{}'.format(j)] = ws['C{}'.format(a+2)].value
+            wb[names[i][:30]]['B{}'.format(j)] = ws['E{}'.format(a+2)].value
+            wb[names[i][:30]]['C{}'.format(j)] = ws['K{}'.format(a+2)].value
+            wb[names[i][:30]]['D{}'.format(j)] = ws['L{}'.format(a+2)].value
+            wb[names[i][:30]]['E{}'.format(j)] = ws['M{}'.format(a+2)].value
+            j+=1
         else:
             continue
-    '''
-wb.save('817.xlsx')
+    wb.save('817.xlsx')
+
+for i in range(len(names)):
+    if len(names[i]) <= 31:
+        name = names[i]
+        print(name)
+    else:
+        name = names[i][:25]+' '+names[i][31:]
+        print(name)
+    
+
+a = [{'供应商':'张三','商品':['黑贝南瓜 39.9元5斤包邮','红蜜薯5斤39元包邮 48小时内发货']},
+     {'供应商':'张三','商品':['黑贝南瓜 39.9元5斤包邮','红蜜薯5斤39元包邮 48小时内发货']}]
 
 
             
