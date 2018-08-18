@@ -93,6 +93,8 @@
 	文档地址：http://xlutils.readthedocs.io/en/latest/
 ##5.Python图片识别
 - PIL全称：Python Imaging Library，python图像处理库，这个库支持多种文件格式，并提供了强大的图像处理和图形处理能力。由于PIL仅支持到Python 2.7，所以在PIL的基础上创建了Pillow库，支持最新Python 3.x。
+
+	文档地址：https://pillow.readthedocs.org/
 - pytesseract图片识别工具
 
 安装
@@ -154,5 +156,18 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - socket- 低级网络接口
 
 	文档地址：https://docs.python.org/3.6/library/socket.html
+##10. 其他模块
+- itchat是一个开源的微信个人号接口，使用python调用微信从未如此简单
+
+	文档地址：https://itchat.readthedocs.io/zh/latest/
+- pandas：功能强大的Python数据分析工具包
+
+	文档地址：http://pandas.pydata.org/pandas-docs/stable/
+- jieba中文分词：做最好的 Python 中文分词组件
+
+	文档地址：https://github.com/fxsjy/jieba
+- Wordcloud Python中的一个小词云生成器
+
+	文档地址：https://github.com/amueller/word_cloud/
 
 	
