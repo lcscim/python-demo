@@ -169,5 +169,15 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - Wordcloud Python中的一个小词云生成器
 
 	文档地址：https://github.com/amueller/word_cloud/
+- smtplib- SMTP协议客户端负责发送邮件。
 
-	
+	文档地址：https://docs.python.org/3/library/smtplib.html
+- email- 电子邮件和MIME处理包负责构造邮件
+
+	文档地址：https://docs.python.org/3/library/email.html
+- email.mime：从头开始创建电子邮件和MIME对象
+
+	文档地址：https://docs.python.org/3/library/email.mime.html
+- poplib- POP3协议客户端 收取邮件
+
+	文档地址：https://docs.python.org/3/library/poplib.html
