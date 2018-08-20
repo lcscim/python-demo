@@ -181,3 +181,9 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - poplib- POP3协议客户端 收取邮件
 
 	文档地址：https://docs.python.org/3/library/poplib.html
+- wsgiref- WSGI实用程序和参考实现Web服务器网关接口（WSGI）是Web服务器软件和用Python编写的Web应用程序之间的标准接口。拥有标准接口可以轻松使用支持WSGI的应用程序和许多不同的Web服务器。
+
+	文档地址：https://docs.python.org/3/library/wsgiref.html
+- flask Web框架
+
+	文档地址：http://flask.pocoo.org/docs/1.0/

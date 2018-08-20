@@ -183,3 +183,211 @@ JavaScript虽然名称有个Java，但它和Java真的一点关系没有。JavaS
 	
 	http://www.w3school.com.cn/
 ##1.2.3 WSGI接口
+Web应用的本质就是：
+
+	浏览器发送一个HTTP请求；
+	服务器收到请求，生成一个HTML文档；	
+	服务器把HTML文档作为HTTP响应的Body发送给浏览器；
+	浏览器收到HTTP响应，从HTTP Body取出HTML文档并显示。
+最简单的Web应用就是先把HTML用文件保存好，用一个现成的HTTP服务器软件，接收用户请求，从文件中读取HTML，返回。
+统一的接口，让我们专心用Python编写Web业务。这个接口就是WSGI：Web Server Gateway Interface。WSGI接口定义非常简单，它只要求Web开发者实现一个函数，就可以响应HTTP请求。我们来看一个最简单的Web版本的“Hello, web!”：
+
+	#application()函数就是符合WSGI标准的一个HTTP处理函数，它接收两个参数：
+		environ：一个包含所有HTTP请求信息的dict对象；
+		start_response：一个发送HTTP响应的函数。
+	def application(environ, start_response):
+	    start_response('200 OK', [('Content-Type', 'text/html')])
+		# 发送了HTTP响应的Header，注意Header只能发送一次，也就是只能调用一次start_response()函数。start_response()函数接收两个参数，一个是HTTP响应码，一个是一组list表示的HTTP Header，每个Header用一个包含两个str的tuple表示。
+	    return [b'<h1>Hello, web!</h1>']
+Python内置了一个WSGI服务器，这个模块叫wsgiref
+
+- 运行WSGI服务
+
+	我们先编写hello.py，实现Web应用程序的WSGI处理函数：
+
+		# hello.py
+		def application(environ, start_response):
+		    start_response('200 OK', [('Content-Type', 'text/html')])
+		    return [b'<h1>Hello, web!</h1>']
+	然后，再编写一个server.py，负责启动WSGI服务器，加载application()函数：
+
+		# server.py
+		# 从wsgiref模块导入:
+		from wsgiref.simple_server import make_server
+		# 导入我们自己编写的application函数:
+		from hello import application
+		
+		# 创建一个服务器，IP地址为空，端口是8000，处理函数是application:
+		httpd = make_server('', 8000, application)
+		print('Serving HTTP on port 8000...')
+		# 开始监听HTTP请求:
+		httpd.serve_forever()
+	确保以上两个文件在同一个目录下，然后在命令行输入python server.py来启动WSGI服务器：![](https://cdn.liaoxuefeng.com/cdn/files/attachments/001400038640434579c45c375d244efbb229e98e5bd7691000)
+	注意：如果8000端口已被其他程序占用，启动将失败，请修改成其他端口。
+
+	启动成功后，打开浏览器，输入http://localhost:8000/，就可以看到结果了：
+	![](https://cdn.liaoxuefeng.com/cdn/files/attachments/0014000386233913cf4690bd4134b23aead27a11a7dbec9000)
+	按Ctrl+C终止服务器。
+
+	如果你觉得这个Web应用太简单了，可以稍微改造一下，从environ里读取PATH_INFO，这样可以显示更加动态的内容：
+		# hello.py
+		def application(environ, start_response):
+		    start_response('200 OK', [('Content-Type', 'text/html')])
+		    body = '<h1>Hello, %s!</h1>' % (environ['PATH_INFO'][1:] or 'web')
+		    return [body.encode('utf-8')]
+	你可以在地址栏输入用户名作为URL的一部分，将返回Hello, xxx!：
+	![](https://cdn.liaoxuefeng.com/cdn/files/attachments/00140003866212417a4fdb1f8ad41ae99c80a75ca0dd432000)
+##1.4使用Web框架
+其实一个Web App，就是写一个WSGI的处理函数，针对每个HTTP请求进行响应。但是如何处理HTTP请求不是问题，问题是如何处理100个不同的URL。
+由于用Python开发一个Web框架十分容易，所以Python有上百个开源的Web框架。这里我们先不讨论各种Web框架的优缺点，直接选择一个比较流行的Web框架——Flask来使用。
+
+先用pip安装Flask：
+
+	 pip install flask
+然后写一个app.py，处理3个URL，分别是：
+
+	GET /：首页，返回Home；
+	GET /signin：登录页，显示登录表单；	
+	POST /signin：处理登录表单，显示登录结果。	
+	注意噢，同一个URL/signin分别有GET和POST两种请求，映射到两个处理函数中。
+
+Flask通过Python的装饰器在内部自动地把URL和函数给关联起来，所以，我们写出来的代码就像这样：
+
+	from flask import Flask
+	from flask import request
+	
+	app = Flask(__name__)
+	
+	@app.route('/', methods=['GET', 'POST'])
+	def home():
+	    return '<h1>Home</h1>'
+	
+	@app.route('/signin', methods=['GET'])
+	def signin_form():
+	    return '''<form action="/signin" method="post">
+	              <p><input name="username"></p>
+	              <p><input name="password" type="password"></p>
+	              <p><button type="submit">Sign In</button></p>
+	              </form>'''
+	
+	@app.route('/signin', methods=['POST'])
+	def signin():
+	    # 需要从request对象读取表单内容：
+	    if request.form['username']=='admin' and request.form['password']=='password':
+	        return '<h3>Hello, admin!</h3>'
+	    return '<h3>Bad username or password.</h3>'
+	
+	if __name__ == '__main__':
+	    app.run()
+除了Flask，常见的Python Web框架还有：
+
+	Django：全能型Web框架；
+	
+	web.py：一个小巧的Web框架；
+	
+	Bottle：和Flask类似的Web框架；
+	
+	Tornado：Facebook的开源异步Web框架。
+##1.5使用模板
+使用模板，我们需要预先准备一个HTML文档，这个HTML文档不是普通的HTML，而是嵌入了一些变量和指令，然后，根据我们传入的数据，替换后，得到最终的HTML，发送给用户：
+
+![](https://cdn.liaoxuefeng.com/cdn/files/attachments/001400339839622665127663fb840b5870864895b103c2f000)
+
+这就是传说中的MVC：Model-View-Controller，中文名“模型-视图-控制器”。
+
+Python处理URL的函数就是C：Controller，Controller负责业务逻辑，比如检查用户名是否存在，取出用户信息等等；
+
+包含变量{{ name }}的模板就是V：View，View负责显示逻辑，通过简单地替换一些变量，View最终输出的就是用户看到的HTML。
+
+MVC中的Model在哪？Model是用来传给View的，这样View在替换变量的时候，就可以从Model中取出相应的数据。
+
+上面的例子中，Model就是一个dict：
+
+	{ 'name': 'Michael' }
+只是因为Python支持关键字参数，很多Web框架允许传入关键字参数，然后，在框架内部组装出一个dict作为Model。
+
+现在，我们把上次直接输出字符串作为HTML的例子用高端大气上档次的MVC模式改写一下：
+
+	from flask import Flask, request, render_template
+	
+	app = Flask(__name__)
+	
+	@app.route('/', methods=['GET', 'POST'])
+	def home():
+	    return render_template('home.html')
+	
+	@app.route('/signin', methods=['GET'])
+	def signin_form():
+	    return render_template('form.html')
+	
+	@app.route('/signin', methods=['POST'])
+	def signin():
+	    username = request.form['username']
+	    password = request.form['password']
+	    if username=='admin' and password=='password':
+	        return render_template('signin-ok.html', username=username)
+	    return render_template('form.html', message='Bad username or password', username=username)
+	
+	if __name__ == '__main__':
+	    app.run()
+Flask通过render_template()函数来实现模板的渲染。和Web框架类似，Python的模板也有很多种。Flask默认支持的模板是jinja2，所以我们先直接安装jinja2：
+
+ $ pip install jinja2
+然后，开始编写jinja2模板：
+
+home.html用来显示首页的模板：
+
+	<html>
+	<head>
+	  <title>Home</title>
+	</head>
+	<body>
+	  <h1 style="font-style:italic">Home</h1>
+	</body>
+	</html>
+form.html用来显示登录表单的模板：
+
+	<html>
+	<head>
+	  <title>Please Sign In</title>
+	</head>
+	<body>
+	  {% if message %}
+	  <p style="color:red">{{ message }}</p>
+	  {% endif %}
+	  <form action="/signin" method="post">
+	    <legend>Please sign in:</legend>
+	    <p><input name="username" placeholder="Username" value="{{ username }}"></p>
+	    <p><input name="password" placeholder="Password" type="password"></p>
+	    <p><button type="submit">Sign In</button></p>
+	  </form>
+	</body>
+	</html>
+signin-ok.html登录成功的模板：
+
+	<html>
+	<head>
+	  <title>Welcome, {{ username }}</title>
+	</head>
+	<body>
+	  <p>Welcome, {{ username }}!</p>
+	</body>
+	</html>
+登录失败的模板呢？我们在form.html中加了一点条件判断，把form.html重用为登录失败的模板。
+
+最后，一定要把模板放到正确的templates目录下，templates和app.py在同级目录下
+在Jinja2模板中，我们用{{ name }}表示一个需要替换的变量。很多时候，还需要循环、条件判断等指令语句，在Jinja2中，用{% ... %}表示指令。
+
+比如循环输出页码：
+
+	{% for i in page_list %}
+	    <a href="/page/{{ i }}">{{ i }}</a>
+	{% endfor %}
+如果page_list是一个list：[1, 2, 3, 4, 5]，上面的模板将输出5个超链接。
+除了Jinja2，常见的模板还有：
+
+	Mako：用<% ... %>和${xxx}的一个模板；
+	
+	Cheetah：也是用<% ... %>和${xxx}的一个模板；
+	
+	Django：Django是一站式框架，内置一个用{% ... %}和{{ xxx }}的模板
