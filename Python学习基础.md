@@ -3009,7 +3009,21 @@ python装饰器就是用于拓展原来函数功能的一种函数，这个函�
 - docs/:存放一些文档
 - setup.py:安装部署打包的脚本
 - requirements.txt:存放软件依赖的外部Python包序列
-- readm:项目说明文件
+- readme:项目说明文件
+
+##7.hashlib模块
+Python的hashlib提供了常见的摘要算法，如MD5，SHA1等等。摘要算法又称哈希算法、散列算法。它通过一个函数，把任意长度的数据转换为一个长度固定的数据串（通常用16进制的字符串表示）。示例
+
+	import hashlib
+	md5 = hashlib.md5()
+	md5.update('how to use md5 in python hashlib?')
+	print md5.hexdigest()
+如果数据量很大，可以分块多次调用update()，最后计算的结果是一样的
+##8.decode和encode
+- decode的作用是将其他编码的字符串转换成unicode编码
+- encode的作用是将unicode编码转换成其他编码的字符串
+- decode():是解码，encode()是编码
+
 
 
 
