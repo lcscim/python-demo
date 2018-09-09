@@ -3023,8 +3023,27 @@ Python的hashlib提供了常见的摘要算法，如MD5，SHA1等等。摘要算
 - decode的作用是将其他编码的字符串转换成unicode编码
 - encode的作用是将unicode编码转换成其他编码的字符串
 - decode():是解码，encode()是编码
+##9.日志模块logging
+logging模块是Python内置的标准模块，主要用于输出运行日志，可以设置输出日志的等级、日志保存路径、日志文件回滚等；相比print，具备如下优点：
 
+1. 可以通过设置不同的日志等级，在release版本中只输出重要信息，而不必显示大量的调试信息；
+2. print将所有信息都输出到标准输出中，严重影响开发者从标准输出中查看其它数据；logging则可以由开发者决定将信息输出到什么地方，以及怎么输出；
 
+默认输出：
+	import logging
+	logging.basicConfig(level=logging.DEBUG, 
+	                    format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+	                    datefmt='%a,%d %b %Y %H:%M:%S',		
+	                    filename='test.log',	//设置文件名称
+	                    filemode='w')	//，默认操作模式为a，如果有内容继续添加
+	
+	logging.debug("debug message")
+	logging.info("info message")
+	logging.warning("hello error")
+	logging.error("error message")
+	logging.critical("critical message")
+
+文档的内容为： Sun,09 Sep 2018 21:23:39 - september.py[line:10] - DEBUG: debug message
 
 
 

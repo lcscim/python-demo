@@ -189,5 +189,8 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 	文档地址：http://flask.pocoo.org/docs/1.0/
 - hashlib模块
 
-	文档地质：https://docs.python.org/3.1/library/hashlib.html
+	文档地质：https://docs.python.org/3.7/library/hashlib.html
+- logging记录工具模块
+
+	文档地址：https://docs.python.org/3.7/library/logging.html
 	
