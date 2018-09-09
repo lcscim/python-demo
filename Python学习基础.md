@@ -2916,8 +2916,101 @@ requests库的基础方法如下：
 	pyinstaller 改变生成exe程序的图标
 		pyinstaller -F --icon=my.ico test.py
 	my.ico 是一个图标名，和当前的test.py文件在同一个目录下
+
+#9.9
+
+##1.高阶函数
+1. 函数名可以作为参数输入
+2. 函数名可以作为返回值
+
+##2.闭包
+定义：如果在一个内部函数里，对在外部作用域（但不是在全局作用域）的变量进行引用，那么内部函数就被认为是闭包
+
+##3.装饰器
+python装饰器就是用于拓展原来函数功能的一种函数，这个函数的特殊之处在于它的返回值也是一个函数，使用python装饰器的好处就是在不用更改原函数的代码前提下给函数增加新的功能。
+
+	#既不需要侵入，也不需要函数重复执行
+	import time
 	
-    
+	def deco(func):		//deco函数就是最原始的装饰器，它的参数是一个函数，然后返回值也是一个函数。
+	    def wrapper():
+	        startTime = time.time()
+	        func()
+	        endTime = time.time()
+	        msecs = (endTime - startTime)*1000
+	        print("time is %d ms" %msecs)
+	    return wrapper
+	
+	
+	@deco	//在函数func()前面加上@deco，func()函数就相当于被注入了计时功能，现在只要调用func()，它就已经变身为“新的功能更多”的函数了。 
+	def func():
+	    print("hello")
+	    time.sleep(1)
+	    print("world")
+	
+	if __name__ == '__main__':
+	    f = func #这里f被赋值为func，执行f()就是执行func()
+	    f()
+装饰器的参数不一定是函数，但返回值一定是一个函数（包裹函数），而且包裹函数与原函数参数必须一致
+
+##4.生成器
+- 在Python中，这种一边循环一边计算的机制，称为生成器：generator。
+- 列表生成式
+
+	a=[x for x in range(10)]  x可以为函数如fun(x)，但必须与for的名称相同
+- 创建list和generator的区别仅在于最外层的[]和()
+
+		>>> L = [x * x for x in range(10)]
+		>>> L
+		[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+		>>> g = (x * x for x in range(10))
+		>>> g
+		<generator object <genexpr> at 0x1022ef630>
+	要一个一个打印出来，可以通过next()函数获得generator的下一个返回值
+
+		>>> next(g)
+		0
+		>>> next(g)
+		1
+		>>> next(g)
+		4
+		>>> next(g)
+		9
+- 每次调用next(g)，就计算出g的下一个元素的值，直到计算到最后一个元素，没有更多的元素时，抛出StopIteration的错误。
+- 我们创建了一个generator后，基本上永远不会调用next()，而是通过for循环来迭代它，并且不需要关心StopIteration的错误。
+- 要把fib函数变成generator，只需要把print(b)改为yield b就可以了：
+		
+		def fib(max):
+		    n, a, b = 0, 0, 1
+		    while n < max:
+		        yield b
+		        a, b = b, a + b
+		        n = n + 1
+		    return 'done'
+##5.包package
+按目录组织模块的方法，导入时如下
+
+	from web.web2 import logger		//导入web包下的web2包中的logger模块
+每个包下面都有一个__init__.py文件
+
+假如module不在同一个目录下需添加文件所在路径
+
+	import sys
+	import os
+	BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	sys.path.append(BASE_DIR)
+##6.目录结构
+- bin/:存放一些可执行文件
+- foo/:存放项目的所有源代码，名称可以根据实际自定
+
+	1. 源代码中所有模块 包 都应在此目录，不要置于顶层目录
+	2. 其子目录tests/存放单元测试代码
+	3. 程序的入口最好命名为main.py
+- docs/:存放一些文档
+- setup.py:安装部署打包的脚本
+- requirements.txt:存放软件依赖的外部Python包序列
+- readm:项目说明文件
+
 
 
 
