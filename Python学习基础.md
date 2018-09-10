@@ -3169,4 +3169,78 @@ Python对象持久性
 	    print(name,rank)
 ##7.面向对象
 - 定义类的第一个函数参数必须有self
-- 类对象指针，创建类的对象，有一个指向类的指针self
+- 类对象指针，创建类的对象，有一个指向类的指针
+- self代指调用方法对象
+
+构造方法：创建类对象时自动调用构造方法__init__()
+
+	class Bar:
+	    def __init__(self,name):
+	        self.name1 = name
+	    def foo(self):
+	        print(self.name1)
+	z = Bar('lcscim')
+	print(z.name1)
+	z.foo()
+###7.1继承：
+- 简单表示
+		class F:
+		    def f1(self):
+		        print('F.f1')
+		    def f2(self):
+		        print('F.f2')
+		
+		class S(F):
+		    def s1(self):
+		        print('S.s1')
+		    def s2(self):
+		        print('S.s2')
+		s = S()
+		s.s1()
+		s.f1()
+- 重写父类方法
+
+		class F:
+		    def f1(self):
+		        print('F.f1')
+		    def f2(self):
+		        print('F.f2')
+		
+		class S(F):
+		    def s1(self):
+		        print('S.s1')
+		    def f1(self):
+		        print('S.f1')
+		s = S()
+		s.s1()
+		s.f1()
+		s.f2()
+- super访问父类方法
+
+	- super(子类，self).父类中的方法（）
+	- 父类名.父类中的方法（self，。。。）
+
+		class F:
+		    def f1(self):
+		        print('F.f1')
+		    def f2(self):
+		        print('F.f2')
+		
+		class S(F):
+		    def s1(self):
+		        print('S.s1')
+		    def f1(self):
+		        super(S,self).f2()
+		        #super访问父类方法，第一个参数为当前类，第二个为self
+		        print('S.f1')
+		        F.f2(self)#也可访问父类f2方法，建议第一种super
+		s = S()
+		s.s1()
+		s.f1()
+- 支持多继承
+
+	- 左侧优先
+	- 一条道走到黑
+	- 同一个基类，基类最后执行
+
+- 多态，Python原生多态
