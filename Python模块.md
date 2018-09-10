@@ -193,4 +193,11 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - logging记录工具模块
 
 	文档地址：https://docs.python.org/3.7/library/logging.html
+- shelve- Python对象持久性
+
+	文档地址：https://docs.python.org/3/library/shelve.html
+- XML处理模块
+
+	文档地址：https://docs.python.org/3/library/xml.html?highlight=xml#module-xml
+	https://docs.python.org/3/library/xml.etree.elementtree.html#module-xml.etree.ElementTree
 	

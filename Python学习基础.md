@@ -3045,5 +3045,128 @@ logging模块是Python内置的标准模块，主要用于输出运行日志，�
 
 文档的内容为： Sun,09 Sep 2018 21:23:39 - september.py[line:10] - DEBUG: debug message
 
+#9.10
+
+##1.eval()
+将字符串string对象转化为有效的表达式参与求值运算返回计算结果
+
+	eval（expression，globals=None, locals=None）返回的是计算结果
+
+其中：
+
+    expression是一个参与计算的python表达式
+    globals是可选的参数，如果设置属性不为None的话，就必须是dictionary对象了
+    locals也是一个可选的对象，如果设置属性不为None的话，可以是任何map对象
+##2.序列化与反序列化
+把对象（变量）从内存中变成可以存储或传输的过程称之为序列化。反过来把变量内容从序列化对象读取到新内存里称之为反序列化
+##3.json模块
+JSON编码器和解码器，处理json格式文本
+- json.dumps()将obj序列化为str使用此转换表格式化的JSON 
+- json.loads()反序列化
+- json.dump(obj,f) 
+- json.load(obj)
+
+序列化
+	import json
+	dic = {'name':'alex','age':'18'}
+	data = json.dumps(dic)
+	f=open('JSON_text','w')
+	f.write(data)
+	f.close()
+	#使用dump的效果
+	import json
+	dic = {'name':'alex','age':'18'}
+	f=open('JSON_text','w')
+	data = json.dump(dic，f)
+	f.close()	
+反序列化
+	import json
+	f=open("JSON_text",'r')
+	data = f.read()
+	data = json.loads(data)
+	print(data)
+	f.close()
+	#使用load效果
+	import json
+	f=open("JSON_text",'r')
+	data = json.load(f)
+	print(data)
+	f.close()	
+##4.pickle Python对象序列化
+该pickle模块实现了用于序列化和反序列化Python对象结构的二进制协议。用于存放（pickling）读取（unpickling）
+- pickle.dumps()序列化
+- pickle.loads()反序列化
+- pickle.dump()
+- pickle.load()
 
 
+	import pickle
+	def foo():
+	    print("ok")
+	data = pickle.dumps(foo)
+	f=open('PICKLE_text','wb')
+	f.write(data)
+	f.close()
+	#使用dump
+	import pickle
+	def foo():
+	    print("ok")
+	f = open('PICKLE_text', 'wb')
+	data = pickle.dump(foo,f)
+	f.close()
+
+	import pickle
+	def foo():
+	    print("ok")
+	f=open("PICKLE_text",'rb')
+	data = f.read()
+	data = pickle.loads(data)
+	data()
+	f.close()
+	#使用load
+	import pickle
+	def foo():
+	    print("ok")
+	f=open("PICKLE_text",'rb')
+	data = pickle.load(f)
+	data()
+	f.close()
+注意：反序列化语句中必须需要原函数如上，foo
+##5.shelve模块
+Python对象持久性
+
+	import shelve
+	f = shelve.open(r'shelve.txt')
+	f['info'] = {'name':'lcscim','age':'52'}
+	f.close()
+	
+	import shelve
+	f = shelve.open(r'shelve.txt')
+	print(f.get('info')['age'])
+	f.close()
+##6.XML模块
+是实现不同语言程序进行交换的协议跟json差不多。操作XML有以下方法：
+- DOM会把整个XML读入内存，解析为树，因此占用内存大，解析慢，优点是可以任意遍历树的节点。
+- SAX是流模式，边读边解析，占用内存小，解析快，缺点是我们需要自己处理事件。
+- ElementTree就像一个轻量级的DOM，具有方便友好的API。代码可用性好，速度快，消耗内存少。
+
+正常情况下，优先考虑SAX，因为DOM实在太占内存。
+
+	import xml.etree.cElementTree as ET
+	tree = ET.parse('XML_text')
+	root = tree.getroot()
+	print(root.tag)#获取文件的标签
+	for neighbor in root.iter('neighbor'):
+	    #递归迭代它下面的所有子树（它的子节点，它们的子节点等）
+	    print(neighbor.attrib)
+	for country in root.findall('country'):
+	    #仅查找具有标记的元素，这些元素是当前元素的直接子元素
+	    rank = country.find('rank').text
+	    # Element.find()查找具有特定标记的第一个子项
+	    #Element.text访问该元素的文本内容
+	    name = country.get('name')
+	    # Element.get()访问元素的属性
+	    print(name,rank)
+##7.面向对象
+- 定义类的第一个函数参数必须有self
+- 类对象指针，创建类的对象，有一个指向类的指针self
