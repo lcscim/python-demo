@@ -919,13 +919,13 @@ try-except语句，语法：
 	except OSError as reason:
 		print('出错了，原因是：'+str(reason))
 
-raise语句引发异常
+raise语句引发异常,主动触发异常
 
 	raise [异常名（'要显示异常的具体信息'）]
 #6.6
 tips:
 1. 建议不要在IDLE上运行EasyGui
-2. 对于函数而言前两个参数是消息和标题，几乎所有的组件都会显示一个标题和消息，标题默认空白字符串，信息是一个简单的默认值
+2. 对于函数而言前两个参数是消息和标题，几乎所有的组件都会显示一个标题和消息，标题默认空白字符串，信息是一个简单的默认值 
 3. 按钮组件可不带参数地调用它，当选择cancel或者关闭窗口的时候返回一个布尔值
 4. msgbox(msg,title,ok_button,image,root)该方法显示一个消息和提供一个OK按钮，可以指定消息，标题，按钮，建议使用关键字参数调用
 5. 
@@ -3176,6 +3176,7 @@ Python对象持久性
 
 	class Bar:
 	    def __init__(self,name):
+			#self.name为字段
 	        self.name1 = name
 	    def foo(self):
 	        print(self.name1)
@@ -3244,3 +3245,180 @@ Python对象持久性
 	- 同一个基类，基类最后执行
 
 - 多态，Python原生多态
+
+#9.12
+
+##1.类字段
+	class Bar:
+	    def __init__(self,name):
+			#self.name为字段
+	        self.name1 = name
+	    def foo(self):
+	        print(self.name1)
+- 普通字段，保存在对象中，执行只能通过对象访问
+- 静态字段，保存在类中，执行可以通过对象访问也可通过类访问
+
+	class Bar:
+		#静态字段
+		country = 'china'
+	    def __init__(self,name):
+			#self.name为字段 普通字段
+	        self.name1 = name
+##2.类方法
+- 普通方法 保存在类中由对象调用
+- 静态方法 可通过类名.直接调用
+
+		class Foo:
+		    def bar(self):
+		        print('bar')
+		
+		    @staticmethod
+		    def sta():
+		        print('static')
+		
+		    @staticmethod
+		    #静态方法前都有@staticmethod标识
+		    def sta2(x,y):
+		        print(x,y)
+		Foo.sta()
+		#静态方法
+		Foo.sta2(1,2)
+		#带有参数的静态方法
+		foo = Foo()
+		foo.bar()
+		#非静态方法
+##3.成员修饰符
+
+- 公有成员 外部可以访问
+- 私有成员 外部不可访问，在名称前加两个下划线
+
+私有变量
+		class Foo:
+		    def __init__(self,name,age):
+		        self.name = name
+		        #self.age = age
+		        #变量名前加‘__’表示私有变量，外部无法直接访问
+		        self.__age = age
+		    def shou(self):#内部可以访问__age
+		        return self.__age
+		
+		foo = Foo('lcscim',52)
+		print(foo.name)
+		#print(foo.__age) 无法直接访问
+		print(foo.shou())
+
+		class Foo:
+		    __age = 21
+		    def __init__(self):
+		        pass
+		    def sta(self):
+		        return Foo.__age
+		    @staticmethod
+		    def stat():
+		        return Foo.__age
+		foo = Foo().sta()
+		print(foo)
+		fo = Foo.stat()
+		print(fo)
+私有方法
+
+	class Foo:
+	    def __f1(self):
+	        return 123
+	    def f2(self):
+	        return self.__f1()
+	
+	print(Foo().f2())
+注意:继承无法访问父类的私有方法
+##4.特殊成员
+在创建类对象后再加一个括号即可访问__call__方法
+		class Foo:
+		    def __init__(self):
+		        print('1')
+		    def __call__(self, *args, **kwargs):
+		        print('2')
+		Foo()()
+- __init__  类()自动执行
+- __del__   析构方法 对象不再使用时由解释器自动在内存中进行销毁
+- __call__  对象() 或 类()()自动执行
+- __int__   int(对象)
+- __str__   str(对象)
+
+		class Foo:
+		    def __init__(self):
+		        pass
+		    def __str__(self):
+		        return 'lcscim'
+		print(str(Foo()))
+- __add__   对象相加时调用，其余运算方法类似
+- __dict__  将对象中所有封装的内容以字典形式返回，如果是对象名.__dict__返回对象的成员，如果是类返回类的成员
+
+		class Foo:
+		    def __init__(self,name,age):
+		        self.name = name
+		        self.age = age
+		
+		foo = Foo('lcscim',25)
+		d = foo.__dict__
+		print(d)
+	返回
+		{'name': 'lcscim', 'age': 25}
+- __getitem__ #通过对象[]获取值，其余类似
+- __setitem__
+- __delitem__
+
+		class Foo:
+		    def __init__(self,name,age):
+		        self.name = name
+		        self.age = age
+		    def __getitem__(self, item):
+		        
+		        return item
+		    def __setitem__(self, key, value):
+		        print(key,value)
+		    def __delitem__(self, key):
+		        print(key)
+		
+		foo = Foo('lcscim',25)
+		foo[8]
+		foo[9] = 123
+		del foo[10]
+- __iter__ 如果类中有该方法，表示创建的对象可迭代，__iter__的返回值是一个迭代器
+
+		class Foo:
+		    def __init__(self,name,age):
+		        self.name = name
+		        self.age = age
+		    def __iter__(self):
+		        return iter([11,22,33,44])
+		
+		foo = Foo('lcscim',52)
+		for i in foo:
+		    print(i)
+##5.类执行过程
+- Python的一切事物都是对象
+- 所有的类都是type对象
+- 创建类对象时首先执行type的init方法，在执行type的call方法，在执行类的init方法
+
+##6.异常处理
+assert（断言），当跟在assert后的条件为假的时候，程序自动崩溃并抛出AssertionError异常，常用在确保程序某个条件一定为真时才让程序正常工作的情况下
+
+try-except语句，语法：
+
+	try：
+		检测范围
+	except Exception[as reason]:	//Exception是异常名，reason是指异常信息，
+		c出现异常(Exception)后的处理代码
+	finally：
+		无论如何都会被执行的代码
+	例如：
+	try:
+		f = open('nofile.txt')
+		print(f.read())
+		f.close()
+	except OSError as reason:
+		print('出错了，原因是：'+str(reason))
+
+raise语句引发异常,主动触发异常
+
+	raise [异常名（'要显示异常的具体信息'）]
