@@ -3422,3 +3422,44 @@ try-except语句，语法：
 raise语句引发异常,主动触发异常
 
 	raise [异常名（'要显示异常的具体信息'）]
+##7.反射
+通过字符串的形式操作对象中的成员：
+
+- getattr
+- hasattr
+- setattr
+- delattr
+
+		class Foo:
+		    def __init__(self,name,age):
+		        self.name = name
+		        self.age = age
+		    def show(self):
+		        return '%s-%s'%(self.name,self.age)
+		
+		foo = Foo('lcscim',52)
+		print(getattr(foo,'name'))
+		print(hasattr(foo,'name'))
+		print(getattr(foo,'show'))
+		print(setattr(foo,'name','laochang'))
+		print(foo.name)
+反射在模块中也可以使用
+
+示例：
+
+	#模块
+	def f1():
+	    print('你好')
+	def f2():
+	    print('我好')
+	def f3():
+	    print('大家好')
+	#引用
+	import s2
+	
+	inp = input('请输入')
+	if hasattr(s2,inp):
+	    foo = getattr(s2,inp)
+	    foo()
+	else:
+	    print('404')
