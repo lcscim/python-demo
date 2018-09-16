@@ -144,3 +144,98 @@ TCP是建立可靠连接，并且通信双方都可以以流的形式发送数�
 	    print(s.recv(1024).decode('utf-8'))
 	s.close()
 
+
+
+#9.16
+
+##1.网络通信要素
+- IP地址
+
+	1. 用来标识网络上一台独立的主机
+	2. IP地址 = 网络地址+主机地址（网络地址：用于识别主机所在的网络/网段；主机地址：用来标识该网络上的主机）
+	3. 特殊的IP地址：127.0.0.1（本地回环地址，保留地址，点分十进制，可用于测试网卡是否故障，表示本机）
+- 端口号
+
+	1. 用于表示进程的逻辑地址，不同的进程有不同的端口标识
+	2. 端口：要将数据发送到对方指定的应用程序上，为了表示这些应用程序，所应对这些网络应用程序都用数据进行了表示。为了方便称呼这些数字，则将这些数字称为端口，是逻辑端口
+- 传输协议：通讯的规则。如：TCP，UDP
+
+	- IP协议负责把数据从一台计算机通过网络发送到另一台计算机。数据被分割成一小块一小块，然后通过IP包发送出去。由于互联网链路复杂，两台计算机之间经常有多条线路，因此，路由器就负责决定如何把一个IP包转发出去。IP包的特点是按块发送，途径多个路由，但不保证能到达，也不保证顺序到达。
+	- TCP协议则是建立在IP协议之上的。TCP协议负责在两台计算机之间建立可靠连接，保证数据包按顺序到达。TCP协议会通过握手建立连接，然后，对每个IP包编号，确保对方按顺序收到，如果包丢掉了，就自动重发。
+	- TCP是建立可靠连接，并且通信双方都可以以流的形式发送数据。相对TCP，UDP则是面向无连接的协议。使用UDP协议时，不需要建立连接，只需要知道对方的IP地址和端口号，就可以直接发数据包。但是，能不能到达就不知道了。
+##2.TCP
+访问百度
+
+	# 导入socket库:
+	import socket
+	# 创建一个socket:AF_INET指定使用IPv4协议，如果要用更先进的IPv6，就指定为AF_INET6。SOCK_STREAM指定使用面向流的TCP协议，这样，一个Socket对象就创建成功，但是还没有建立连接。作为服务器，提供什么样的服务，端口号就必须固定下来。由于我们想要访问网页，因此百度提供网页服务的服务器必须把端口号固定在80端口，因为80端口是Web服务的标准端口。
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	# 建立连接:客户端要主动发起TCP连接，必须知道服务器的IP地址和端口号。参数是一个tuple，包含地址和端口号。
+	s.connect(('www.baidu.com', 80))
+	# 发送数据:发送的文本格式必须符合HTTP标准
+	s.send(b'GET / HTTP/1.1\r\nHost: www.baidu.com\r\nConnection: close\r\n\r\n')
+	# 接收数据:while循环中反复接收，直到recv()返回空数据，表示接收完毕，退出循环。
+	buffer = []
+	while True:
+	    # 每次最多接收1k字节:调用recv(max)方法，一次最多接收指定的字节数
+	    d = s.recv(1024)
+	    if d:
+	        buffer.append(d)
+	    else:
+	        break
+	data = b''.join(buffer)
+	# 关闭连接:当我们接收完数据后，调用close()方法关闭Socket，这样，一次完整的网络通信就结束了
+	s.close()
+	header, html = data.split(b'\r\n\r\n', 1)
+	print(header.decode('utf-8'))
+	# 把接收的数据写入文件:接收到的数据包括HTTP头和网页本身，我们只需要把HTTP头和网页分离一下，把HTTP头打印出来，网页内容保存到文件
+	with open('baidu.html', 'wb') as f:
+	    f.write(html)
+- 服务端
+
+		import socket
+		import threading
+		import time
+		# 创建一个基于IPv4和TCP协议的Socket：
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		# 监听端口:127.0.0.1是一个特殊的IP地址，表示本机地址。这个服务不是标准服务，所以用9999这个端口号。请注意，小于1024的端口号必须要有管理员权限才能绑定：
+		s.bind(('127.0.0.1', 9999))
+		# 调用listen()方法开始监听端口，传入的参数指定等待连接的最大数量：
+		s.listen(5)
+		print('Waiting for connection...')
+		# 每个连接都必须创建新线程（或进程）来处理，否则，单线程在处理连接的过程中，无法接受其他客户端的连接：
+		def tcplink(sock, addr):
+		    print('Accept new connection from %s:%s...' % addr)
+		    sock.send(b'Welcome!')
+		    while True:
+		        data = sock.recv(1024)
+		        time.sleep(1)
+		        if not data or data.decode('utf-8') == 'exit':
+		            break
+		        sock.send(('Hello, %s!' % data.decode('utf-8')).encode('utf-8'))
+		    sock.close()
+		    print('Connection from %s:%s closed.' % addr)
+		# 服务器程序通过一个永久循环来接受来自客户端的连接，accept()会等待并返回一个客户端的连接:
+		while True:
+		    # 接受一个新连接:
+		    sock, addr = s.accept()
+		    # 创建新线程来处理TCP连接:
+		    t = threading.Thread(target=tcplink, args=(sock, addr))
+		    t.start()
+- 客户端
+
+		import socket
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		# 建立连接:
+		s.connect(('127.0.0.1', 9999))
+		# 接收欢迎消息:
+		print(s.recv(1024).decode('utf-8'))
+		for data in [b'Michael', b'Tracy', b'Sarah']:
+		    # 发送数据:
+		    s.send(data)
+		    print(s.recv(1024).decode('utf-8'))
+		s.send(b'exit')
+		s.close()
+具体流程如下
+![](https://i.imgur.com/E1mZvrn.jpg)
+
