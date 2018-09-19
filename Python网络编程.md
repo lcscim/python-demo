@@ -239,3 +239,120 @@ TCP是建立可靠连接，并且通信双方都可以以流的形式发送数�
 具体流程如下
 ![](https://i.imgur.com/E1mZvrn.jpg)
 
+
+#9.19
+
+##1.socket，可聊天应用
+服务端
+
+	import socket
+	
+	s = socket.socket()
+	address = ('127.0.0.1',8888)
+	s.bind(address)
+	s.listen(3)
+	while 1:
+	    conn,addr = s.accept()
+	    print(addr)
+	    while 1:
+	        try:
+	            data = conn.recv(1024)
+	        except Exception:
+	            break
+	        print('.......',str(data,'utf8'))
+	        inp = input('>>>')
+	        conn.send(bytes(inp,'utf8'))
+	s.close()
+客户端
+
+	import socket
+	
+	s = socket.socket()
+	print(s)
+	address = ('127.0.0.1',8888)
+	s.connect(address)
+	while True:
+	
+	    inp = input('>>>')
+	    if inp == 'exit':
+	        break
+	    s.send(bytes(inp,'utf8'))
+	    data = s.recv(1024)
+	    print(str(data,'utf8'))
+	s.close()
+##2.远程执行命令
+
+	#------------------------------------------------server
+	#------------------------------------------------
+	import socket
+	import subprocess
+	ip_port = ('127.0.0.1',8879)
+	sk = socket.socket()
+	sk.bind(ip_port)
+	sk.listen(5)
+	print ("服务端启动...")
+	while True:
+	    conn,address = sk.accept()
+	    while True:
+	        try:
+	
+	            client_data=conn.recv(1024)
+	        except Exception:
+	            break
+	        print (str(client_data,"utf8"))
+	        print ("waiting...")
+	        # server_response=input(">>>")
+	        # conn.sendall(bytes(server_response,"utf8"))
+	        cmd=str(client_data,"utf8").strip()		//删除命令行左和右的空格
+	        cmd_call=subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+				//传入cmd参数，把shell设置成True，指定的命令会在shell里解释执行。 ，subprocess.PIPE表示创建一个通道
+	        cmd_result=cmd_call.stdout.read()	//对cmd返回的对象进行读取
+	        if len(cmd_result)==0:
+	            cmd_result=b"no output!"
+	        conn.sendall(cmd_result)	//将返回的数据发送回客户端
+	        print('send data size',len(cmd_result))
+	        print('******************')
+	        print('******************')
+	        print('******************')
+	
+	    conn.close()
+	    
+	#------------------------------------------------client 
+	#------------------------------------------------
+	import socket
+	ip_port = ('127.0.0.1',8879)
+	sk = socket.socket()
+	sk.connect(ip_port)
+	print ("客户端启动：")
+	while True:
+	    inp = input('cdm:>>>').strip( )
+	    if len(inp)==0:
+	        continue
+	    if inp=="q":
+	        break
+	    sk.sendall(bytes(inp,"utf8"))
+	    server_response=sk.recv(1024)
+	    print (str(server_response,"gbk"))
+	    print('receive data size',len(server_response))
+	    if inp == 'exit':
+	        break
+	sk.close()
+
+- subprocess.Popen
+
+	subprocess模块定义了一个类： Popen
+		class subprocess.Popen( args, 
+		      bufsize=0, 
+		      executable=None,
+		      stdin=None,
+		      stdout=None, 
+		      stderr=None, 
+		      preexec_fn=None, 
+		      close_fds=False, 
+		      shell=False, 
+		      cwd=None, 
+		      env=None, 
+		      universal_newlines=False, 
+		      startupinfo=None, 
+		      creationflags=0)
+	![](http://img1.51cto.com/attachment/201203/120613646.jpg)

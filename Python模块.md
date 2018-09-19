@@ -200,4 +200,7 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 
 	文档地址：https://docs.python.org/3/library/xml.html?highlight=xml#module-xml
 	https://docs.python.org/3/library/xml.etree.elementtree.html#module-xml.etree.ElementTree
+- subprocess- 子进程管理。允许您生成新进程，连接到它们的输入/输出/错误管道，并获取它们的返回代码。
+
+	文档地址：https://docs.python.org/3.7/library/subprocess.html
 	
