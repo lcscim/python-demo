@@ -356,3 +356,81 @@ TCP是建立可靠连接，并且通信双方都可以以流的形式发送数�
 		      startupinfo=None, 
 		      creationflags=0)
 	![](http://img1.51cto.com/attachment/201203/120613646.jpg)
+
+
+#9.20
+
+##1.粘包现象
+连续两次或多次发送信息，有可能出现错误，这种现象叫做粘包现象
+
+解决办法：在两次发送间隔断一下如：
+
+	...
+	conn.sendall(cmd_result)
+	conn.recv(1024)
+	conn.sendall(cmd)
+	...
+##2.编码
+- Python3中只有两种数据类型 str byte
+- 由str>>>bytes:  编码（encode方法）
+- 由bytes>>>str:  解码（decode方法）
+
+##3.文件上传
+
+	import socket,os
+	ip_port=("127.0.0.1",8898)
+	sk=socket.socket()
+	sk.bind(ip_port)
+	sk.listen(5)
+	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+	#获取文件的路径
+	while True:
+	    print("waiting connect")
+	    conn,addr=sk.accept()
+	    flag = True
+	    while flag:
+	
+	            client_bytes=conn.recv(1024)
+	            client_str=str(client_bytes,"utf8")
+	            func,file_byte_size,filename=client_str.split("|",2)
+	
+	            path=os.path.join(BASE_DIR,'yuan',filename)
+	            has_received=0
+	            file_byte_size=int(file_byte_size)
+	
+	            f=open(path,"wb")
+	            while has_received<file_byte_size:
+	                data=conn.recv(1024)
+	                f.write(data)
+	                has_received+=len(data)
+	            print("ending")
+	            f.close()
+	
+	#----------------------------------------------client
+	#----------------------------------------------
+	import socket
+	import re,os,sys
+	ip_port=("127.0.0.1",8898)
+	sk=socket.socket()
+	sk.connect(ip_port)
+	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+	print("客户端启动....")
+	
+	while True:
+	    inp=input("please input:")
+	
+	    if inp.startswith("post"):
+	        method,local_path=inp.split("|",1)
+	        local_path=os.path.join(BASE_DIR,local_path)
+	        file_byte_size=os.stat(local_path).st_size
+	        file_name=os.path.basename(local_path)
+	        post_info="post|%s|%s"%(file_byte_size,file_name)
+	        sk.sendall(bytes(post_info,"utf8"))
+	        has_sent=0
+	        file_obj=open(local_path,"rb")
+	        while has_sent<file_byte_size:
+	            data=file_obj.read(1024)
+	            sk.sendall(data)
+	            has_sent+=len(data)
+	        file_obj.close()
+	        print("上传成功")
