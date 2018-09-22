@@ -437,4 +437,147 @@ TCP是建立可靠连接，并且通信双方都可以以流的形式发送数�
 
 #9.21
 
-##1.server端并发聊天
+##1.socketserver
+创建一个socketserver 至少分以下几步
+
+1. 首先，必须通过子类化BaseRequestHandlerclass并覆盖其handle()方法来创建请求处理程序类;此方法将处理传入的请求。
+2. 其次，必须实例化一个服务器类，将服务器地址和请求处理程序类传递给它。
+3. 然后调用服务器对象的handle_request()或serve_forever()方法来处理一个或多个请求。
+4. 最后，调用server_close()关闭。
+
+		import socketserver
+		#重写一个类继承socketserver.BaseRequestHandler
+		class MyTCPHandler(socketserver.BaseRequestHandler):
+		    """
+		    The request handler class for our server.
+		    It is instantiated once per connection to the server, and must
+		    override the handle() method to implement communication to the
+		    client.
+		    ""
+			#重写父类的handle方法
+		    def handle(self):
+		        # self.request is the TCP socket connected to the client
+		        self.data = self.request.recv(1024).strip()
+		        print("{} wrote:".format(self.client_address[0]))
+		        print(self.data)
+		        # just send back the same data, but upper-cased
+		        self.request.sendall(self.data.upper())
+		
+		if __name__ == "__main__":
+		    HOST, PORT = "localhost", 9999
+		    # Create the server, binding to localhost on port 9999
+		    server = socketserver.ThreadingTCPServer((HOST, PORT), MyTCPHandler)
+		    # Activate the server; this will keep running until you
+		    # interrupt the program with Ctrl-C
+		    server.serve_forever()
+
+#9.22
+
+##1.线程与进程
+- 线程，是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务
+- 进程，程序的执行实例称为进程。
+
+进程与线程的区别
+
+1. 线程共享创建它的进程的地址空间;进程有自己的地址空间。
+2. 线程可以直接访问其进程的数据段;进程拥有自己父进程数据段的副本。
+3. 线程可以直接与其进程的其他线程通信;进程必须使用进程间通信来与兄弟进程通信。
+4. 新线程很容易创建;新进程需要复制父进程。
+5. 线程可以对同一进程的线程进行相当大的控制;进程只能控制子进程。
+6. 对主线程的更改（取消，优先级更改等）可能会影响进程的其他线程的行为;对父进程的更改不会影响子进程。
+
+##2.线程threading模块
+线程的2种调用方式
+
+- 直接调用
+
+		import threading
+		import time
+		def sayhi(num): #定义每个线程要运行的函数
+		    print("running on number:%s" %num)
+		    time.sleep(3)
+		if __name__ == '__main__':
+		    t1 = threading.Thread(target=sayhi,args=(1,)) #生成一个线程实例
+		    t2 = threading.Thread(target=sayhi,args=(2,)) #生成另一个线程实例
+		    t1.start() #启动线程
+		    t2.start() #启动另一个线程
+		    print(t1.getName()) #获取线程名
+		    print(t2.getName())
+- 继承式调用
+
+		import threading
+		import time
+		class MyThread(threading.Thread):
+		    def __init__(self,num):
+		        threading.Thread.__init__(self)
+		        self.num = num
+		    def run(self):#定义每个线程要运行的函数
+		        print("running on number:%s" %self.num)
+		        time.sleep(3)
+		if __name__ == '__main__':
+		    t1 = MyThread(1)
+		    t2 = MyThread(2)
+		    t1.start()
+		    t2.start()
+
+###2.1 join()方法
+- join()方法可以等待子进程结束后再继续往下运行，通常用于进程间的同步。
+- setDaemon(True)：将线程声明为守护线程，必须在start() 方法调用之前设置， 如果不设置为守护线程程序会被无限挂起。当我们 在程序运行中，执行一个主线程，如果主线程又创建一个子线程，主线程和子线程 就分兵两路，分别运行，那么当主线程完成想退出时，会检验子线程是否完成。如 果子线程未完成，则主线程会等待子线程完成后再退出。但是有时候我们需要的是 只要主线程完成了，不管子线程是否完成，都要和主线程一起退出，这时就可以 用setDaemon方法
+
+	import threading
+	from time import ctime,sleep
+	import time
+	
+	def music(func):
+	    for i in range(2):
+	        print ("Begin listening to %s. %s" %(func,ctime()))
+	        sleep(4)
+	        print("end listening %s"%ctime())
+	
+	def move(func):
+	    for i in range(2):
+	        print ("Begin watching at the %s! %s" %(func,ctime()))
+	        sleep(5)
+	        print('end watching %s'%ctime())
+	
+	threads = []
+	t1 = threading.Thread(target=music,args=('七里香',))
+	threads.append(t1)
+	t2 = threading.Thread(target=move,args=('阿甘正传',))
+	threads.append(t2)
+	
+	if __name__ == '__main__':
+	
+	    for t in threads:
+	        # t.setDaemon(True)
+	        t.start()
+	        # t.join()
+	    # t1.join()
+	    t2.join()########考虑这三种join位置下的结果？   t2运行结束之后最后运行print
+	    print ("all over %s" %ctime())
+
+thread 模块提供的其他方法：
+- threading.currentThread(): 返回当前的线程变量。
+- threading.enumerate(): 返回一个包含正在运行的线程的list。正在运行指线程启动后、结束前，不包括启动前和终止后的线程。
+- threading.activeCount(): 返回正在运行的线程数量，与len(threading.enumerate())有相同的结果。
+- 除了使用方法外，线程模块同样提供了Thread类来处理线程，Thread类提供了以下方法:
+- run(): 用以表示线程活动的方法。
+- start():启动线程活动。
+- join([time]): 等待至线程中止。这阻塞调用线程直至线程的join() 方法被调用中止-正常退出或者抛出未处理的异常-或者是可选的超时发生。
+- isAlive(): 返回线程是否活动的。
+- getName(): 返回线程名。
+- setName(): 设置线程名。
+
+##3.GIL全局解释器锁
+- CPU密集型任务:  主要是执行计算任务，响应时间很快，cpu一直在运行，这种任务cpu的利用率很高
+- IO密集型任务：主要是进行IO操作，执行IO操作的时间较长，这是cpu出于空闲状态，导致cpu的利用率不高
+
+在同一时刻，只能有一个线程进入解释器。Python只支持单线程。
+
+在Python中，如果任务是IO密集型用C语言
+
+
+
+13 212 
+
+

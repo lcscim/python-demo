@@ -203,4 +203,7 @@ adb全名Andorid Debug Bridge. 顾名思义, 这是一个Debug工具。
 - subprocess- 子进程管理。允许您生成新进程，连接到它们的输入/输出/错误管道，并获取它们的返回代码。
 
 	文档地址：https://docs.python.org/3.7/library/subprocess.html
+- socketserver- 网络服务器的框架
+
+	文档地址：https://docs.python.org/3/library/socketserver.html
 	
