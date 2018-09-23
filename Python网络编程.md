@@ -521,7 +521,7 @@ TCP是建立可靠连接，并且通信双方都可以以流的形式发送数�
 		    t2.start()
 
 ###2.1 join()方法
-- join()方法可以等待子进程结束后再继续往下运行，通常用于进程间的同步。
+- join()方法可以等待调用该方法的进程结束后再继续往下运行，通常用于进程间的同步。
 - setDaemon(True)：将线程声明为守护线程，必须在start() 方法调用之前设置， 如果不设置为守护线程程序会被无限挂起。当我们 在程序运行中，执行一个主线程，如果主线程又创建一个子线程，主线程和子线程 就分兵两路，分别运行，那么当主线程完成想退出时，会检验子线程是否完成。如 果子线程未完成，则主线程会等待子线程完成后再退出。但是有时候我们需要的是 只要主线程完成了，不管子线程是否完成，都要和主线程一起退出，这时就可以 用setDaemon方法
 
 	import threading
@@ -577,7 +577,162 @@ thread 模块提供的其他方法：
 在Python中，如果任务是IO密集型用C语言
 
 
+#9.23
 
-13 212 
+##1.同步锁(Lock)
+- acquire()上锁
+- release()解锁
+
+		import time
+		import threading
+		
+		def addNum():
+		    global num #在每个线程中都获取这个全局变量
+			#上锁
+		    lock.acquire()
+		    temp=num
+		    print('--get num:',num )
+		    num =temp-1 #对此公共变量进行-1操作
+			#解锁
+		    lock.release()
+		
+		num = 100  #设定一个共享变量
+		thread_list = []
+		#调用锁
+		lock=threading.Lock()
+		
+		for i in range(100):
+		    t = threading.Thread(target=addNum)
+		    t.start()
+		    thread_list.append(t)
+		
+		for t in thread_list: #等待所有线程执行完毕
+		    t.join()
+		
+		print('final num:', num )
+被锁的部分是串行的
+##2.递归锁（RLock）和死锁
+死锁： 是指两个或两个以上的进程或线程在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去
+
+		import threading,time
+		
+		class myThread(threading.Thread):
+		    def doA(self):
+		        lockA.acquire()
+		        print(self.name,"gotlockA",time.ctime())
+		        time.sleep(3)
+		        lockB.acquire()
+		        print(self.name,"gotlockB",time.ctime())
+		        lockB.release()
+		        lockA.release()
+		
+		    def doB(self):
+		        lockB.acquire()
+		        print(self.name,"gotlockB",time.ctime())
+		        time.sleep(2)
+		        lockA.acquire()
+		        print(self.name,"gotlockA",time.ctime())
+		        lockA.release()
+		        lockB.release()
+		    def run(self):
+		        self.doA()
+		        self.doB()
+		if __name__=="__main__":
+		
+		    lockA=threading.Lock()
+		    lockB=threading.Lock()
+		    threads=[]
+		    for i in range(5):
+		        threads.append(myThread())
+		    for t in threads:
+		        t.start()
+		    for t in threads:
+		        t.join()#等待线程结束，后面再讲。
+解决办法使用递归锁：lock=threading.RLock()
+
+		import threading,time
+		class myThread(threading.Thread):
+		    def doA(self):
+		        lock.acquire()
+		        print(self.name,"gotlockA",time.ctime())
+		        time.sleep(3)
+		        lock.acquire()
+		        print(self.name,"gotlockB",time.ctime())
+		        lock.release()
+		        lock.release()
+		
+		    def doB(self):
+		        lock.acquire()
+		        print(self.name,"gotlockB",time.ctime())
+		        time.sleep(2)
+		        lock.acquire()
+		        print(self.name,"gotlockA",time.ctime())
+		        lock.release()
+		        lock.release()
+		    def run(self):
+		        self.doA()
+		        self.doB()
+		if __name__=="__main__":
+		
+		    lock=threading.RLock()
+		    threads=[]
+		    for i in range(5):
+		        threads.append(myThread())
+		    for t in threads:
+		        t.start()
+		    for t in threads:
+		        t.join()#等待线程结束，后面再讲。
+##3.条件变量同步(Condition)
+Python提供了threading.Condition 对象用于条件变量线程的支持，需要满足条件之后才能够继续执行。它除了能提供RLock()或Lock()的方法外，还提供了 wait()、notify()、notifyAll()方法。
+
+	lock_con=threading.Condition([Lock/Rlock])： 锁是可选选项，不传人锁，对象自动创建一个RLock()。
+
+		wait()：条件不满足时调用，线程会释放锁并进入等待阻塞；
+		notify()：条件创造后调用，通知等待池激活一个线程；
+		notifyAll()：条件创造后调用，通知等待池激活所有线程。
+
+
+	import threading,time
+	from random import randint
+	class Producer(threading.Thread):
+	    def run(self):
+	        global L
+	        while True:
+	            val=randint(0,100)
+	            print('生产者',self.name,":Append"+str(val),L)
+	            if lock_con.acquire():
+	                L.append(val)
+	                lock_con.notify()
+	                lock_con.release()
+	            time.sleep(3)
+	class Consumer(threading.Thread):
+	    def run(self):
+	        global L
+	        while True:
+	                lock_con.acquire()
+	                if len(L)==0:
+	                    lock_con.wait()
+	                print('消费者',self.name,":Delete"+str(L[0]),L)
+	                del L[0]
+	                lock_con.release()
+	                time.sleep(0.25)
+	
+	if __name__=="__main__":
+	
+	    L=[]
+		#声明条件锁
+	    lock_con=threading.Condition()
+	    threads=[]
+	    for i in range(5):
+	        threads.append(Producer())
+	    threads.append(Consumer())
+	    for t in threads:
+	        t.start()
+	    for t in threads:
+	        t.join()
+
+
+
+
 
 
