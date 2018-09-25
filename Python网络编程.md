@@ -700,9 +700,12 @@ Python提供了threading.Condition 对象用于条件变量线程的支持，需
 	        while True:
 	            val=randint(0,100)
 	            print('生产者',self.name,":Append"+str(val),L)
-	            if lock_con.acquire():
+				#如果上锁了           
+				if lock_con.acquire():	
 	                L.append(val)
+					#通知等待的线程进行激活
 	                lock_con.notify()
+					#进行解锁
 	                lock_con.release()
 	            time.sleep(3)
 	class Consumer(threading.Thread):
@@ -710,7 +713,9 @@ Python提供了threading.Condition 对象用于条件变量线程的支持，需
 	        global L
 	        while True:
 	                lock_con.acquire()
-	                if len(L)==0:
+					#判断变量L是否为空
+	                if len(L)==0
+						#如果为空就将该线程上锁并阻塞
 	                    lock_con.wait()
 	                print('消费者',self.name,":Delete"+str(L[0]),L)
 	                del L[0]
@@ -730,8 +735,133 @@ Python提供了threading.Condition 对象用于条件变量线程的支持，需
 	        t.start()
 	    for t in threads:
 	        t.join()
+#9.25
 
+##1.信号量(Semaphore)
+信号量用来控制线程并发数的，BoundedSemaphore或Semaphore管理一个内置的计数 器，每当调用acquire()时-1，调用release()时+1。
 
+计数器不能小于0，当计数器为 0时，acquire()将阻塞线程至同步锁定状态，直到其他线程调用release()。(类似于停车位的概念)
+
+BoundedSemaphore与Semaphore的唯一区别在于前者将在调用release()时检查计数 器的值是否超过了计数器的初始值，如果超过了将抛出一个异常。
+
+	import threading,time
+	class myThread(threading.Thread):
+	    def run(self):
+			#如果上锁了
+	        if semaphore.acquire():
+	            print(self.name)
+	            time.sleep(5)
+	            semaphore.release()
+	if __name__=="__main__":
+		#管理线程并发数，这里指定为5个
+	    semaphore=threading.Semaphore(5)
+	    thrs=[]
+	    for i in range(100):
+	        thrs.append(myThread())
+	    for t in thrs:
+	        t.start()
+##2.同步条件(Event)
+条件同步和条件变量同步差不多意思，只是少了锁功能，因为条件同步设计于不访问共享资源的条件环境。
+
+	event=threading.Event()：条件环境对象，初始值 为False；
+
+	event.isSet()：返回event的状态值；
+	event.wait()：如果 event.isSet()==False将阻塞线程；
+	event.set()： 设置event的状态值为True，所有阻塞池的线程激活进入就绪状态， 等待操作系统调度；
+	event.clear()：恢复event的状态值为False。
+
+		import threading,time
+		class Boss(threading.Thread):
+		    def run(self):
+		        print("BOSS：今晚大家都要加班到22:00。")
+		        event.isSet() or event.set()	//返回状态，并设置为TRUE
+		        time.sleep(5)
+		        print("BOSS：<22:00>可以下班了。")
+		        event.isSet() or event.set()
+		class Worker(threading.Thread):
+		    def run(self):
+		        event.wait()		//先进入等待
+		        print("Worker：哎……命苦啊！")
+		        time.sleep(0.25)
+		        event.clear()
+		        event.wait()
+		        print("Worker：OhYeah!")
+		if __name__=="__main__":
+			#拿到事件对象
+		    event=threading.Event()
+		    threads=[]
+		    for i in range(5):
+		        threads.append(Worker())
+		    threads.append(Boss())
+		    for t in threads:
+		        t.start()
+		    for t in threads:
+		        t.join()
+##3.多线程利器 队列(queue)
+- 创建一个“队列”对象
+
+		import Queue
+		q = Queue.Queue(maxsize = 10)
+
+	Queue.Queue类即是一个队列的同步实现。队列长度可为无限或者有限。可通过Queue的构造函数的可选参数maxsize来设定队列长度。如果maxsize小于1就表示队列长度无限。
+
+- 将一个值放入队列中，插入数据
+
+		q.put(10)
+
+	调用队列对象的put()方法在队尾插入一个项目。put()有两个参数，第一个item为必需的，为插入项目的值；第二个block为可选参数，默认为1。如果队列当前为空且block为1，put()方法就使调用线程暂停,直到空出一个数据单元。如果block为0，put方法将引发Full异常。
+
+- 将一个值从队列中取出，获取数据
+
+		q.get()
+
+	调用队列对象的get()方法从队头删除并返回一个项目。可选参数为block，默认为True。如果队列为空且block为True，get()就使调用线程暂停，直至有项目可用。如果队列为空且block为False，队列将引发Empty异常。
+
+Python Queue模块有三种队列及构造函数:
+1、Python Queue模块的FIFO队列先进先出。  class queue.Queue(maxsize)
+2、LIFO类似于堆，即先进后出。             class queue.LifoQueue(maxsize)
+3、还有一种是优先级队列级别越低越先出来。   class queue.PriorityQueue(maxsize)
+
+此包中的常用方法(q = Queue.Queue()):
+
+	q.qsize() 返回队列的大小
+	q.empty() 如果队列为空，返回True,反之False
+	q.full() 如果队列满了，返回True,反之False
+	q.full 与 maxsize 大小对应
+	q.get([block[, timeout]]) 获取队列，timeout等待时间
+	q.get_nowait() 相当q.get(False)
+	非阻塞 q.put(item) 写入队列，timeout等待时间
+	q.put_nowait(item) 相当q.put(item, False)
+	q.task_done() 在完成一项工作之后，q.task_done() 函数向任务已经完成的队列发送一个信号
+	q.join() 实际上意味着等到队列为空，再执行别的操作
+
+- 例1:
+
+	import threading,queue
+	from time import sleep
+	from random import randint
+	class Production(threading.Thread):
+	    def run(self):
+	        while True:
+	            r=randint(0,20)
+	            q.put(r)
+	            print("生产出来%s号包子"%r)
+	            sleep(1)
+	class Proces(threading.Thread):
+	    def run(self):
+	        while True:
+	            re=q.get()
+	            print("吃掉%s号包子"%re)
+	if __name__=="__main__":
+	    q=queue.Queue(10)
+	    threads=[Production(),Production(),Production(),Proces()]
+	    for t in threads:
+	        t.start()
+
+##4.多进程(multiprocessing模块)
+Python提供了非常好用的多进程包multiprocessing，只需要定义一个函数，Python会完成其他所有事情。借助这个包，可以轻松完成从单进程到并发执行的转换。
+
+multiprocessing支持子进程、通信和共享数据、执行不同形式的同步，提供了Process、Queue、Pipe、Lock等组件。
 
 
 
