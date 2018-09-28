@@ -197,3 +197,22 @@ b. 将MySQL服务制作成windows服务
 		# 修改用户名密码
 		update mysql.user set authentication_string=password('666') where user='root';
 		flush privileges;
+4. sql语句
+
+	数据库级别：
+
+		show databases;		展示数据库
+		create database 数据表名；	创建数据库
+		CREATE DATABASE 数据库名称 DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+		
+		use 数据库名；	打开数据库
+		drop 数据库名；	删除数据库
+	表级别
+
+		show tables;		展示库里的数据表
+		desc tbl;			展示表结构
+
+		create table tb1(nid int not null auto_increment primary key,
+							name varchar(16),age int default 19)
+		engine=innodb default charset=utf8;
+		#创建表名为tb1，nid不为空，自增为主键。。。engine=innodb指定数据库引擎
