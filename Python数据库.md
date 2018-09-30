@@ -1,4 +1,5 @@
 #9.27
+https://www.cnblogs.com/wupeiqi/articles/5433893.html	--总目录
 http://www.cnblogs.com/wupeiqi/articles/5713315.html
 http://www.cnblogs.com/wupeiqi/articles/5713323.html
 http://www.cnblogs.com/wupeiqi/articles/5729934.html
@@ -516,6 +517,10 @@ http://dev.mysql.com/doc/refman/5.7/en/data-type-overview.html
 导入现有数据库数据：
 
 	mysqldump -uroot -p密码  数据库名称 < 文件路径  
+- 一些其他函数和方法
+
+	DISTINCT		去重
+	AVG(num)		求平均数
 ##4.习题及答案
 - 习题
 
@@ -523,3 +528,257 @@ http://dev.mysql.com/doc/refman/5.7/en/data-type-overview.html
 - 答案
 
 	http://www.cnblogs.com/wupeiqi/articles/5748496.html
+
+
+#9.30
+http://www.cnblogs.com/wupeiqi/articles/5713330.html
+
+##1.python 操作MySQL
+- 下载
+
+	pip install mysql
+- 简单使用
+
+		import pymysql
+		#链接数据库
+		conn = pymysql.connect(host='localhost',port=3306,user='root',password='',db='test')
+		#创建游标
+		course=conn.cursor();
+		#提交语句
+		course.execute('delete from class where class.caption = "自学"')
+		#确认提交
+		conn.commit()
+		#关闭游标
+		course.close()
+		#关闭链接
+		conn.close()
+	注意必须以参数形式传递字符串，如果多个占位符，则参数为元组，如果为列表则为executemany().
+	如果查找不需要commit
+1、执行SQL
+
+	#!/usr/bin/env python
+	# -*- coding:utf-8 -*-
+	import pymysql
+	  
+	# 创建连接
+	conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123', db='t1')
+	# 创建游标
+	cursor = conn.cursor()
+	  
+	# 执行SQL，并返回收影响行数
+	effect_row = cursor.execute("update hosts set host = '1.1.1.2'")
+	  
+	# 执行SQL，并返回受影响行数
+	#effect_row = cursor.execute("update hosts set host = '1.1.1.2' where nid > %s", (1,))
+	  
+	# 执行SQL，并返回受影响行数
+	#effect_row = cursor.executemany("insert into hosts(host,color_id)values(%s,%s)", [("1.1.1.11",1),("1.1.1.11",2)])
+	  
+	  
+	# 提交，不然无法保存新建或者修改的数据
+	conn.commit()
+	  
+	# 关闭游标
+	cursor.close()
+	# 关闭连接
+	conn.close()
+2、获取新创建数据自增ID
+
+	#!/usr/bin/env python
+	# -*- coding:utf-8 -*-
+	import pymysql
+	  
+	conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123', db='t1')
+	cursor = conn.cursor()
+	cursor.executemany("insert into hosts(host,color_id)values(%s,%s)", [("1.1.1.11",1),("1.1.1.11",2)])
+	conn.commit()
+	cursor.close()
+	conn.close()
+	  
+	# 获取最新自增ID
+	new_id = cursor.lastrowid
+
+3、获取查询数据
+
+	#!/usr/bin/env python
+	# -*- coding:utf-8 -*-
+	import pymysql
+	  
+	conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123', db='t1')
+	cursor = conn.cursor()
+	cursor.execute("select * from hosts")
+	  
+	# 获取第一行数据
+	row_1 = cursor.fetchone()
+	  
+	# 获取前n行数据
+	# row_2 = cursor.fetchmany(3)
+	# 获取所有数据
+	# row_3 = cursor.fetchall()
+	  
+	conn.commit()
+	cursor.close()
+	conn.close()
+	注：在fetch数据时按照顺序进行，可以使用cursor.scroll(num,mode)来移动游标位置，如：
+	
+	cursor.scroll(1,mode='relative')  # 相对当前位置移动
+	cursor.scroll(2,mode='absolute') # 相对绝对位置移动
+4、fetch数据类型
+
+	关于默认获取的数据是元祖类型，如果想要或者字典类型的数据，即：
+	cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+	#!/usr/bin/env python
+	# -*- coding:utf-8 -*-
+	import pymysql
+	  
+	conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123', db='t1')
+	  
+	# 游标设置为字典类型
+	cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+	r = cursor.execute("call p1()")
+	  
+	result = cursor.fetchone()
+	  
+	conn.commit()
+	cursor.close()
+	conn.close()
+
+注意：
+
+- sql注入错误
+
+	#必须以这种形式传值，否则会出现sql注入错误。比如内容是'name" or 1=1 -- '
+	inp1 = input('请输入账号')
+	inp2 = input('请输入密码')
+	course.execute('select username,password from test where username = "%s" and password = "%s"',(inp1,inp2))
+
+##2.视图
+视图是一个虚拟表（非真实存在），其本质是【根据SQL语句获取动态的数据集，并为其命名】，用户使用时只需使用【名称】即可获取结果集，并可以将其当作表来使用。
+
+SELECT * FROM (SELECT nid,NAME FROM tb1 WHERE nid > 2) AS A WHERE A. NAME > 'alex';
+
+1. 创建视图
+
+	--格式：CREATE VIEW 视图名称 AS  SQL语句
+	CREATE VIEW v1 AS SELET nid,name FROM A WHERE nid > 4;
+2. 删除视图
+
+
+	--格式：DROP VIEW 视图名称
+	DROP VIEW v1
+3. 修改视图
+
+	-- 格式：ALTER VIEW 视图名称 AS SQL语句
+	ALTER VIEW v1 AS SELET A.nid,B.NAME FROM A LEFT JOIN B ON A.id =  B.nid LEFT JOIN C ON A.id = C.nid WHERE A.id > 2 AND C.nid < 5
+4. 使用视图
+
+	使用视图时，将其当作表进行操作即可，由于视图是虚拟表，所以无法使用其对真实表进行创建、更新和删除操作，仅能做查询用。
+	select * from v1
+
+##3.存储过程
+存储过程是一个SQL语句集合，当主动去调用存储过程时，其中内部的SQL语句会按照逻辑执行。
+
+1. 创建存储过程
+
+	- 无参数
+
+		#创建存储过程
+		delimiter //
+		create procedure p1()
+		BEGIN
+		    select * from t1;
+		END//
+		delimiter ;
+		
+		#执行存储过程
+		call p1()
+
+	对于存储过程，可以接收参数，其参数有三类：
+	
+		in        仅用于传入参数用
+		out       仅用于返回值用
+		inout     既可以传入又可以当作返回值
+	- 有参数
+
+		delimiter \\
+		create procedure p1(
+		    in i1 int,
+		    in i2 int,
+		    inout i3 int,
+		    out r1 int
+		)
+		BEGIN
+			#DECLARE相当于声明变量类型
+		    DECLARE temp1 int;
+		    DECLARE temp2 int default 0;
+		    
+		    set temp1 = 1;
+		
+		    set r1 = i1 + i2 + temp1 + temp2;
+		    
+		    set i3 = i3 + 100;
+		
+		end\\
+		delimiter ;
+		
+		-- 执行存储过程
+		#有返回值的变量必须以@开头
+		set @t1 =4;
+		set @t2 = 0;
+		CALL p1 (1, 2 ,@t1, @t2);
+		SELECT @t1,@t2;
+	- 结果集
+
+        delimiter //
+        create procedure p1()
+        begin
+            select * from v1;
+        end //
+        delimiter ;
+	- 结果集+out值
+
+		delimiter //
+        create procedure p2(
+            in n1 int,
+            inout n3 int,
+            out n2 int,
+        )
+        begin
+            declare temp1 int ;
+            declare temp2 int default 0;
+
+            select * from v1;
+            set n2 = n1 + 100;
+            set n3 = n3 + n1 + 100;
+        end //
+        delimiter ;
+3. 执行存储过程
+
+		# 无参数
+		call proc_name()
+		# 有参数，全in
+		call proc_name(1,2)
+		# 有参数，有in，out，inout
+		set @t1=0;
+		set @t2=3;
+		call proc_name(1,2,@t1,@t2)
+
+	pymysql执行存储过程
+
+		#!/usr/bin/env python
+		# -*- coding:utf-8 -*-
+		import pymysql
+		conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123', db='t1')
+		cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+		# 执行存储过程callproc
+		cursor.callproc('p1', args=(1, 22, 3, 4))
+		# 获取执行完存储的参数
+		cursor.execute("select @_p1_0,@_p1_1,@_p1_2,@_p1_3")
+		result = cursor.fetchall()
+		conn.commit()
+		cursor.close()
+		conn.close()
+		print(result)
+
+

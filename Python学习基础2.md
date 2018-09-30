@@ -631,3 +631,17 @@ raise语句引发异常,主动触发异常
 	obj1 = Foo.get_v()
 	print(obj1)
 	#创建的两个对象指向同一个内存
+
+#9.30
+
+##1.动态导入模块
+需要importlib模块。比如：
+	
+	#分别为模块名和参数
+	module = 'src.userinfo'
+	func = 'add'
+	#通过反射的方式获取
+	import importlib
+	m = importlib.import_module(module)
+	fun = getattr(m,func)
+	func()
