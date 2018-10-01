@@ -120,10 +120,10 @@ http://www.cnblogs.com/yuanchenqi/articles/5976755.html
 		宽度就是它的文字或图片的宽度，不可改变
 		内联元素只能容纳文本或者其他内联元素
 		
-	特殊字符
+	特殊字符具体特殊字符可以搜索
 		
 	     &lt; &gt；&quot；&copy;&reg;
-
+		<,>
 二 图形标签: <img> 
 
 	src: 要显示图片的路径.
@@ -154,9 +154,9 @@ http://www.cnblogs.com/yuanchenqi/articles/5976755.html
 	cellpadding: 内边距
 	cellspacing: 外边距.
 	width: 像素 百分比.（最好通过css来设置长宽）
-	<tr>: table row
-	     <th>: table head cell
-	     <td>: table data cell
+	<tr>: table row  每行
+	     <th>: table head cell	标题列，效果是加粗
+	     <td>: table data cell	数值列
 	rowspan:  单元格竖跨多少行
 	colspan:  单元格横跨多少列（即合并单元格）
 	<th>: table header <tbody>(不常用): 为表格进行分区.
