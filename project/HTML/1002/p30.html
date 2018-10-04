@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<style>
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+    body{
+        font-size: 14px;
+    }
+    .head-box{
+        background-color: #2459a2;
+        height: 44px;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    .head-content{
+        margin: 0 auto;
+        width: 1016px;
+        height: 44px;
+        background-color: #2459a2;
+        position: relative;
+    }
+    a{
+        text-decoration: none;
+    }
+    .head-box .logo{
+        background: url("image/logo.png");
+        display: inline-block;
+        width: 121px;
+        height: 23px;
+        float: left;
+        margin-top: 11px;
+    }
+    .action-menu{
+        float: left;
+        margin-left: 11px;
+        text-align: center;
+        line-height: 44px;
+    }
+    .tb{
+        margin-left: -4px;
+        padding: 0 13px 0 13px;
+        color: white;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .tb:hover,.actived{
+        background: dodgerblue;
+    }
+    .key-search{
+        float: right;
+        margin-top: 5px;
+    }
+    .key-search .search-text,.key-search a.i{
+        float: left;
+    }
+    .key-search .search-text{
+        width: 91px;
+        height: 25px;
+        padding: 2px 2px 2px 5px;
+    }
+    .ico{
+        background: url("image/icon.png") no-repeat 0 -197px;
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+    .key-search a.i{
+        height: 32px;
+        width: 30px;
+        background: #f4f4f4;
+        display: inline-block;
+    }
+    .action-nav{
+        position: absolute;
+        right: 131px;
+    }
+    .action-nav a{
+        color: #fff;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+        line-height: 44px;
+        padding: 0 20px;
+        margin-left: -4px;
+    }
+    .action-nav a:hover{
+        background: #c0cddf;
+    }
+    .main-content-box{
+        padding-top: 44px;
+        background-color: #ededed;
+        width: 100%;
+    }
+    .main-content{
+        margin: 0 auto;
+        /*!important表示以后出现的不对其进行覆盖*/
+        background-color: white!important;
+        width: 960px;
+        height: auto;
+        min-height: 700px;
+        padding: 6px 28px 60px 28px;
+    }
+    .content-L{
+        float: left;
+        width: 630px;
+    }
+    .child-nav,.sort-nav{
+        float: left;
+        padding: 10px;
+    }
+    .publish-btn{
+        float: right;
+        padding: 10px;
+    }
+
+    .top-area{
+        border-bottom: 1px solid #ccdcef;
+        overflow: hidden;
+    }
+    .child-nav .active{
+        background: url("image/tip.png") no-repeat 0 -299px;
+        display: inline-block;
+        width: 60px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        color: black;
+    }
+    .child-nav a{
+        width: 60px;
+        height: 26px;
+        display: inline-block;
+        line-height: 26px;
+        text-align: center;
+        color: #369;
+        font-weight: 700;
+        margin-top: 3px;
+    }
+
+</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>study</title>
+</head>
+<body>
+<div class="head-box">
+    <div class="head-content">
+        <a href="#" class="logo"></a>
+        <div class="action-menu">
+            <a href="#" class="tb actived">全部</a>
+            <a href="#" class="tb">42区</a>
+            <a href="#" class="tb">段子</a>
+            <a href="#" class="tb">图片</a>
+            <a href="#" class="tb">挨踢1024</a>
+            <a href="#" class="tb">你问我答</a>
+        </div>
+        <div class="key-search">
+            <form action="/" method="post">
+                <input type="text" class="search-text">
+                <a href="#" class="i">
+                    <span class="ico"></span>
+                </a>
+            </form>
+        </div>
+        <div class="action-nav">
+            <a href="#" class="register-btn">注册</a>
+            <a href="#" class="login-btn">登录</a>
+
+        </div>
+    </div>
+</div>
+<div class="main-content-box">
+    <div class="main-content">
+        <div class="content-L">
+            <div class="top-area">
+                <div class="child-nav">
+                    <a href="#" class="hotbtn active">最热</a>
+                    <a href="#" class="newbtn">最新</a>
+                    <a href="#" class="personbtn">人类发布</a>
+
+                </div>
+                <div class="sort-nav">
+                    <a href="#" class="sortbtn active">即时排序</a>
+                    <a href="#" class="newbtn">24小时</a>
+                    <a href="#" class="newbtn">3天</a>
+
+                </div>
+                <a href="#" class="publish-btn">
+                    <span class="n2">发布</span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer-box">
+
+    </div>
+</div>
+</body>
+</html>
