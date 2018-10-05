@@ -100,10 +100,11 @@
         margin: 0 auto;
         /*!important表示以后出现的不对其进行覆盖*/
         background-color: white!important;
-        width: 960px;
+        width: 1016px;
         height: auto;
-        min-height: 700px;
+        min-height: 1500px;
         padding: 6px 28px 60px 28px;
+        overflow: hidden;
     }
     .content-L{
         float: left;
@@ -117,7 +118,6 @@
         float: right;
         padding: 10px;
     }
-
     .top-area{
         border-bottom: 1px solid #ccdcef;
         overflow: hidden;
@@ -140,6 +140,153 @@
         color: #369;
         font-weight: 700;
         margin-top: 3px;
+    }
+    .sort-nav{
+        margin-left: 140px;
+        margin-top: 10px;
+    }
+    .sort-nav .active{
+        color: #b4b4b4;
+    }
+    .sort-nav a{
+        margin-left: 10px;
+        color: darkgreen;
+    }
+    .publish-btn{
+        display: inline-block;
+        background-color: #84a42b;
+        height: 18px;
+        width: 80px;
+        color: #ffffff;
+        line-height: 18px;
+        text-align: center;
+    }
+    /*-----------------end area--------*/
+    .content-list .item{
+        margin-top: 10px;
+        border-bottom: 1px solid red;
+    }
+    .item .news-pic{
+        float: right;
+        margin-top: 3px;
+        margin-left: 10px;
+    }
+    .part2{
+        padding: 6px;
+        color: #ccc;
+        margin-bottom: 4px;
+    }
+    .hand-icon{
+        background: url("image/icon_18_118.png") no-repeat 0 0;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        vertical-align: -4px;
+    }
+    .icon-digg{
+        background-position: 0 -40px;
+    }
+    .icon-discus{
+        background-position: 0 -100px;
+    }
+    .icon-collect{
+        background-position: 0 -140px;
+    }
+    .user-a span{
+        vertical-align: -4px;
+    }
+    .part2 a{
+        margin-left: 7px;
+    }
+    .part1{
+        line-height: 20px;
+    }
+    .n2 .content-kind{
+        color: #d4d4d4;
+        text-decoration: underline;
+        margin-left: 20px;
+        font-size: 10px;
+    }
+    .show-content{
+        color: #369;
+    }
+    .part2 a b{
+        color: #99aecb;
+        font-size: 13px;
+    }
+    .show-content:hover,.part2 a b:hover{
+        color: #369;
+        text-decoration: underline;
+    }
+    .share-icon a{
+        background: url("image/share_icon.png") no-repeat 0 0;
+        height: 14px;
+        width: 17px;
+        display: inline-block;
+        vertical-align: -3px;
+        opacity: 0.3;/*透明度*/
+
+    }
+    .share-site-to{
+        float: right;
+    }
+    .share-site-to .icon-sina{
+        background-position: 0 -90px;
+    }
+    .share-site-to .icon-douban{
+        background-position: 0 -105px;
+    }
+    .share-site-to .icon-qqzone{
+        background-position: 0 -120px;
+    }
+    .share-site-to .icon-renren{
+        background-position: 0 -150px;
+    }
+    .share-site-to a:hover{
+        opacity: 1;
+    }
+
+    .page-area ul li,.ct_page_edge{
+        display: inline-block;
+        float: left;
+        color: #369;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+        width: 34px;
+        border: 1px solid #e1e1e1;
+        border-radius: 10%;/*边框圆角*/
+        margin-left: 3px;
+        margin-bottom: 20px;
+    }
+    #dig_lcpage{
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+    #ct_pagepw,#ct_page_edge{
+        border: none;
+        background: none!important;
+    }
+    .ct_page_edge{
+        width: 70px;
+    }
+    .page-area ul li:hover,.ct_page_edge:hover{
+        color: #fff!important;
+        background-color: #204982;
+    }
+    .footer-box{
+        clear: both;
+
+    }
+    .footer-box .foot-nav,.foot-nav2{
+        padding-top: 15px;
+        text-align: center;
+        border-top: 1px solid #ccdcef;
+        position: relative;
+    }
+    .footer-box .foot-nav2{
+        border-top: none;
+        margin-top: -8px;
     }
 
 </style>
@@ -196,11 +343,716 @@
                 </a>
 
             </div>
+            <div class="content-list">
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+
+                    <div class="news-pic">
+                        <img src="image/news-photo.png" alt="抽屉新热榜" width="70px">
+                    </div>
+                    <div class="news-content">
+                        <div class="part1">
+                                <a href="#" class="show-content" target="_blank">
+
+                                            @平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图
+
+                                </a>
+                            <!-- 段子和谣言类别不显示类别名称 -->
+                                <a href="#" class="n2">
+                                    <span class="content-kind">图片</span>
+                                </a>
+                            <!-- 来源手机客户端 -->
+                            <!-- 显示话题标签 -->
+
+                        </div>
+                        <!-- 显示摘要 -->
+
+                        <div class="part2" share-title="@平安北京：针对有家长报警在大红门某商场内其孩子被抢，质疑公安机关对嫌疑人处理过轻的情况，丰台分局已于10月4日接到涉事家长的复议申请。市公安局对此案高度重视，已组成工作专班对案件开展复核，相关结果将及时通报。//原博主@六月的雨在哪里 已经被删。还好截图" share-summary="" share-linkid="22456226" share-subject="图片">
+                            <a href="#" class="digg-a" title="推荐">
+                                <span class="hand-icon icon-digg"></span>
+                                <b>60</b>
+                                <i style="display:none">22456226</i>
+                            </a>
+                            <a href="#" class="discus-a" timetopool="9分钟前" lang="22456226" onmousedown="linksClickStat(22456226);">
+                                <span class="hand-icon icon-discus"></span>
+                                <b>55</b>
+                            </a>
+                            <a href="#" class="collect-a" lang="22456226" title="加入私藏" destjid="" jid="wb_5558991852">
+                                <span class="hand-icon icon-collect"></span>
+                                <b>私藏</b>
+                            </a>
+                            <a href="#" class="user-a">
+                                <span><img src="image/head-icon.jpg" width="20px"></span>
+                                <b>一枚姓王的蛋蛋</b>
+                            </a>
+                            <span class="left time-into">
+                                <a class="time-a" href="/link/22456226" target="_blank">
+                                    <b>18分钟前</b>
+                                </a>
+                                <i>入热榜</i>
+                            </span>
+                            <span class="share-site-to">
+                                <i>分享到</i>
+                                <span class="share-icon">
+                                    <a class="icon-sina" title="分享到新浪微博" href="#"></a>
+                                    <a class="icon-douban" title="分享到豆瓣" href="#"></a>
+                                    <a class="icon-qqzone" title="分享到QQ空间" href="#"></a>
+                                    <a class="icon-renren" title="分享到人人网" href="#"></a>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+			</div>
+            <div id="page-area" class="page-area">
+                <div id="dig_lcpage">
+                    <ul>
+                        <li id="ct_pagepw"><span>1</span></li>
+                        <li><a href="#" class="ct_pagepa">2</a></li>
+                        <li><a href="#" class="ct_pagepa">3</a></li>
+                        <li><a href="#" class="ct_pagepa">4</a></li>
+                        <li><a href="#" class="ct_pagepa">5</a></li>
+                        <li><a href="#" class="ct_pagepa">6</a></li>
+                        <li><a href="#" class="ct_pagepa">7</a></li>
+                        <li><a href="#" class="ct_pagepa">8</a></li>
+                        <li><a href="#" class="ct_pagepa">9</a></li>
+                        <li><a href="#" class="ct_pagepa">10</a></li>
+                        <li id="ct_page_edge"><a href="#" class="ct_page_edge">下一页</a></li>
+                    </ul>
+                </div>
+			</div>
+        </div>
+        <div class="content-R">
+
+        </div>
+        <div class="footer-box">
+            <div class="foot-nav">
+            <a href="#" target="_blank">关于我们</a>
+            <span>|</span>
+            <a href="#" target="_blank">联系我们</a>
+            <span>|</span>
+            <a href="#" target="_blank">服务条款</a>
+            <span>|</span>
+            <a href="#" target="_blank">隐私政策</a>
+            <span>|</span>
+            <a href="#" target="_blank">抽屉新热榜工具</a>
+            <span>|</span>
+            <a href="#" target="_blank">下载客户端</a>
+            <span>|</span>
+            <a href="#" target="_blank">意见与反馈</a>
+            <span>|</span>
+            <a href="#" target="_blank">友情链接</a>
+            <span>|</span>
+            <a href="#" target="_blank">公告</a>
+            <a href="#" target="_blank" style="margin-left:0;vertical-align:-2px;" title="Rss订阅，Feed地址：http://dig.chouti.com/feed.xml">
+                <img src="image/ct_rss.gif" width="36" height="14">
+            </a>
+        </div>
+            <div class="foot-nav2">
+            <a target="_blank" href="#"><img class="foot_e" src="image/gozap-logo-50_15.gif"></a>
+            <span class="foot_d">旗下站点</span>
+            <span class="foot_a">©2018chouti.com</span>
+            <a target="_blank" href="#" class="foot_b">京ICP备09053974号-3 京公网安备 110102004562</a>
+            <div style="margin-top:6px;">
+                <span class="foot_d">违法和不良信息举报：</span>
+                <span class="foot_a">电话：010-58302039  </span>
+                <span class="foot_a" style="margin-left: 15px;">邮箱：<a style="color: #369;margin-right: 10px;" href="mailto:jubao@chouti.com">jubao@chouti.com</a> </span>
+            </div>
+            <div style="margin-top:6px;">版权所有：北京格致璞科技有限公司</div>
+        </div>
         </div>
     </div>
-    <div class="footer-box">
 
-    </div>
 </div>
 </body>
 </html>
