@@ -583,4 +583,5 @@ switch (a) {
     var n = new Number(2);
     alert(typeof (n));
     alert(n instanceof String);
+- trim（）方法去掉空格
 
