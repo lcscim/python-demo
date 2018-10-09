@@ -585,3 +585,17 @@ switch (a) {
     alert(n instanceof String);
 - trim（）方法去掉空格
 
+##6.jQuery相关方法
+http://jquery.cuishifeng.cn
+- 滚动界面练习
+
+	1. onscroll事件
+	2. $(..).scrollTop() 获取匹配元素相对滚动条顶部的距离。
+	3. 如何获取某个标签距离顶部的高度
+	4. $(..).offset()    获取当前标签距离文档顶部的高度
+	5. $(..).height()	 永远获取自己的高度；	获取当前标签自己的高度
+	6. $(..).innerHeight（） 永远获取自己的高度+padding，获取第一个元素内部区域的高度（包括补白不包括边框）。
+	7. $(..).outHeight（）
+		1. 参数1：false   永远获取自己的高度+padding+border
+		2. 参数1：TRUE   永远获取自己的高度+padding+border+margin
+
