@@ -592,10 +592,70 @@ http://jquery.cuishifeng.cn
 	1. onscroll事件
 	2. $(..).scrollTop() 获取匹配元素相对滚动条顶部的距离。
 	3. 如何获取某个标签距离顶部的高度
-	4. $(..).offset()    获取当前标签距离文档顶部的高度
+	4. $(..).offset()    获取匹配元素在当前视口的相对偏移。返回的对象包含两个整型属性：top 和 left，以像素计
 	5. $(..).height()	 永远获取自己的高度；	获取当前标签自己的高度
 	6. $(..).innerHeight（） 永远获取自己的高度+padding，获取第一个元素内部区域的高度（包括补白不包括边框）。
 	7. $(..).outHeight（）
 		1. 参数1：false   永远获取自己的高度+padding+border
 		2. 参数1：TRUE   永远获取自己的高度+padding+border+margin
+
+- 加载
+
+	1. ready()方法 。当DOM载入就绪可以查询及操纵时绑定一个要执行的函数。
+	2. 在DOM中使用onload方法
+	3. 在jQuery中onclick方法是click方法
+	4. bind方法。为每个匹配元素的特定事件绑定事件处理函数。jQuery 3.0中已弃用此方法，请用 on()代替。
+	5. .mouseover()表示鼠标放置在标签上
+	6. .mousedown()表示鼠标点击下标签
+	7. 
+
+- css样式
+
+	- cursor属性指定鼠标图标在该标签上的样式，move值为十字形
+	- show() 显示元素 参数是显示的时间
+	- hide() 隐藏元素 。。。。。。。。
+	- toggle() 显示和隐藏切换
+	- fadein() 淡入   参数是时间
+	- fadeout() 淡出
+	- fadetoggle() 淡入淡出切换
+	- fadeto() 淡入淡出切换 第一个参数是时间，第二个是透明度
+	- slideDown() 通过高度变化（向下增大）来动态地显示所有匹配的元素，在显示完成后可选地触发一个回调函数。
+	- slideDown() 向上收
+	- slidetoggle() 向上或向下切换
+
+- 自定义拓展方法方法
+
+	- $.extend()	
+
+		    $.extend({
+		        getmax:function (a,b) {
+		            return a<b?a:b;
+		        }
+		    });
+			#必须使用该方法调用
+		    alert($.getmax(5,8));
+	- $.fn.extend()
+
+		    $.fn.extend({
+		        print:function () {
+		
+		            console.log($(this).html());
+		        }
+		    });
+		    //获取当前标签的HTML内容
+			#带有标签的使用标签调用
+		    $("p").print();
+	- 对拓展方法限定作用域
+		#将方法放到自执行匿名函数中
+		(function () {
+		        $.fn.extend({
+		            print:function () {
+		                console.log($(this).html());
+		            }
+		        });
+		    })();
+		
+		    $("p").print();
+
+
 
