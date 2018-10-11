@@ -607,7 +607,7 @@ http://jquery.cuishifeng.cn
 	4. bind方法。为每个匹配元素的特定事件绑定事件处理函数。jQuery 3.0中已弃用此方法，请用 on()代替。
 	5. .mouseover()表示鼠标放置在标签上
 	6. .mousedown()表示鼠标点击下标签
-	7. 
+	7. index()获取当前标签对象
 
 - css样式
 

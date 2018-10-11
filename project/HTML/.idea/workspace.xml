@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="362e2e8a-f328-455f-816a-5dc31fa22b34" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/../../Python全栈/JavaScript 的基础学习(一) - Yuan先生 - 博客园.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Python全栈/JavaScript 的基础学习(一) - Yuan先生 - 博客园_files/20160110101629.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Python全栈/JavaScript 的基础学习(一) - Yuan先生 - 博客园_files/262677.css" beforeDir="false" />
@@ -59,6 +60,12 @@
       <change beforePath="$PROJECT_DIR$/../../Python全栈/Jquery_files/logo.gif" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Python全栈/Jquery_files/pubads_impl_263.js.下载" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Python全栈/Jquery_files/wechat.png" beforeDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/HTML.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HTML.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1002/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/1002/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1010/轮播图.html" beforeDir="false" afterPath="$PROJECT_DIR$/1010/轮播图.html" afterDir="false" />
+>>>>>>> cd96df659dfec3de624e535775f254d1ebb4c396
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -107,14 +114,42 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-61337854">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="html" value="531" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="HTML" value="531" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
+      <usages-collector id="statistics.file.extensions.open" />
+      <usages-collector id="statistics.file.types.open" />
+      <usages-collector id="statistics.vcs.git.usages" />
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/1010/轮播图.html">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="299">
               <caret line="43" column="6" selection-start-line="43" selection-start-column="6" selection-end-line="43" selection-end-column="6" />
+=======
+            <state relative-caret-position="530">
+              <caret line="92" column="20" selection-start-line="92" selection-start-column="20" selection-end-line="92" selection-end-column="20" />
+>>>>>>> cd96df659dfec3de624e535775f254d1ebb4c396
             </state>
           </provider>
         </entry>
@@ -160,9 +195,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1170" />
-    <option name="width" value="749" />
-    <option name="height" value="1040" />
+    <option name="x" value="1137" />
+    <option name="width" value="790" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -228,9 +263,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1170" y="0" width="749" height="1040" extended-state="0" />
+    <frame x="1137" y="0" width="790" height="1047" extended-state="0" />
     <layout>
+<<<<<<< HEAD
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.46298984" />
+=======
+      <window_info content_ui="combo" id="Project" order="0" weight="0.46164384" />
+>>>>>>> cd96df659dfec3de624e535775f254d1ebb4c396
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -246,6 +285,8 @@
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" />
       <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="R Graphics" />
+      <window_info anchor="right" id="R Packages" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -391,8 +432,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/1010/轮播图.html">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="299">
           <caret line="43" column="6" selection-start-line="43" selection-start-column="6" selection-end-line="43" selection-end-column="6" />
+=======
+        <state relative-caret-position="530">
+          <caret line="92" column="20" selection-start-line="92" selection-start-column="20" selection-end-line="92" selection-end-column="20" />
+>>>>>>> cd96df659dfec3de624e535775f254d1ebb4c396
         </state>
       </provider>
     </entry>
