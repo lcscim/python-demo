@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mysite'
+    'mysite',
 ]
 
 MIDDLEWARE = [
@@ -120,4 +120,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/abc/'
+#STATICFILES_DIRS表示指定静态文件目录，STATIC_URL指定的目录可以替代statics
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR,"statics"),
+)
+
