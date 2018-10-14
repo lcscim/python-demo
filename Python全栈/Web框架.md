@@ -157,4 +157,11 @@ http请求中产生两个核心对象：
 	- render(req,"login.html")
 	- render_to_response("login.html",{"name":"alex"})	,可向login.html中的{{name}}变量进行修改
 	- render_to_response("login.html",locals())		这样可以直接在login.html中使用方法中的变量{{ 函数中的变量名 }}
-	- 
+
+
+
+#10.14
+
+##1.tips
+
+- form表单提交数据会刷新页面，此时就需要使用jQuery的ajax 
