@@ -165,3 +165,10 @@ http请求中产生两个核心对象：
 ##1.tips
 
 - form表单提交数据会刷新页面，此时就需要使用jQuery的ajax 
+- 在前端也有json  
+
+	- json.parse(字符串)		把字符串变为json对象
+	- json.stringify(对象)	把对象变为字符串
+
+- 在前端location.reload()表示刷新当前页面
+- 在前端location.href(路径)表示跳转到目标路径

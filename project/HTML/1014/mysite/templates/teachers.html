@@ -28,33 +28,42 @@
             margin-left: -200px;
             margin-top: -150px;
         }
+        th,td{
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
-<h1>班级列表</h1>
+<h1>老师列表</h1>
 <div>
-    <a href="/add_class/">添加</a>
+    <a href="#">添加</a>
     <a onclick="showModal()">对话框添加</a>
 </div>
 
-<table>
+<table style="border: 1px solid black">
     <thead>
         <tr>
             <th>ID</th>
-            <th>班级名称</th>
+            <th>老师姓名</th>
+            <th>任课班级</th>
             <th>操作</th>
         </tr>
     </thead>
     <tbody>
-        {% for row in class_list %}
+        {% for row in teacher_list %}
             <tr>
-                <td>{{ row.id }}</td>
-                <td>{{ row.title }}</td>
-                <td>&nbsp;<a href="/del_class/?nid={{ row.id }}">删除</a>
+                <td>{{ row.tid }}</td>
+                <td>{{ row.name }}</td>
+                <td>
+                    {% for i in row.titles %}
+                        <span style="border: 1px solid red;margin: 5px">{{ i }}</span>
+                    {% endfor %}
+                </td>
+                <td>&nbsp;<a href="#">删除</a>
                     |
-                    <a onclick="modelEdit(this)">对话框编辑</a>
+                    <a>对话框编辑</a>
                     |
-                    <a href="/edit_class/?nid={{ row.id }}">编辑</a>
+                    <a href="#">编辑</a>
                 </td>
             </tr>
         {% endfor %}
@@ -82,7 +91,7 @@
     <input type="button" value="取消" onclick="cancleModal()">
     <span id="errormsg"></span>
 </div>
-<script src="/static/jquery-1.12.4.js"></script>
+{% comment %}<script src="/static/jquery-1.12.4.js"></script>
 <script>
     function showModal() {
         document.getElementById('shadow').classList.remove('hide')
@@ -140,6 +149,6 @@
         })
     }
 
-</script>
+</script>{% endcomment %}
 </body>
 </html>
