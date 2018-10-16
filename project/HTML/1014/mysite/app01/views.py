@@ -4,6 +4,7 @@ from django.shortcuts import render,redirect,HttpResponse
 import pymysql
 from helper import mysqlhelp
 import json
+import time
 def classes(req):
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='s4db65',charset='utf8')
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -164,3 +165,83 @@ def teachers(req):
         else:
             result[tid]={'tid':row['tid'],'name':row['name'],'titles':[row['title'],]}
     return render(req,'teachers.html',{'teacher_list':result.values()})
+
+def add_teacher(req):
+    obj = mysqlhelp.SqlHelper()
+    if req.method=="GET":
+        class_list=obj.get_list('select id,title from class',[])
+        return render(req,"add_teacher.html",{'class_list':class_list})
+    else:
+        name=req.POST.get('name')
+        teacher_id=obj.create('insert into teacher(name) values (%s)',[name,])
+
+        class_ids=req.POST.getlist('class_ids')
+        print(class_ids)
+        data_list=[]
+        for cls_id in class_ids:
+            temp = (teacher_id,cls_id)
+            #print(temp)
+            data_list.append(temp)
+
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values (%s,%s)',data_list)
+        obj.close()
+        return redirect('/teachers/')
+
+def edit_teacher(req):
+    if req.method=='GET':
+        nid = req.GET.get('nid')
+        obj = mysqlhelp.SqlHelper()
+        teacher_info=obj.get_one('select id,name from teacher where id=%s',[nid,])
+        class_id_list=obj.get_list('select class_id from teacher2class where teacher_id=%s',[nid,])
+        class_list=obj.get_list('select id,title from class',[])
+        obj.close()
+        temp=[]
+        for i in class_id_list:
+            temp.append(i['class_id'])
+        return render(req,'edit_teacher.html',{
+            'teacher_info':teacher_info,
+            'class_id_list':temp,
+            'class_list':class_list,
+        })
+    else:
+        nid=req.GET.get('nid')
+        name=req.POST.get('name')
+        class_ids=req.POST.getlist('class_ids')
+        obj = mysqlhelp.SqlHelper()
+        obj.modify('update teacher set name=%s where id=%s',[name,nid])
+        obj.modify('delete from teacher2class where teacher_id=%s',[nid,])
+        data_list = []
+        for cls_id in class_ids:
+            temp = (nid, cls_id)
+            data_list.append(temp)
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values (%s,%s)', data_list)
+        obj.close()
+        return redirect('/teachers/')
+def get_all_class(req):
+    obj=mysqlhelp.SqlHelper()
+    class_list=obj.get_list('select id,title from class',[])
+    obj.close()
+    return HttpResponse(json.dumps(class_list))
+def modal_add_teacher(req):
+    ret={'status':True,'message':None}
+    try:
+        obj = mysqlhelp.SqlHelper()
+        name=req.POST.get('name')
+        class_id_list=req.POST.getlist('class_id_list')
+        teacher_id=obj.create('insert into teacher(name) values (%s)',[name,])
+        data_list = []
+
+        for cls_id in class_id_list:
+            temp = (teacher_id, cls_id)
+            data_list.append(temp)
+
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values (%s,%s)', data_list)
+        obj.close()
+    except Exception as e:
+        ret['status']=False
+        ret['message']=str(e)
+    return HttpResponse(json.dumps(ret))
+def test(req):
+    return render(req,'test.html')
+def layout(req):
+    return render(req,'layout.html')

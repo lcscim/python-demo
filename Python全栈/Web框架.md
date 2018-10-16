@@ -172,3 +172,28 @@ http请求中产生两个核心对象：
 
 - 在前端location.reload()表示刷新当前页面
 - 在前端location.href(路径)表示跳转到目标路径
+- 使用ajax时如果返回服务器中的data值中有列表，就需要再添加一行traditional:true,这样才能发送成功
+
+- 一些插件
+
+	- bootstrap		https://v4.bootcss.com/
+	- fontawesome	http://fontawesome.dashgame.com/
+
+- 在ajax中，接收到的json格式文件对其进行支持，需添加dataType:'JSON',
+
+		$.ajax({
+		    url:'/modal_add_teacher/',
+		    type: 'POST',
+		    data:{'name':name,'class_id_list':class_id_list},
+		    traditional:true,//
+		    dataType:'JSON',
+		    success:function (arg) {
+		        if (arg.status){
+		            location.reload()
+		        } else {
+		            alert(arg.message)
+		        }
+		    }
+		})
+- 响应式 @media (Max-wide:700px){ ... } 表示窗口宽度小于700px时加载大括号中的样式
+- css属性min-width: 1190px;表示当浏览器窗口宽度小于1190px时会在屏幕下方出现滚动条
