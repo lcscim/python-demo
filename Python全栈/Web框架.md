@@ -197,3 +197,19 @@ http请求中产生两个核心对象：
 		})
 - 响应式 @media (Max-wide:700px){ ... } 表示窗口宽度小于700px时加载大括号中的样式
 - css属性min-width: 1190px;表示当浏览器窗口宽度小于1190px时会在屏幕下方出现滚动条
+- css属性overflow: scroll;表示当内容超出窗口长度出现滚动条
+- cookie是保存在电脑上的键值对
+
+	obj=redirect('/exp/')
+    obj.set_cookie('ticket','asdasdasdasd'，max_age=10,expires=value)
+	#max_age=10,expires=value,这两个都代表时间制，第一个是多少秒后失效，第二个表示什么时间失效
+    return obj
+	
+	签过名的：
+		#set_signed_cookie设置签名cookie
+		obj=redirect('/exp/')
+	    obj.set_signed_cookie('ticket','asdasdasdasd',salt='jjjjjjjj')
+	    return obj
+		#get_signed_cookie('ticket',salt='jjjjjjjj')获取签名cookie
+		req.get_signed_cookie('ticket',salt='jjjjjjjj')
+	

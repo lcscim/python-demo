@@ -245,3 +245,27 @@ def test(req):
     return render(req,'test.html')
 def layout(req):
     return render(req,'layout.html')
+def example(req):
+    if req.get_signed_cookie('ticket',salt='jjjjjjjj')=='asdasdasdasd':
+        conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='s4db65', charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        cursor.execute("select id,title from class")
+        class_list = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render(req, "example.html", locals())
+    else:
+        return redirect('/login/')
+def login(req):
+    if req.method=="GET":
+        return render(req,'login.html')
+    else:
+        user=req.POST.get('name')
+        pwd=req.POST.get('password')
+        if user=='alex'and pwd=='123':
+            obj=redirect('/exp/')
+            obj.set_signed_cookie('ticket','asdasdasdasd',salt='jjjjjjjj')
+            return obj
+
+        else:
+            return render(req,'login.html')
