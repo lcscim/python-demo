@@ -212,4 +212,106 @@ http请求中产生两个核心对象：
 	    return obj
 		#get_signed_cookie('ticket',salt='jjjjjjjj')获取签名cookie
 		req.get_signed_cookie('ticket',salt='jjjjjjjj')
+- 使用命令行创建Django  
+
+	django-admin startproject + 项目名
 	
+	到根目录下使用命令 Python manage.py startapp app02  创建了名为APP02的子项目
+
+- URL使用正则表达式必须导入URL模块from django.conf.urls import url
+	
+	url('edit/(\w+).html', views.edit),
+	#正则表达式前加?P<a1>表示指定方法参数a1,a2  位置就可以随便放了。否则必须按顺序
+	url('edit/(?P<a1>\w+)/(?P<a2>\w+)/', views.edit),
+	def edit(req,a1,a2):
+    return HttpResponse(a1+a2)
+- 路由除结尾的/ 使用终止符$更合适，此时就不用/结尾
+
+	url('index$', views.index),
+- from django.urls import reverse
+	...
+    v = reverse('join')
+    print(v)	
+    #返回url中  name=‘join’的路径
+	v=reverse('n1',kwargs={'a1':a1})
+    print(v)
+	#返回当前路径
+	v=reverse('n1',args=(456,))
+    print(v)
+	#可手工设置值
+###1.1 Django数据库
+Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
+1. 首先创建数据库
+2. 在setting文件中修改
+	DATABASES = {
+	    'default': {
+	    'ENGINE': 'django.db.backends.mysql',
+	    'NAME':'数据库名',
+	    'USER': 'root',
+	    'PASSWORD': 'xxx',
+	    'HOST': 地址,
+	    'PORT': 端口,
+	    }
+	}
+3. 在根目录的__init__中添加
+
+	import pymysql
+	pymysql.install_as_MySQLdb()
+4. 生成数据表
+
+	from django.db import models
+	class UserInfo(models.Model):
+	    nid=models.AutoField(primary_key=True)
+	    username=models.CharField(max_length=32)
+	    password=models.CharField(max_length=64)
+5. 最后在setting中添加项目文件注册
+
+	INSTALLED_APPS = [
+	    'django.contrib.admin',
+	    'django.contrib.auth',
+	    'django.contrib.contenttypes',
+	    'django.contrib.sessions',
+	    'django.contrib.messages',
+	    'django.contrib.staticfiles',
+	    #'logins'
+	]
+6. 创建数据表		重要
+
+	Python manage.py makemigrations +项目名
+	python manage.py migrate
+7. 创建外键
+	#需要填上这两个参数on_delete=models.CASCADE,null=True
+	ug=models.ForeignKey("UserGroup",on_delete=models.CASCADE,null=True)
+8. 添加数据
+	from django.shortcuts import HttpResponse,render,redirect
+	from login import models
+	def login(req):
+		#添加数据
+	    models.UserGroup.objects.create(title='销售部')
+	    models.UserInfo.objects.create(user='root',password='pwd',age=18,ug_id=1)
+		
+		
+	    return render(req,'login.html',{'group_list':group_list,})
+9. 查询数据
+	#查询所有数据
+	group_list=models.UserGroup.objects.all(）
+	#查询id=1的数据
+	group=models.UserGroup.objects.filter(id=1)
+	#查询id=1 and title='666'的
+    group=models.UserGroup.objects.filter(id=1,title='666')
+    #查询id>1的数据
+    group=models.UserGroup.objects.filter(id__gt=1)
+	#查询id<1的数据
+    group=models.UserGroup.objects.filter(id__lt=1)
+10. 删除
+
+	models.UserGroup.objects.filter(id=2).delete()
+11. 更新
+
+	models.UserGroup.objects.filter(id=2).update(title='公关部')
+
+	
+
+##2.
+Django【基础篇】
+https://www.cnblogs.com/wupeiqi/articles/5237704.html

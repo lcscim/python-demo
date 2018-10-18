@@ -58,15 +58,20 @@ def edit_class(req):
         cursor.close()
         conn.close()
         return redirect('/classes/')
+
+
 def students(req):
-    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='s4db65',charset='utf8')
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    cursor.execute("SELECT student.id,student.`name`,student.class_id,class.title FROM student LEFT JOIN class ON student.class_id=class.id")
-    student_list=cursor.fetchall()
-    cursor.close()
-    conn.close()
-    class_list=mysqlhelp.get_list('select id,title from class')
-    return render(req,"students.html",{'student_list':student_list,'class_list':class_list})
+    if req.get_signed_cookie('ticket', salt='jjjjjjjj') == 'asdasdasdasd':
+        conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='s4db65',charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        cursor.execute("SELECT student.id,student.`name`,student.class_id,class.title FROM student LEFT JOIN class ON student.class_id=class.id")
+        student_list=cursor.fetchall()
+        cursor.close()
+        conn.close()
+        class_list=mysqlhelp.get_list('select id,title from class')
+        return render(req,"students.html",{'student_list':student_list,'class_list':class_list})
+    else:
+        return redirect('/login/')
 def add_student(req):
     if req.method=="GET":
         conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='s4db65', charset='utf8')
@@ -152,19 +157,22 @@ def modal_edit_student(req):
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
 def teachers(req):
-    teacher_list=mysqlhelp.get_list("""
-        SELECT teacher.id AS tid,teacher.name,class.title FROM teacher
-        LEFT JOIN teacher2class ON teacher.id = teacher2class.teacher_id
-        LEFT JOIN class ON class.id = teacher2class.class_id;""")
-    #print(teacher_list)
-    result={}
-    for row in teacher_list:
-        tid=row['tid']
-        if tid in result:
-            result[tid]['titles'].append(row['title'])
-        else:
-            result[tid]={'tid':row['tid'],'name':row['name'],'titles':[row['title'],]}
-    return render(req,'teachers.html',{'teacher_list':result.values()})
+    if req.get_signed_cookie('ticket', salt='jjjjjjjj') == 'asdasdasdasd':
+        teacher_list=mysqlhelp.get_list("""
+            SELECT teacher.id AS tid,teacher.name,class.title FROM teacher
+            LEFT JOIN teacher2class ON teacher.id = teacher2class.teacher_id
+            LEFT JOIN class ON class.id = teacher2class.class_id;""")
+        #print(teacher_list)
+        result={}
+        for row in teacher_list:
+            tid=row['tid']
+            if tid in result:
+                result[tid]['titles'].append(row['title'])
+            else:
+                result[tid]={'tid':row['tid'],'name':row['name'],'titles':[row['title'],]}
+        return render(req,'teachers.html',{'teacher_list':result.values()})
+    else:
+        return redirect('/login/')
 
 def add_teacher(req):
     obj = mysqlhelp.SqlHelper()
@@ -269,3 +277,11 @@ def login(req):
 
         else:
             return render(req,'login.html')
+
+def index(req):
+    a1=[
+        'ccc','sss','fff',
+    ]
+    return render(req,'index.html',{'list':a1})
+def edit(req,a1,a2):
+    return HttpResponse(a1+a2)

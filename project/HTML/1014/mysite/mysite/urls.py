@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app01 import views
+from django.conf.urls import url
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
@@ -40,5 +41,9 @@ urlpatterns = [
     path('layout/', views.layout),
     path('exp/', views.example),
     path('login/', views.login),
+
+    #url('edit/(\w+)/(\w+)/', views.edit),
+    url('edit/(?P<a1>\w+)/(?P<a2>\w+)/', views.edit),
+    url('index$', views.index),
 
 ]
