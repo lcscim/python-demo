@@ -218,7 +218,7 @@ http请求中产生两个核心对象：
 	
 	到根目录下使用命令 Python manage.py startapp app02  创建了名为APP02的子项目
 
-- URL使用正则表达式必须导入URL模块from django.conf.urls import url
+- URL使用正则表达式必须导入URL模块from django.conf.urls import url  叫做动态路由
 	
 	url('edit/(\w+).html', views.edit),
 	#正则表达式前加?P<a1>表示指定方法参数a1,a2  位置就可以随便放了。否则必须按顺序
@@ -239,6 +239,7 @@ http请求中产生两个核心对象：
 	v=reverse('n1',args=(456,))
     print(v)
 	#可手工设置值
+- 伪静态就是自己设定网页路径结尾即手动设置.html
 ###1.1 Django数据库
 Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 1. 首先创建数据库
@@ -257,7 +258,7 @@ Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 
 	import pymysql
 	pymysql.install_as_MySQLdb()
-4. 生成数据表
+4. 生成数据表,在models中写入
 
 	from django.db import models
 	class UserInfo(models.Model):
@@ -280,7 +281,7 @@ Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 	Python manage.py makemigrations +项目名
 	python manage.py migrate
 7. 创建外键
-	#需要填上这两个参数on_delete=models.CASCADE,null=True
+	#需要填上这两个参数on_delete=models.CASCADE,null=True，此时外键名为ug_id
 	ug=models.ForeignKey("UserGroup",on_delete=models.CASCADE,null=True)
 8. 添加数据
 	from django.shortcuts import HttpResponse,render,redirect
@@ -309,9 +310,112 @@ Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 11. 更新
 
 	models.UserGroup.objects.filter(id=2).update(title='公关部')
-
+###1.2 CBV和FBV
+- CBV就是以类的方式使用
+	#在url文件中
+	from django.conf.urls import url
+	from app01 import views
+	urlpatterns = [
+	    path('admin/', admin.site.urls),
+		#Login是个类，使用时必须使用as_view()方法
+	    url(r'^login.html$', views.Login.as_view()),
+	]
+	#在views文件中，该类必须继承自view
+	from django.views import View
+	class Login(View):
+	    def get(self,req):
+	        return HttpResponse('hello')
+	    def post(self,req):
+	        return HttpResponse('world')
+###1.3 ORM操作数据库
+- 正向操作，由外键所在的数据库去查找关联的数据库中的相关内容
+    
+	result=models.UserInfo.objects.all()
+    for obj in result:
+       print(obj.id,obj.name,obj.ut_id,obj.ut.title)
+- 反向操作，由关联的数据库去查找外键所在的数据库中的相关内容
+    
+	result=models.UserType.objects.all().first()
+    for obj in result.userinfo_set.all():
+         print(obj.name,obj.age)
+- 获取数据
+	#获取多个数据，filter(id_gt=1)表示条件 id>1 返回是对象。结果可以跨表操作
+	models.UserInfo.objects.all()
+    models.UserInfo.objects.filter(id_gt=1)
+	#返回是字典，不可跨表操作
+    models.UserInfo.objects.all().values('id','name')
+    models.UserInfo.objects.filter(id_gt=1).values('id','name')
+		#如果要跨表在查询的时候需添加,下同
+		models.UserInfo.objects.all().values('id','name'，"ut__title")
+	#返回是元组，不可跨表操作
+	models.UserInfo.objects.all().values_list('id','name')
+	models.UserInfo.objects.filter(id_gt=1).values_list('id','name')
 	
+- 分页，即分批获取数据
 
-##2.
+	models.UserInfo.objects.all()[0:10]
+	models.UserInfo.objects.all()[20:30]
+- django内置分页
+
+	- views中	
+		from django.shortcuts import render
+		from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+		L = []
+		for i in range(999):
+		    L.append(i)
+		def index(request):
+		    current_page = request.GET.get('p')
+		    paginator = Paginator(L, 10)
+		    # per_page: 每页显示条目数量
+		    # count:    数据总个数
+		    # num_pages:总页数
+		    # page_range:总页数的索引范围，如: (1,10),(1,200)
+		    # page:     page对象
+		    try:
+		        posts = paginator.page(current_page)
+		        # has_next              是否有下一页
+		        # next_page_number      下一页页码
+		        # has_previous          是否有上一页
+		        # previous_page_number  上一页页码
+		        # object_list           分页之后的数据列表
+		        # number                当前页
+		        # paginator             paginator对象
+		    except PageNotAnInteger:
+		        posts = paginator.page(1)
+		    except EmptyPage:
+		        posts = paginator.page(paginator.num_pages)
+		    return render(request, 'index.html', {'posts': posts})
+	- HTML中
+
+		<!DOCTYPE html>
+		<html>
+		<head lang="en">
+		    <meta charset="UTF-8">
+		    <title></title>
+		</head>
+		<body>
+		<ul>
+		    {% for item in posts %}
+		        <li>{{ item }}</li>
+		    {% endfor %}
+		</ul>
+		
+		<div class="pagination">
+		      <span class="step-links">
+		        {% if posts.has_previous %}
+		            <a href="?p={{ posts.previous_page_number }}">Previous</a>
+		        {% endif %}
+		          <span class="current">
+		            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+		          </span>
+		          {% if posts.has_next %}
+		              <a href="?p={{ posts.next_page_number }}">Next</a>
+		          {% endif %}
+		      </span>
+		
+		</div>
+		</body>
+		</html>
+##2.相关资料
 Django【基础篇】
 https://www.cnblogs.com/wupeiqi/articles/5237704.html
