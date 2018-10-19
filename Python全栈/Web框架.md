@@ -364,8 +364,8 @@ Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 		for i in range(999):
 		    L.append(i)
 		def index(request):
-		    current_page = request.GET.get('p')
-		    paginator = Paginator(L, 10)
+		    current_page = request.GET.get('p')	//传入个参数代表当前页数
+		    paginator = Paginator(L, 10)	//第一个参数是要分页的对象，第二个是要求几个分为一页
 		    # per_page: 每页显示条目数量
 		    # count:    数据总个数
 		    # num_pages:总页数
