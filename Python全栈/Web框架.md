@@ -416,6 +416,134 @@ Django中默认的数据库是sqlite要使用MySQL需对设置进行修改
 		</div>
 		</body>
 		</html>
+
+
+###1.4 操作表 进阶操作（了不起的双下划线）
+- 获取个数
+
+    models.Tb1.objects.filter(name='seven').count()
+
+- 大于，小于
+
+    models.Tb1.objects.filter(id__gt=1)              # 获取id大于1的值
+    models.Tb1.objects.filter(id__gte=1)              # 获取id大于等于1的值
+    models.Tb1.objects.filter(id__lt=10)             # 获取id小于10的值
+    models.Tb1.objects.filter(id__lte=10)             # 获取id小于10的值
+    models.Tb1.objects.filter(id__lt=10, id__gt=1)   # 获取id大于1 且 小于10的值
+
+- in 
+
+    models.Tb1.objects.filter(id__in=[11, 22, 33])   # 获取id等于11、22、33的数据
+    models.Tb1.objects.exclude(id__in=[11, 22, 33])  # not in
+
+- isnull 是否为空
+    Entry.objects.filter(pub_date__isnull=True)
+
+- contains是否包含
+
+    models.Tb1.objects.filter(name__contains="ven")
+    models.Tb1.objects.filter(name__icontains="ven") # icontains大小写不敏感
+    models.Tb1.objects.exclude(name__icontains="ven")
+
+- range
+
+    models.Tb1.objects.filter(id__range=[1, 2])   # 范围bettwen and
+
+    其他类似
+
+    startswith，istartswith, endswith, iendswith,
+
+- order by 排序
+
+    models.Tb1.objects.filter(name='seven').order_by('id')    # asc 从小到大
+    models.Tb1.objects.filter(name='seven').order_by('-id')   # desc 从大到小
+
+- group by
+
+    from django.db.models import Count, Min, Max, Sum
+    models.Tb1.objects.filter(c1=1).values('id').annotate(c=Count('num'))
+    SELECT "app01_tb1"."id", COUNT("app01_tb1"."num") AS "c" FROM "app01_tb1" WHERE "app01_tb1"."c1" = 1 GROUP BY "app01_tb1"."id"
+
+- limit 、offset
+
+    models.Tb1.objects.all()[10:20]
+
+- regex正则匹配，iregex 不区分大小写
+
+    Entry.objects.get(title__regex=r'^(An?|The) +')
+    Entry.objects.get(title__iregex=r'^(an?|the) +')
+
+- date
+
+    Entry.objects.filter(pub_date__date=datetime.date(2005, 1, 1))
+    Entry.objects.filter(pub_date__date__gt=datetime.date(2005, 1, 1))
+
+- year
+
+    Entry.objects.filter(pub_date__year=2005)
+    Entry.objects.filter(pub_date__year__gte=2005)
+
+- month
+
+    Entry.objects.filter(pub_date__month=12)
+    Entry.objects.filter(pub_date__month__gte=6)
+
+- day
+
+    Entry.objects.filter(pub_date__day=3)
+    Entry.objects.filter(pub_date__day__gte=3)
+- week_day
+
+    Entry.objects.filter(pub_date__week_day=2)
+    Entry.objects.filter(pub_date__week_day__gte=2)
+
+- hour
+
+    Event.objects.filter(timestamp__hour=23)
+    Event.objects.filter(time__hour=5)
+    Event.objects.filter(timestamp__hour__gte=12)
+- minute
+
+    Event.objects.filter(timestamp__minute=29)
+    Event.objects.filter(time__minute=46)
+    Event.objects.filter(timestamp__minute__gte=29)
+
+- second
+
+    Event.objects.filter(timestamp__second=31)
+    Event.objects.filter(time__second=2)
+    Event.objects.filter(timestamp__second__gte=31)
+
+- F访问数据库中的数据
+
+    from django.db.models import F
+    models.Tb1.objects.update(num=F('num')+1)
+
+
+- Q用于构造复杂的查询条件
+
+    方式一：
+    Q(nid__gt=10)
+    Q(nid=8) | Q(nid__gt=10)
+    Q(Q(nid=8) | Q(nid__gt=10)) & Q(caption='root')
+    方式二：
+    con = Q()
+    q1 = Q()
+    q1.connector = 'OR'
+    q1.children.append(('id', 1))
+    q1.children.append(('id', 10))
+    q1.children.append(('id', 9))
+    q2 = Q()
+    q2.connector = 'OR'
+    q2.children.append(('c1', 1))
+    q2.children.append(('c1', 10))
+    q2.children.append(('c1', 9))
+    con.add(q1, 'AND')
+    con.add(q2, 'AND')
+
+    models.Tb1.objects.filter(con)
 ##2.相关资料
 Django【基础篇】
 https://www.cnblogs.com/wupeiqi/articles/5237704.html
+Django【进阶篇】
+https://www.cnblogs.com/wupeiqi/articles/5246483.html

@@ -21,4 +21,5 @@ from app01 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^test.html$', views.test.as_view()),
+    url(r'^custom.html$', views.custom.as_view()),
 ]
