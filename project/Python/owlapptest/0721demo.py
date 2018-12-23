@@ -24,8 +24,8 @@ if __name__ == '__main__':
                'Accept-Encoding': 'gzip',
                'User-Agent': 'okhttp/3.6.0'
                }
-    heros_url = "https://api.overwatchleague.cn/ranking"
-    req = requests.get(url=heros_url, headers=headers).json().get('content')
+    heros_url = "https://api.overwatchleague.cn/teams"
+    req = requests.get(url=heros_url, headers=headers).json().get('competitors')
     print('一共有%d个队伍' %len(req))
     for i in req:
         filename = i.get('competitor').get('name')
