@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2c948125-e8fc-43bd-88a5-9ccef8399600" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../../Python有意思的模块及介绍.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Python有意思的模块及介绍.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../0721demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../0721demo.py" afterDir="false" />
-    </list>
+    <list default="true" id="2c948125-e8fc-43bd-88a5-9ccef8399600" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/save.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+            <state relative-caret-position="-847">
+              <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
               <folding>
                 <element signature="e#34#49#0" expanded="true" />
               </folding>
@@ -75,20 +72,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="saveexcel" type="b2602c69:ProjectViewProjectNode" />
-              <item name="saveexcel" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -151,14 +135,16 @@
       <workItem from="1545470287474" duration="125000" />
       <workItem from="1545471042289" duration="5327000" />
       <workItem from="1545534600695" duration="6957000" />
+      <workItem from="1546307345481" duration="183000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13797000" />
+    <option name="totallyTimeSpent" value="13980000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="788" y="0" width="1132" height="1040" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.22666667" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -203,8 +189,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/save.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+        <state relative-caret-position="-847">
+          <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
           <folding>
             <element signature="e#34#49#0" expanded="true" />
           </folding>
