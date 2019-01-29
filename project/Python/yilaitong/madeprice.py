@@ -22,7 +22,6 @@ def jybj():
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=420","home":"1c20","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=353","home":"2a16","sale":"魅族"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=183","home":"1d13","sale":"小米"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=157","home":"1B12","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=199","home":"1C19","sale":"华为"}]
     return otherurls
@@ -114,7 +113,10 @@ def get_new_num(sale):
     
     for j in range(rows-1):
         wb['{}'.format(sale)]['B{}'.format(j+2)] = newnums[j]
-        wb['{}'.format(sale)]['C{}'.format(j+2)] = nums[j]+10
+        if nums[j] == 0 or nums[j] == None:
+            wb['{}'.format(sale)]['C{}'.format(j+2)] = 0
+        else:
+            wb['{}'.format(sale)]['C{}'.format(j+2)] = nums[j]+10
         
     wb.save('报价.xlsx')
 
