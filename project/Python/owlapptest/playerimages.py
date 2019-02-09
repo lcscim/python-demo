@@ -33,4 +33,4 @@ if __name__ == '__main__':
         for player in players:
             playername = player.get('player').get('name')
             playerurl = player.get('player').get('headshot')
-            save_img(playerurl,playername,'teams\{}'.format(teamname))
+            save_img(playerurl,"{0}-{1}".format(teamname,playername),'players')
