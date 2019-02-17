@@ -17,12 +17,12 @@ def jybj():
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=287","home":"2c29","sale":"魅族"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=392","home":"2c43","sale":"小米"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=483","home":"2a26","sale":"小米"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=157","home":"1B12","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=283","home":"1c32","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=3054","home":"1d09","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=420","home":"1c20","sale":"华为"},
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=353","home":"2a16","sale":"魅族"},
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=157","home":"1B12","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=1913","home":"2D37","sale":"魅族"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},  
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=199","home":"1C19","sale":"华为"}]
     return otherurls
 
@@ -216,7 +216,9 @@ if __name__ == '__main__':
         jy_url = jybj()[j].get('url')
         checkout(jy_sale,jy_url)
         get_new_num(jy_sale)
+        print(j)
         time.sleep(0.5)
+
     
     zong_price()
     
