@@ -49,12 +49,21 @@ def save_excel():
     ws['K1'].style = highlight
     ws['L1'].style = highlight
     ws['M1'].style = highlight
-    ws.column_dimensions['C'].width = 20
-    ws.column_dimensions['D'].width = 20
+    ws.column_dimensions['A'].width = 6
+    ws.column_dimensions['B'].width = 8
+    ws.column_dimensions['C'].width = 13
+    ws.column_dimensions['D'].width = 8
+    ws.column_dimensions['E'].width = 8
+    ws.column_dimensions['F'].width = 20
     ws.column_dimensions['G'].width = 20
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 20
     ws.column_dimensions['J'].width = 20
+    ws.column_dimensions['K'].width = 20
+    ws.column_dimensions['L'].width = 20
+    ws.column_dimensions['M'].width = 20
     i = 2
-    players_num = 0
+    
     for player in players:
         player_id = player.get('id')
         player_name = player.get('name')
@@ -82,9 +91,15 @@ def save_excel():
         ws['L{0}'.format(i)].alignment = Alignment(horizontal='center', vertical='center')
         ws['M{0}'.format(i)].alignment = Alignment(horizontal='center', vertical='center')
         i += 1
-    print('一共有%d个队员' % players_num)
+    
     wb.save("saveplayer.xlsx")
-def data():
+def other_msg():
+    
+    wb = openpyxl.load_workbook("saveplayer.xlsx")
+    wb.guess_types = True
+    ws = wb["players"]
+    rows = ws.max_row
+    print(rows)
     headers = {'Host': 'api.overwatchleague.cn',
                'Connection': 'Keep-Alive',
                'Accept-Encoding': 'gzip',
@@ -95,13 +110,13 @@ def data():
     num = []
     for player in players:
         player_name = player.get('name')
-        eliminations_avg_per_10m = float(player.get('eliminations_avg_per_10m'))
-        deaths_avg_per_10m = float(player.get('deaths_avg_per_10m'))
-        hero_damage_avg_per_10m = float(player.get('hero_damage_avg_per_10m'))
-        healing_avg_per_10m = float(player.get('healing_avg_per_10m'))
-        ultimates_earned_avg_per_10m = float(player.get('ultimates_earned_avg_per_10m'))
-        final_blows_avg_per_10m = float(player.get('final_blows_avg_per_10m'))
-        time_played_total = float(player.get('time_played_total'))
+        eliminations_avg_per_10m = player.get('eliminations_avg_per_10m')
+        deaths_avg_per_10m = player.get('deaths_avg_per_10m')
+        hero_damage_avg_per_10m = player.get('hero_damage_avg_per_10m')
+        healing_avg_per_10m = player.get('healing_avg_per_10m')
+        ultimates_earned_avg_per_10m = player.get('ultimates_earned_avg_per_10m')
+        final_blows_avg_per_10m = player.get('final_blows_avg_per_10m')
+        time_played_total = player.get('time_played_total')
         num.append([player_name,[
             eliminations_avg_per_10m,
             deaths_avg_per_10m,
@@ -111,23 +126,26 @@ def data():
             final_blows_avg_per_10m,
             time_played_total
         ]])
-    return num
-
-def other_msg():
-    wb = openpyxl.load_workbook("saveplayer.xlsx")
-    wb.guess_types = True
-    ws = wb["players"]
-    rows = ws.max_row
     for i in range(rows):
-        if i + 1 < 2:
+        if i+1<2 & i<rows-1:
             continue
         else:
-            for j in data():
-                if ws.cell(row="{}".format(i+1),column='C').value == j[1]:
-                    
+            for j in num:
+                if ws.cell(row=int("{}".format(i+1)),column=3).value == j[0]:
+                    ws['G{}'.format(i+1)] = ' {} '.format(j[1][0])
+                    ws['H{}'.format(i+1)] = ' {} '.format(j[1][1])
+                    ws['I{}'.format(i+1)] = ' {} '.format(j[1][2])
+                    ws['J{}'.format(i+1)] = ' {} '.format(j[1][3])
+                    ws['K{}'.format(i+1)] = ' {} '.format(j[1][4])
+                    ws['L{}'.format(i+1)] = ' {} '.format(j[1][5])
+                    ws['M{}'.format(i+1)] = ' {} '.format(j[1][6]/60)
+                    break
+                else:
+                    continue
+    wb.save("saveplayer.xlsx")
             
-
 
 if __name__ == '__main__':
     save_excel()
+    other_msg()
 
