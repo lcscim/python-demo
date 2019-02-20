@@ -30,7 +30,7 @@ def save_excel():
     for a in range(len(sheets)):
         wb.create_sheet(index = int("{}".format(a)),title="{}".format(sheets[a]))
         ws = wb["{}".format(sheets[a])]
-    
+
         ws['A1'] = "序号"
         ws['B1'] = "player_id"
         ws['C1'] = "player_name"
@@ -49,7 +49,15 @@ def save_excel():
         ws['P1'] = "排名"
         ws['Q1'] = "{}平均每10分钟最后一击".format(sheets[a])
         ws['R1'] = "排名"
-        ws['S1'] = "{}游戏总时长(min)".format(sheets[a])
+        if a > 0:
+            ws['S1'] = "{}游戏总时长(s)".format(sheets[a])
+        else:
+            ws['S1'] = "{}游戏总时长(min)".format(sheets[a])
+            ws['T1'] = "使用英雄数量"
+            ws['U1'] = "所用英雄（包括未打出伤害或使用时间短）"
+            ws.merge_cells('U1:V1')
+            ws['T1'].style = highlight
+            ws['U1'].style = highlight
         ws['A1'].style = highlight
         ws['B1'].style = highlight
         ws['C1'].style = highlight
@@ -88,6 +96,7 @@ def save_excel():
         ws.column_dimensions['Q'].width = 12
         ws.column_dimensions['R'].width = 6
         ws.column_dimensions['S'].width = 12
+        ws.column_dimensions['T'].width = 6
         i = 2
         
         for player in players:
@@ -161,13 +170,13 @@ def data(id):
     hero_time_played_total = []
     for hero in heroes:
         hero_name.append(hero.get('name'))
-        hero_eliminations.append(hero.get('eliminations_avg_per_10m'))
-        hero_deaths.append(hero.get('deaths_avg_per_10m'))
-        hero_damage.append(hero.get('hero_damage_avg_per_10m'))
-        hero_healing.append(hero.get('healing_avg_per_10m'))
-        hero_ultimates_earned.append(hero.get('ultimates_earned_avg_per_10m'))
-        hero_final_blows.append(hero.get('final_blows_avg_per_10m'))
-        hero_time_played_total.append(hero.get('time_played_total'))
+        hero_eliminations.append(hero.get('stats').get('eliminations_avg_per_10m'))
+        hero_deaths.append(hero.get('stats').get('deaths_avg_per_10m'))
+        hero_damage.append(hero.get('stats').get('hero_damage_avg_per_10m'))
+        hero_healing.append(hero.get('stats').get('healing_avg_per_10m'))
+        hero_ultimates_earned.append(hero.get('stats').get('ultimates_earned_avg_per_10m'))
+        hero_final_blows.append(hero.get('stats').get('final_blows_avg_per_10m'))
+        hero_time_played_total.append(hero.get('stats').get('time_played_total'))
     num.append([player_name,[
         eliminations_avg_per_10m,
         deaths_avg_per_10m,
@@ -185,7 +194,6 @@ def other_msg():
 
     wb = openpyxl.load_workbook("saveplayer.xlsx")
     wb.guess_types = True
-    ws = wb["综合数据"]
     rows = wb["综合数据"].max_row
     player_id = []
     headers = {'Host': 'api.overwatchleague.cn',
@@ -198,31 +206,44 @@ def other_msg():
     for player in players:
         id = player.get('playerId')
         player_id.append(id)
-
+    print('上过场的有%d个队员' % len(players))
     for i in range(rows):
         if i+1<2 & i<rows-1:
             continue
         else:
             for j in player_id:
-                if ws.cell(row=int("{}".format(i+1)),column=2).value == j:
+                if wb["综合数据"].cell(row=int("{}".format(i+1)),column=2).value == j:
                     player_data = data(j)
                     print(j)
-                    ws['G{}'.format(i+1)] = '{}'.format(player_data[0][1][0])
-                    ws['H{}'.format(i+1)] = '{}'.format(player_data[0][2][0])
-                    ws['I{}'.format(i+1)] = '{}'.format(player_data[0][1][1])
-                    ws['J{}'.format(i+1)] = '{}'.format(player_data[0][2][1])
-                    ws['K{}'.format(i+1)] = '{}'.format(player_data[0][1][2])
-                    ws['L{}'.format(i+1)] = '{}'.format(player_data[0][2][2])
-                    ws['M{}'.format(i+1)] = '{}'.format(player_data[0][1][3])
-                    ws['N{}'.format(i+1)] = '{}'.format(player_data[0][2][3])
-                    ws['O{}'.format(i+1)] = '{}'.format(player_data[0][1][4])
-                    ws['P{}'.format(i+1)] = '{}'.format(player_data[0][2][4])
-                    ws['Q{}'.format(i+1)] = '{}'.format(player_data[0][1][5])
-                    ws['R{}'.format(i+1)] = '{}'.format(player_data[0][2][5])
-                    ws['S{}'.format(i+1)] = '{}'.format(player_data[0][1][6]/60)
-                    cols = 20
+                    wb["综合数据"]['G{}'.format(i+1)] = '{}'.format(player_data[0][1][0])
+                    wb["综合数据"]['H{}'.format(i+1)] = '{}'.format(player_data[0][2][0])
+                    wb["综合数据"]['I{}'.format(i+1)] = '{}'.format(player_data[0][1][1])
+                    wb["综合数据"]['J{}'.format(i+1)] = '{}'.format(player_data[0][2][1])
+                    wb["综合数据"]['K{}'.format(i+1)] = '{}'.format(player_data[0][1][2])
+                    wb["综合数据"]['L{}'.format(i+1)] = '{}'.format(player_data[0][2][2])
+                    wb["综合数据"]['M{}'.format(i+1)] = '{}'.format(player_data[0][1][3])
+                    wb["综合数据"]['N{}'.format(i+1)] = '{}'.format(player_data[0][2][3])
+                    wb["综合数据"]['O{}'.format(i+1)] = '{}'.format(player_data[0][1][4])
+                    wb["综合数据"]['P{}'.format(i+1)] = '{}'.format(player_data[0][2][4])
+                    wb["综合数据"]['Q{}'.format(i+1)] = '{}'.format(player_data[0][1][5])
+                    wb["综合数据"]['R{}'.format(i+1)] = '{}'.format(player_data[0][2][5])
+                    wb["综合数据"]['S{}'.format(i+1)] = '{}'.format(player_data[0][1][6]/60)
+                    
+                    cols = 21
+
                     for hero in player_data[0][3]:
-                        ws.cell(row=int("{}".format(i+1)),column=int("{}".format(cols)),value=hero)
+                        
+                        wb["综合数据"].cell(row=int("{}".format(i+1)),column=int("{}".format(cols)),value=hero)
+                        wb["综合数据"]['{0}{1}'.format(get_column_letter(cols),i+1)].alignment = \
+                           Alignment(horizontal='center', vertical='center')
+                        hero_index = player_data[0][3].index(hero)
+                        wb["{}".format(hero)]['G{}'.format(i+1)] = '{}'.format(player_data[0][4][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['I{}'.format(i+1)] = '{}'.format(player_data[0][5][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['K{}'.format(i+1)] = '{}'.format(player_data[0][6][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['M{}'.format(i+1)] = '{}'.format(player_data[0][7][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['O{}'.format(i+1)] = '{}'.format(player_data[0][8][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['Q{}'.format(i+1)] = '{}'.format(player_data[0][9][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['S{}'.format(i+1)] = '{}'.format(player_data[0][10][int("{}".format(hero_index))])
                         cols+=1
                     break
                 else:
