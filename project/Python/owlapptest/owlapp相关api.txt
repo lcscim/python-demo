@@ -9,4 +9,5 @@ https://api.overwatchleague.cn/v2/standings?locale=zh-CN	--赛区战队信息
 https://api.overwatchleague.com/stats/players?stage_id=regular_season   --选手常规赛数据
 https://api.overwatchleague.com/stats/players?stage_id=postseason 	--选手季后赛数据
 https://api.overwatchleague.cn/teams?expand=team.content&locale=zh_CN	--战队及选手数据
+https://api.overwatchleague.cn/players/8811?locale=zh-cn&season=2019&stage_id=regular_season&expand=stats,stat.ranks  8811选手详细数据
 
