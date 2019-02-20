@@ -228,6 +228,8 @@ def other_msg():
                     wb["综合数据"]['Q{}'.format(i+1)] = '{}'.format(player_data[0][1][5])
                     wb["综合数据"]['R{}'.format(i+1)] = '{}'.format(player_data[0][2][5])
                     wb["综合数据"]['S{}'.format(i+1)] = '{}'.format(player_data[0][1][6]/60)
+                    wb["综合数据"]['T{}'.format(i+1)] = '{}'.format(len(player_data[0][3]))
+                    wb["综合数据"]['T{}'.format(i+1)].alignment = Alignment(horizontal='center', vertical='center')
                     
                     cols = 21
 
