@@ -58,6 +58,8 @@ def save_excel():
             ws.merge_cells('U1:V1')
             ws['T1'].style = highlight
             ws['U1'].style = highlight
+            ws.column_dimensions['T'].width = 6
+            
         ws['A1'].style = highlight
         ws['B1'].style = highlight
         ws['C1'].style = highlight
@@ -96,7 +98,7 @@ def save_excel():
         ws.column_dimensions['Q'].width = 12
         ws.column_dimensions['R'].width = 6
         ws.column_dimensions['S'].width = 12
-        ws.column_dimensions['T'].width = 6
+        ws.auto_filter.ref = "A1:S{}".format(player_num+1)
         i = 2
         
         for player in players:
