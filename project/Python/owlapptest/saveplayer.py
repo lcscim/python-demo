@@ -51,6 +51,7 @@ def save_excel():
         ws['R1'] = "排名"
         if a > 0:
             ws['S1'] = "{}游戏总时长(s)".format(sheets[a])
+            ws.auto_filter.ref = "A1:S{}".format(player_num+1)
         else:
             ws['S1'] = "{}游戏总时长(min)".format(sheets[a])
             ws['T1'] = "使用英雄数量"
@@ -59,6 +60,7 @@ def save_excel():
             ws['T1'].style = highlight
             ws['U1'].style = highlight
             ws.column_dimensions['T'].width = 6
+            ws.auto_filter.ref = "A1:AX{}".format(player_num+1)
             
         ws['A1'].style = highlight
         ws['B1'].style = highlight
@@ -98,7 +100,7 @@ def save_excel():
         ws.column_dimensions['Q'].width = 12
         ws.column_dimensions['R'].width = 6
         ws.column_dimensions['S'].width = 12
-        ws.auto_filter.ref = "A1:S{}".format(player_num+1)
+        
         i = 2
         
         for player in players:

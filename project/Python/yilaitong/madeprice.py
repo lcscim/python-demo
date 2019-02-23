@@ -21,6 +21,7 @@ def jybj():
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=283","home":"1c32","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=3054","home":"1d09","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=420","home":"1c20","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=245","home":"2A53","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=1913","home":"2D37","sale":"魅族"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},  
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=199","home":"1C19","sale":"华为"}]
