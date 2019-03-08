@@ -137,7 +137,7 @@ def save_excel():
             ws['S{0}'.format(i)].alignment = Alignment(horizontal='center', vertical='center')
             i += 1
     
-    wb.save("saveplayer.xlsx")
+    wb.save("players_data.xlsx")
 def data(id):
     headers = {'Host': 'api.overwatchleague.cn',
                'Connection': 'Keep-Alive',
@@ -196,7 +196,7 @@ def data(id):
 
 def other_msg():
 
-    wb = openpyxl.load_workbook("saveplayer.xlsx")
+    wb = openpyxl.load_workbook("players_data.xlsx")
     wb.guess_types = True
     rows = wb["综合数据"].max_row
     player_id = []
@@ -254,7 +254,7 @@ def other_msg():
                     break
                 else:
                     continue
-    wb.save("saveplayer.xlsx")
+    wb.save("players_data.xlsx")
             
 
 if __name__ == '__main__':
