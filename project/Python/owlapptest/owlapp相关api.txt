@@ -12,3 +12,6 @@ https://api.overwatchleague.cn/teams?expand=team.content&locale=zh_CN	--战队及选
 https://api.overwatchleague.cn/players/8811?locale=zh-cn&season=2019&stage_id=regular_season&expand=stats,stat.ranks  8811选手详细数据
 https://api.overwatchleague.cn/stats/matches/21252/maps/1		--比赛编号为21252的第一张地图的详细数据
 
+
+https://api.overwatchcontenders.com/schedule?expand=team.content&locale=zh_CN		owoc数据
+
