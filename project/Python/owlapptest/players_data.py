@@ -8,7 +8,7 @@ from openpyxl.utils import get_column_letter, column_index_from_string
 
 sheets = ['综合数据','dva','orisa','reinhardt','roadhog','winston','zarya','wreckingball','ashe','bastion',
         'doomfist','genji','hanzo','junkrat','mccree','mei','pharah','reaper','soldier-76','sombra',
-        'symmetra','torbjorn','tracer','widowmaker','ana','brigitte','lucio','mercy','moira','zenyatta']
+        'symmetra','torbjorn','tracer','widowmaker','ana','brigitte','lucio','mercy','moira','zenyatta','baptiste']
 
 def save_excel():
     wb = openpyxl.Workbook()
