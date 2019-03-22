@@ -219,20 +219,20 @@ def other_msg():
                 if wb["综合数据"].cell(row=int("{}".format(i+1)),column=2).value == j:
                     player_data = data(j)
                     print(j)
-                    wb["综合数据"]['G{}'.format(i+1)] = '{}'.format(player_data[0][1][0])
-                    wb["综合数据"]['H{}'.format(i+1)] = '{}'.format(player_data[0][2][0])
-                    wb["综合数据"]['I{}'.format(i+1)] = '{}'.format(player_data[0][1][1])
-                    wb["综合数据"]['J{}'.format(i+1)] = '{}'.format(player_data[0][2][1])
-                    wb["综合数据"]['K{}'.format(i+1)] = '{}'.format(player_data[0][1][2])
-                    wb["综合数据"]['L{}'.format(i+1)] = '{}'.format(player_data[0][2][2])
-                    wb["综合数据"]['M{}'.format(i+1)] = '{}'.format(player_data[0][1][3])
-                    wb["综合数据"]['N{}'.format(i+1)] = '{}'.format(player_data[0][2][3])
-                    wb["综合数据"]['O{}'.format(i+1)] = '{}'.format(player_data[0][1][4])
-                    wb["综合数据"]['P{}'.format(i+1)] = '{}'.format(player_data[0][2][4])
-                    wb["综合数据"]['Q{}'.format(i+1)] = '{}'.format(player_data[0][1][5])
-                    wb["综合数据"]['R{}'.format(i+1)] = '{}'.format(player_data[0][2][5])
-                    wb["综合数据"]['S{}'.format(i+1)] = '{}'.format(player_data[0][1][6]/60)
-                    wb["综合数据"]['T{}'.format(i+1)] = '{}'.format(len(player_data[0][3]))
+                    wb["综合数据"]['G{}'.format(i+1)] = player_data[0][1][0]
+                    wb["综合数据"]['H{}'.format(i+1)] = player_data[0][2][0]
+                    wb["综合数据"]['I{}'.format(i+1)] = player_data[0][1][1]
+                    wb["综合数据"]['J{}'.format(i+1)] = player_data[0][2][1]
+                    wb["综合数据"]['K{}'.format(i+1)] = player_data[0][1][2]
+                    wb["综合数据"]['L{}'.format(i+1)] = player_data[0][2][2]
+                    wb["综合数据"]['M{}'.format(i+1)] = player_data[0][1][3]
+                    wb["综合数据"]['N{}'.format(i+1)] = player_data[0][2][3]
+                    wb["综合数据"]['O{}'.format(i+1)] = player_data[0][1][4]
+                    wb["综合数据"]['P{}'.format(i+1)] = player_data[0][2][4]
+                    wb["综合数据"]['Q{}'.format(i+1)] = player_data[0][1][5]
+                    wb["综合数据"]['R{}'.format(i+1)] = player_data[0][2][5]
+                    wb["综合数据"]['S{}'.format(i+1)] = player_data[0][1][6]/60
+                    wb["综合数据"]['T{}'.format(i+1)] = len(player_data[0][3])
                     wb["综合数据"]['T{}'.format(i+1)].alignment = Alignment(horizontal='center', vertical='center')
                     
                     cols = 21
@@ -243,13 +243,13 @@ def other_msg():
                         wb["综合数据"]['{0}{1}'.format(get_column_letter(cols),i+1)].alignment = \
                            Alignment(horizontal='center', vertical='center')
                         hero_index = player_data[0][3].index(hero)
-                        wb["{}".format(hero)]['G{}'.format(i+1)] = '{}'.format(player_data[0][4][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['I{}'.format(i+1)] = '{}'.format(player_data[0][5][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['K{}'.format(i+1)] = '{}'.format(player_data[0][6][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['M{}'.format(i+1)] = '{}'.format(player_data[0][7][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['O{}'.format(i+1)] = '{}'.format(player_data[0][8][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['Q{}'.format(i+1)] = '{}'.format(player_data[0][9][int("{}".format(hero_index))])
-                        wb["{}".format(hero)]['S{}'.format(i+1)] = '{}'.format(player_data[0][10][int("{}".format(hero_index))])
+                        wb["{}".format(hero)]['G{}'.format(i+1)] = player_data[0][4][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['I{}'.format(i+1)] = player_data[0][5][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['K{}'.format(i+1)] = player_data[0][6][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['M{}'.format(i+1)] = player_data[0][7][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['O{}'.format(i+1)] = player_data[0][8][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['Q{}'.format(i+1)] = player_data[0][9][int("{}".format(hero_index))]
+                        wb["{}".format(hero)]['S{}'.format(i+1)] = player_data[0][10][int("{}".format(hero_index))]
                         cols+=1
                     break
                 else:
