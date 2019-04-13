@@ -7,7 +7,8 @@ def find_url(url):
                'Connection':'Keep-Alive',
                'Accept-Encoding': 'gzip'
                }
-    req = requests.get(url=url, headers=headers).json()
+    requests.packages.urllib3.disable_warnings()
+    req = requests.get(url=url, headers=headers, verify=False).json()
     sid = []
     sname = []
     sno = []

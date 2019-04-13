@@ -24,7 +24,12 @@ def jybj():
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=245","home":"2A53","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=1913","home":"2D37","sale":"魅族"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=212","home":"2c46","sale":"华为"},  
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=199","home":"1C19","sale":"华为"}]
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=199","home":"1C19","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=297","home":"1D46","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=424","home":"2C35","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=422","home":"2C33","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=402","home":"1C28","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=499","home":"2A30","sale":"华为"}]
     return otherurls
 
 def find_url(url):
@@ -33,7 +38,8 @@ def find_url(url):
                'Connection':'Keep-Alive',
                'Accept-Encoding': 'gzip'
                }
-    req = requests.get(url=url, headers=headers).json()
+    requests.packages.urllib3.disable_warnings()
+    req = requests.get(url=url, headers=headers, verify=False).json()
     name = []
     price = []
     for i in req:
