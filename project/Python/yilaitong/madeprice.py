@@ -29,7 +29,8 @@ def jybj():
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=424","home":"2C35","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=422","home":"2C33","sale":"华为"},
                  {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=402","home":"1C28","sale":"华为"},
-                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=499","home":"2A30","sale":"华为"}]
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=499","home":"2A30","sale":"华为"},
+                 {"url":"https://www.yilaitong.net/?m=Android&c=Supplier&a=shopSupplier&sid=209","home":"2A46","sale":"小米"}]
     return otherurls
 
 def find_url(url):
